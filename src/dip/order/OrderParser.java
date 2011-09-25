@@ -994,8 +994,8 @@ public class OrderParser
 		Coast coast = Coast.parse(locName);	// will return Coast.UNDEFINED at worst
 		
 		// parse the province. if there are 'ties', we return the result.
-		final Collection col = map.getProvincesMatchingClosest(locName);
-		final Province[] provinces = (Province[]) col.toArray(new Province[col.size()]);
+		final Collection<Province> col = map.getProvincesMatchingClosest(locName);
+		final Province[] provinces = col.toArray(new Province[col.size()]);
 		
 		
 		if(provinces.length == 0)

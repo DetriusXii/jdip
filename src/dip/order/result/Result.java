@@ -35,7 +35,7 @@ import java.io.Serializable;
 *		for debugging. To obtain a properly-formatted localized message, use
 *		getMessage().
 */
-public class Result extends Object implements Serializable, Comparable
+public class Result extends Object implements Serializable, Comparable<Result>
 {
 	// constants
 	private static final OrderFormatOptions DEFAULT_OFO = OrderFormatOptions.createDefault();
@@ -131,9 +131,8 @@ public class Result extends Object implements Serializable, Comparable
 	*	If power is null, it will be first in ascending order.
 	* 	If message may be empty, but never is null.
 	*/
-	public int compareTo(Object o)
+	public int compareTo(final Result result)
 	{
-		Result result = (Result) o;
 		
 		// first: compare powers
 		int compareResult = 0;

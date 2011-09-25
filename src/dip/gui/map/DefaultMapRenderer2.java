@@ -171,7 +171,7 @@ public class DefaultMapRenderer2 extends MapRenderer2
 	protected final Map trackerMap;			// for rendering units & dislodged units; keyed by Province
 	protected final HashMap layerMap;		// layers to which we render; keyed by LAYER; includes label layers
 	private final HashMap renderSettings;	// control rendering options.
-	private final HashMap locMap;			// maps multicoastal province ids -> Location objects for multicoastal provinces
+	private final HashMap<String, Location> locMap;			// maps multicoastal province ids -> Location objects for multicoastal provinces
 	private final HashMap[] powerOrderMap;
 	private HashMap oldRenderSettings;		// old render settings
 	
@@ -209,7 +209,7 @@ public class DefaultMapRenderer2 extends MapRenderer2
 		trackerMap = new HashMap(113);		
 		renderSettings = new HashMap(11);
 		layerMap = new HashMap(11);
-		locMap = new HashMap(17);
+		locMap = new HashMap<String, Location>(17);
 		
 		// power order hashmap (now with z-axis) setup
 		powerOrderMap = new HashMap[Z_LAYER_NAMES.length];
@@ -1345,15 +1345,15 @@ public class DefaultMapRenderer2 extends MapRenderer2
 	private void addProvinceHilitesToTracker()
 	{
 		// Make a list of all possible provinces with underscores
-		ArrayList uscoreProvList = new ArrayList(125);	// stores underscore-preceded names
-		ArrayList lookupProvList = new ArrayList(125);	// stores corresponding Province
-		for(int i=0; i<provinces.length; i++)
+		final ArrayList<String> uscoreProvList = new ArrayList<String>(125);	// stores underscore-preceded names
+		final ArrayList<Province> lookupProvList = new ArrayList<Province>(125);	// stores corresponding Province
+		for(final Province province: provinces)
 		{
-			String[] shortNames = provinces[i].getShortNames();
-			for(int j=0; j<shortNames.length; j++)
+			final String[] shortNames = province.getShortNames();
+			for(final String shortName : shortNames)
 			{
-				uscoreProvList.add('_'+shortNames[j] );
-				lookupProvList.add(provinces[i]);
+				uscoreProvList.add('_'+shortName );
+				lookupProvList.add(province);
 			}
 		}
 		
@@ -1369,7 +1369,7 @@ public class DefaultMapRenderer2 extends MapRenderer2
 			SVGElement element = (SVGElement) map.get( uscoreProvList.get(i) );
 			if(element != null)
 			{
-				Tracker tracker = (Tracker) trackerMap.get( (Province) lookupProvList.get(i) );
+				Tracker tracker = (Tracker) trackerMap.get(lookupProvList.get(i) );
 				tracker.setProvinceHiliteElement(element);
 			}
 		}

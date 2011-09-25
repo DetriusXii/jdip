@@ -114,21 +114,16 @@ public class SCHistoryWriter
 		// find all provinces w/supply centers
 		List scList = new ArrayList();
 		final Province[] provs = w.getMap().getProvinces();
-		for(int i=0; i<provs.length; i++)
-		{
-			if(provs[i].hasSupplyCenter())
-			{
-				scList.add(provs[i]);
+		for(final Province prov: provs) {
+			if(prov.hasSupplyCenter()) {
+				scList.add(prov);
 			}
 		}
 		
 		// sort list by alphabetical order of the short name (abbreviation)
-		Collections.sort(scList, new Comparator()
+		Collections.sort(scList, new Comparator<Province>()
 		{
-			public int compare(Object o1, Object o2)
-			{
-				Province p1 = (Province) o1;
-				Province p2 = (Province) o2;
+			public int compare(final Province p1, final Province p2) {
 				return p1.getShortName().compareTo(p2.getShortName());
 			}
 			

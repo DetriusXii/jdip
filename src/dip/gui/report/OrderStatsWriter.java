@@ -266,15 +266,11 @@ public class OrderStatsWriter
 	*	Makes an array of tabular data, for easy calculation.
 	*	ONLY Movement TURNS are used to create statistical data.
 	*/
-	public MovePhaseTurnData[] collectData()
-	{
-		List turns = world.getAllTurnStates();
-		ArrayList data = new ArrayList(turns.size());
+	public MovePhaseTurnData[] collectData() {
+		final List<TurnState> turns = world.getAllTurnStates();
+		final ArrayList<MovePhaseTurnData> data = new ArrayList<MovePhaseTurnData>(turns.size());
 		
-		Iterator iter = turns.iterator();
-		while(iter.hasNext())
-		{
-			TurnState ts = (TurnState) iter.next();
+                for (final TurnState ts: turns) {
 			if( ts.isResolved() && 
 				Phase.PhaseType.MOVEMENT.equals(ts.getPhase().getPhaseType()) )
 			{
@@ -282,7 +278,7 @@ public class OrderStatsWriter
 			}
 		}
 		
-		return (MovePhaseTurnData[]) data.toArray(new MovePhaseTurnData[data.size()]);
+		return data.toArray(new MovePhaseTurnData[data.size()]);
 	}// collectData()
 	
 	

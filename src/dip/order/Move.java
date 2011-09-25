@@ -142,7 +142,7 @@ public class Move extends Order
 	*	Creates a Move order with multiple explicit convoy routes.
 	*	Each entry in routes must be a single-dimensional Province array.
 	*/
-	protected Move(Power power, Location src, Unit.Type srcUnitType, Location dest, List routes)
+	protected Move(Power power, Location src, Unit.Type srcUnitType, Location dest, List<List<Province>> routes)
 	{
 		this(power, src, srcUnitType, dest, true);
 		
@@ -152,7 +152,7 @@ public class Move extends Order
 		}
 		
 		// TODO: we don't check the routes very strictly.
-		convoyRoutes = new ArrayList(routes);
+		convoyRoutes = new ArrayList<List<Province>>(routes);
 	}// Move()
 	
 	

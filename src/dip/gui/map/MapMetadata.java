@@ -435,7 +435,8 @@ public class MapMetadata
 	*/
 	public String getOrderParamString(String orderElement, String attribute)
 	{
-		return getOrderParam(orderElement, attribute);
+            final Object orderParam = getOrderParam(orderElement, attribute);
+            return orderParam instanceof String ? (String) orderParam : null;
 	}// getOrderParamString()
 	
 	/**
@@ -444,7 +445,8 @@ public class MapMetadata
 	*/
 	public float getOrderParamFloat(String orderElement, String attribute)
 	{
-		return ((Float) getOrderParam(orderElement, attribute)).floatValue();
+            final Object orderParam = getOrderParam(orderElement, attribute);
+            return orderParam instanceof Float ? ((Float) orderParam).floatValue() : 0f;
 	}// getOrderParamFloat()
 	
 	
@@ -458,8 +460,10 @@ public class MapMetadata
 	*/
 	public float getOrderRadius(String orderElement, String symbolName)
 	{
-		final float deltaRadius = ((Float) getOrderParam(orderElement, ATT_DELTA_RADIUS)).floatValue();
-		return getSymbolSize(symbolName).getRadius(deltaRadius);
+            final Object orderParam = getOrderParam(orderElement, ATT_DELTA_RADIUS);
+            final float deltaRadius = orderParam instanceof Float ? 
+                    ((Float) orderParam).floatValue() : 0f;
+            return getSymbolSize(symbolName).getRadius(deltaRadius);
 	}// getOrderRadius()
 	
 	
@@ -469,7 +473,8 @@ public class MapMetadata
 	*/
 	public float[] getOrderParamFloatArray(String orderElement, String attribute)
 	{
-		return ((float[]) getOrderParam(orderElement, attribute));
+            final Object orderParam = getOrderParam(orderElement, attribute);
+            return orderParam instanceof float[] ? ((float[]) orderParam) : null;
 	}// getOrderParamFloat()
 	
 	/** 
@@ -861,7 +866,8 @@ public class MapMetadata
 		StringBuffer sb = new StringBuffer(64);
 		sb.append(el);
 		sb.append(att);
-		displayProps.put(sb.toString(), value);
+                displayProps.put(sb.toString(), value);
+
 	}// putOrderParam()
 	
 	
@@ -877,7 +883,7 @@ public class MapMetadata
 		StringBuffer sb = new StringBuffer(64);
 		sb.append(el);
 		sb.append(att);
-		displayProps.put(sb.toString(), value);
+                displayProps.put(sb.toString(), value);
 	}// putOptionalOrderParam()
 	
 	

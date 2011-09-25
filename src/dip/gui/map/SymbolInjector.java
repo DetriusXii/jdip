@@ -217,14 +217,14 @@ public class SymbolInjector
 	private HashMap elementMapper(Element start, String attrName)
 	throws IOException
 	{
-		HashMap map = new HashMap(31);
+		final HashMap<String, Element> map = new HashMap<String, Element>(31);
 		elementMapperWalker(map, start, attrName);
 		return map;
 	}// elementMapper()
 	
 	
 	/** Recursive portion of elementMapper */
-	private void elementMapperWalker(final HashMap map, final Node node, final String attrName)
+	private void elementMapperWalker(final HashMap<String, Element> map, final Node node, final String attrName)
 	throws IOException
 	{
 		if(node.getNodeType() == Node.ELEMENT_NODE)
@@ -236,7 +236,7 @@ public class SymbolInjector
 				if(attrNode != null)
 				{
 					final String attrValue = attrNode.getNodeValue();
-					if(!"".equals(attrValue))
+					if(!"".equals(attrValue) && node instanceof Element)
 					{
 						if(map.containsKey(attrValue))
 						{

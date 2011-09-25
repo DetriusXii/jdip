@@ -112,7 +112,7 @@ public class OrderResult extends Result
 	*	If power is null, it will be first in ascending order.
 	* 	If message may be empty, but never is null.
 	*/
-	public int compareTo(Object o)
+	public int compareTo(Result o)
 	{
 		if(o instanceof OrderResult)
 		{

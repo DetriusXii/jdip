@@ -273,16 +273,16 @@ public class SVGUtils
 	*	</ul>
 	*
 	*/
-	public static Map tagFinderSVG(List lookList, Node root)
+	public static Map<Object, Node> tagFinderSVG(List lookList, Node root)
 	{
 		return tagFinderSVG(lookList, root, false);
 	}// tagFinderSVG	
 	
 	/** As above, but allows any SVG element to be returned */
-	public static Map tagFinderSVG(List lookList, Node root, boolean anySVGElement)
+	public static Map<Object, Node> tagFinderSVG(List<Object> lookList, Node root, boolean anySVGElement)
 	{
-		List list = new ArrayList(lookList);
-		Map map = new HashMap( (4 * lookList.size())/3 );
+		final List<Object> list = new ArrayList<Object>(lookList);
+		final Map<Object, Node> map = new HashMap<Object, Node>( (4 * lookList.size())/3 );
 		
 		// recursively walk tree from root
 		nodeWalker(root, list, map, anySVGElement);
@@ -307,15 +307,16 @@ public class SVGUtils
 	*	</ul>
 	*
 	*/
-	public static void tagFinderSVG(Map map, List lookList, Node root)
+	public static void tagFinderSVG(Map<Object, Node> map, List<Object> lookList, Node root)
 	{
 		tagFinderSVG(map, lookList, root, false);
 	}// tagFinderSVG
 	
 	/** As above but allows any SVG element to be returned */
-	public static void tagFinderSVG(Map map, List lookList, Node root, boolean anySVGElement)
+	public static void tagFinderSVG(Map<Object, Node> map, 
+                final List<Object> lookList, Node root, boolean anySVGElement)
 	{
-		List list = new ArrayList(lookList);
+		final List<Object> list = new ArrayList<Object>(lookList);
 		
 		// recursively walk tree from root
 		nodeWalker(root, list, map, anySVGElement);
@@ -329,9 +330,9 @@ public class SVGUtils
 	*/
 	public static SVGElement[] idFinderSVG(Node root)
 	{
-		List list = new ArrayList(150);
+		final List<SVGElement> list = new ArrayList<SVGElement>(150);
 		idNodeWalker(root, list, true);
-		return (SVGElement[]) list.toArray(new SVGElement[list.size()]);
+		return list.toArray(new SVGElement[list.size()]);
 	}// idFinderSVG()
 	
 	
@@ -340,7 +341,10 @@ public class SVGUtils
 	*	All non-G or non-SYMBOL elements are ignored, if anySVGElement flag is false
 	*
 	*/
-	private static void nodeWalker(Node node, List list, Map map, boolean anySVGElement)
+	private static void nodeWalker(Node node, 
+                List<Object> list, 
+                Map<Object, Node> map, 
+                boolean anySVGElement)
 	{
 		if( node.getNodeType() == Node.ELEMENT_NODE 
 			&& ((anySVGElement && node instanceof org.w3c.dom.svg.SVGElement)
@@ -376,12 +380,12 @@ public class SVGUtils
 	*	Looks for any ELEMENT with an ID value.
 	*
 	*/
-	private static void idNodeWalker(Node node, List list, boolean isRoot)
+	private static void idNodeWalker(Node node, final List<SVGElement> list, boolean isRoot)
 	{
 		if(node.getNodeType() == Node.ELEMENT_NODE && !isRoot)
 		{
  			String id = ((Element) node).getAttribute(SVGConstants.SVG_ID_ATTRIBUTE);
-			if( !"".equals(id) )
+			if( !"".equals(id) && node instanceof SVGElement)
 			{
 				list.add( (SVGElement) node );
 			}
@@ -389,6 +393,7 @@ public class SVGUtils
 		
 		// check if current node has any children
 		// if so, iterate through & recursively call this method
+                
 		NodeList children = node.getChildNodes();
 		if(children != null)
 		{
@@ -405,38 +410,28 @@ public class SVGUtils
 	*	list. If it does, the element is added to map, and removed from the list.
 	*
 	*/
-	private static void nodeChecker(Node attributeNode, Node parentNode, List list, Map map)
-	{
-		String nodeValue = attributeNode.getNodeValue();
+	private static void nodeChecker(Node attributeNode, 
+                Node parentNode, List<Object> list, Map<Object, Node> map) {
+		final String nodeValue = attributeNode.getNodeValue();
 		Iterator iter = list.iterator();
-		while(iter.hasNext())
-		{
+		while(iter.hasNext()) {
 			Object obj = iter.next();
-			if(obj == null)
-			{
+			if(obj == null) {
 				iter.remove();
-			}
-			else
-			{
-				if(obj instanceof Province)
-				{
+			} else {
+				if(obj instanceof Province) {
 					// use getShortNames() to check against all short names
 					String[] provShortNames = ((Province) obj).getShortNames();
-					for(int i=0; i<provShortNames.length; i++)
-					{
-						if(nodeValue.equalsIgnoreCase(provShortNames[i]))
-						{
+					for(final String provShortName: provShortNames) {
+						if(nodeValue.equalsIgnoreCase(provShortName)) {
 							map.put(obj, parentNode);
 							iter.remove();
 							return;
 						}
 					}
-				}
-				else
-				{
+				} else {
 					// for String and Objects, just use toString()
-					if(nodeValue.equalsIgnoreCase(obj.toString()))
-					{
+					if(nodeValue.equalsIgnoreCase(obj.toString())) {
 						map.put(obj, parentNode);
 						iter.remove();
 						return;
