@@ -124,7 +124,7 @@ public class RuleOptions implements Serializable
 	
 	
 	// instance variables
-	protected HashMap optionMap = null;
+	protected HashMap<Option, OptionValue> optionMap = null;
 	
 	
 	/**
@@ -304,7 +304,7 @@ public class RuleOptions implements Serializable
 	/** Creates a new RuleOptions object, which stores various Rule options. */
 	public RuleOptions()
 	{
-		optionMap = new HashMap(31);
+		optionMap = new HashMap<Option, OptionValue>(31);
 	}// RuleOptions()
 	
 	
@@ -344,10 +344,10 @@ public class RuleOptions implements Serializable
 			throw new IllegalArgumentException("null Option");
 		}
 		
-		OptionValue value = (OptionValue) optionMap.get(option);
+		OptionValue value = optionMap.get(option);
 		if(value == null)
 		{
-			return option.getDefault();
+                    return option.getDefault();
 		}
 		
 		return value;
@@ -355,7 +355,7 @@ public class RuleOptions implements Serializable
 	
 	
 	/** Returns a Set of all Options. */
-	public Set getAllOptions()
+	public Set<Option> getAllOptions()
 	{
 		return optionMap.keySet();
 	}// getAllOptions()
@@ -368,18 +368,14 @@ public class RuleOptions implements Serializable
 		sb.append(this.getClass().getName());
 		sb.append('\n');
 		
-		Set set = getAllOptions();
-		Iterator iter = set.iterator();
-		while(iter.hasNext())
-		{
-			Option opt = (Option) iter.next();
-			OptionValue ov = getOptionValue(opt);
-			sb.append("  ");
-			sb.append(opt);
-			sb.append(" : ");
-			sb.append(ov);
-			sb.append('\n');
-		}
+                for(final Option option: getAllOptions()) {
+                    final OptionValue optionValue = getOptionValue(option);
+                    sb.append("  ");
+                    sb.append(option);
+                    sb.append(" : ");
+                    sb.append(optionValue);
+                    sb.append('\n');
+                }
 		
 		return sb.toString();
 	}// toString()

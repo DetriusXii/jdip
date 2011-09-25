@@ -50,18 +50,22 @@ public class ValidationOptions implements Serializable, Cloneable
 	public static final String KEY_GLOBAL_PARSING = "KEY_GLOBAL_PARSING";
 	public static final String VALUE_GLOBAL_PARSING_STRICT = "VALUE_GLOBAL_PARSING_STRICT";
 	public static final String VALUE_GLOBAL_PARSING_LOOSE = "VALUE_GLOBAL_PARSING_LOOSE";
-	public static final Option OPTION_GLOBAL_PARSING = new Option(KEY_GLOBAL_PARSING, 
-					new String[] {VALUE_GLOBAL_PARSING_STRICT,VALUE_GLOBAL_PARSING_LOOSE},
+        public static final String[] PERMITTED_PARSING_TYPES = 
+                new String[] {VALUE_GLOBAL_PARSING_STRICT,VALUE_GLOBAL_PARSING_LOOSE};
+        public static final Option OPTION_GLOBAL_PARSING_LOOSE = 
+                new Option(KEY_GLOBAL_PARSING, PERMITTED_PARSING_TYPES, VALUE_GLOBAL_PARSING_LOOSE);
+	public static final Option OPTION_GLOBAL_PARSING_STRICT = new Option(KEY_GLOBAL_PARSING, 
+					PERMITTED_PARSING_TYPES,
 					VALUE_GLOBAL_PARSING_STRICT);
 	
 	
 	// internal: list of all options (in base class)
-	protected static final Option[] _OPTIONS = {OPTION_GLOBAL_PARSING};
+	protected static final Option[] _OPTIONS = {OPTION_GLOBAL_PARSING_STRICT, OPTION_GLOBAL_PARSING_LOOSE};
 	private static final String DESCRIPTION = "_description";
 			
 	
 	// instance variables
-	protected Hashtable map = new Hashtable(5);
+	protected Map<String, Option> map = new HashMap<String, Option>(5);
 	protected Option[] options = null; 			// subclasses should modify as appropriate in constructor
 	
 	
@@ -87,7 +91,7 @@ public class ValidationOptions implements Serializable, Cloneable
 	throws CloneNotSupportedException
 	{
 		ValidationOptions vopt = (ValidationOptions) super.clone();
-		vopt.map = (Hashtable) this.map.clone();
+		vopt.map = new HashMap<String, Option>(this.map);
 		return vopt;
 	}// clone()
 	
@@ -125,12 +129,16 @@ public class ValidationOptions implements Serializable, Cloneable
 	
 	
 	// Set/Get methods
-	public void setOption(String key, Object value)
+	public void setOption(String key, Option value)
 	{
 		map.put(key, value);
 	}// setOption()
-	
-	public Object getOption(String key)
+        
+        public Option getOption(final int index) {
+            return this.options[index];
+        }
+        
+	public Option getOption(String key)
 	{
 		return map.get(key);
 	}// getOption()
@@ -144,9 +152,9 @@ public class ValidationOptions implements Serializable, Cloneable
 	public final void clearOptions()
 	{
 		map.clear();
-		for(int i=0; i<options.length; i++)
+		for(final Option option: options)
 		{
-			map.put( options[i].getKey(), options[i].getDefaultValue() );
+			map.put( option.getKey(), option );
 		}		
 	}// clearOptions()
 	

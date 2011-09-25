@@ -111,15 +111,13 @@ public class Position implements java.io.Serializable, Cloneable
 	*/
 	public void setEliminationStatus(final Power[] powers)
 	{
-		HashMap pmap = new HashMap(19);
-		for(int i=0; i<powers.length; i++)
-		{
-			pmap.put(powers[i], null);
+		final HashMap<Power, Boolean> pmap = new HashMap<Power, Boolean>(19);
+		for(final Power power: powers) {
+			pmap.put(power, Boolean.TRUE);
 		}
 		
-		for(int i=0; i<provArray.length; i++)
+		for(final ProvinceData pd: provArray)
 		{
-			ProvinceData pd = provArray[i];
 			Power power = null;
 			
 			if(pd != null)
@@ -128,9 +126,9 @@ public class Position implements java.io.Serializable, Cloneable
 				if(unit != null)		// first check non-dislodged units
 				{
 					power = unit.getPower();
-					if(pmap.get(power) == null)
+					if(pmap.get(power))
 					{
-						pmap.put(power, new Object());
+						pmap.put(power, Boolean.FALSE);
 					}
 				}
 				
@@ -139,9 +137,9 @@ public class Position implements java.io.Serializable, Cloneable
 				if(unit != null)
 				{
 					power = unit.getPower();
-					if(pmap.get(power) == null)
+					if(pmap.get(power))
 					{
-						pmap.put(power, new Object());
+						pmap.put(power, Boolean.FALSE);
 					}
 				}
 				
@@ -149,24 +147,16 @@ public class Position implements java.io.Serializable, Cloneable
 				power = pd.getSCOwner();
 				if(power != null)
 				{
-					if(pmap.get(power) == null)
+					if(pmap.get(power))
 					{
-						pmap.put(power, new Object());
+						pmap.put(power, Boolean.FALSE);
 					}
 				}
 			}
 		}
 		
-		for(int i=0; i<powers.length; i++)
-		{
-			if(pmap.get(powers[i]) == null)
-			{
-				setEliminated(powers[i], true);
-			}
-			else
-			{
-				setEliminated(powers[i], false);
-			}
+		for(final Power power: powers) {
+			setEliminated(power, pmap.get(power));
 		}		
 	}// setEliminationStatus()
 	

@@ -27,7 +27,7 @@ package dip.world;
 *	A Power represents player in the game.
 *
 */
-public class Power implements Comparable, java.io.Serializable
+public class Power implements Comparable<Power>, java.io.Serializable
 {
 	// constants for name array; always stored in this order.
 	private static final int FULL_NAME	= 0;	// required
@@ -128,9 +128,8 @@ public class Power implements Comparable, java.io.Serializable
 	
 	
 	/** Implementation of Comparable interface */
-	public int compareTo(Object obj)
+	public int compareTo(final Power power)
 	{
-		Power power = (Power) obj;
 		return getName().compareTo(power.getName());
 	}// compareTo()
 	

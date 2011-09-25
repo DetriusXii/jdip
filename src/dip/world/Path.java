@@ -292,6 +292,10 @@ public class Path extends Object
 	*		<li>the evaluation state of the Convoy order must not be Tristate.FAILURE</li>
 	*	</ol>
 	*/
+        public static boolean isRouteLegal(final Adjudicator adj, final List<Province> route) {
+            return isRouteLegal(adj, route.toArray(new Province[route.size()]));
+        }
+        
 	public static boolean isRouteLegal(final Adjudicator adj, final Province[] route)
 	{
 		final Province src = route[0];

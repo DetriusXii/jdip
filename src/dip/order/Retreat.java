@@ -169,7 +169,7 @@ public class Retreat extends Move
 	{
 		// add moves to destination space, and supports of this space
 		OrderState thisOS = adjudicator.findOrderStateBySrc(getSource());
-		ArrayList depMTDest = null;
+		ArrayList<OrderState> depMTDest = null;
 		
 		OrderState[] orderStates = adjudicator.getOrderStates();
 		for(int osIdx=0; osIdx<orderStates.length; osIdx++)
@@ -178,13 +178,12 @@ public class Retreat extends Move
 			Order order = dependentOS.getOrder();
 			
 			if( order instanceof Retreat 
-				&& order != this )
-			{
+				&& order != this ) {
 				Retreat retreat = (Retreat) order;
 				
 				if( retreat.getDest().isProvinceEqual(this.getDest()) )
 				{
-					if(depMTDest == null) { depMTDest = new ArrayList(4); }
+					if(depMTDest == null) { depMTDest = new ArrayList<OrderState>(4); }
 					depMTDest.add(dependentOS);
 				}
 			}

@@ -356,14 +356,14 @@ public class MultiOrderEntry
 	/** Converts input to token array */
 	private String[] toTokens(String input)
 	{
-		ArrayList list = new ArrayList(10);
+		final ArrayList<String> list = new ArrayList<String>(10);
 		StringTokenizer st = new StringTokenizer(input);
 		while(st.hasMoreTokens())
 		{
 			list.add( st.nextToken() );
 		}
 		
-		return (String[]) list.toArray(new String[list.size()]);
+		return list.toArray(new String[list.size()]);
 	}// toTokens()
 	
 	

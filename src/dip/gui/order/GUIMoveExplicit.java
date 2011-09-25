@@ -90,7 +90,7 @@ public class GUIMoveExplicit extends Move implements GUIOrder
 	private transient static final int REQ_LOC = 2;
 	private transient boolean isConvoyableArmy = false;
 	private transient boolean isComplete = false;
-	private transient LinkedList tmpConvoyPath = null;
+	private transient LinkedList<Province> tmpConvoyPath = null;
 	private transient int currentLocNum = 0;
 	private transient int numSupports = -9999;
 	private transient Point2D.Float failPt = null;
@@ -402,7 +402,7 @@ public class GUIMoveExplicit extends Move implements GUIOrder
 		{
 			if(currentLocNum == 0)
 			{
-				Unit unit = stateInfo.getPosition().getUnit(location.getProvince());
+				final Unit unit = stateInfo.getPosition().getUnit(location.getProvince());
 				src = new Location(location.getProvince(), unit.getCoast());
 				power = unit.getPower();
 				srcUnitType = unit.getType();
@@ -414,7 +414,7 @@ public class GUIMoveExplicit extends Move implements GUIOrder
 				if(isConvoyableArmy)
 				{
 					assert (tmpConvoyPath == null);
-					tmpConvoyPath = new LinkedList();
+					tmpConvoyPath = new LinkedList<Province>();
 					tmpConvoyPath.add( getSource().getProvince() );
 				}
 				
@@ -473,10 +473,14 @@ public class GUIMoveExplicit extends Move implements GUIOrder
 		}
 		else
 		{
-			final Province[] provinceRoute = (Province[]) tmpConvoyPath.toArray(
+			final Province[] provinceRoute = tmpConvoyPath.toArray(
 				new Province[tmpConvoyPath.size()]);
-			convoyRoutes = new ArrayList(1);
-			convoyRoutes.add(provinceRoute);
+			convoyRoutes = new ArrayList<List<Province>>(1);
+                        final List<Province> provinceRouteList = new ArrayList<Province>();
+                        for(final Province province: provinceRoute) {
+                            provinceRouteList.add(province);
+                        }
+			convoyRoutes.add(provinceRouteList);
 		}
 	}// updateConvoyPath()
 	

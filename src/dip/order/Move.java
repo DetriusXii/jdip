@@ -79,7 +79,7 @@ public class Move extends Order
 	
 	// instance variables
 	protected Location dest = null;
-	protected ArrayList convoyRoutes = null;	// contains *defined* convoy routes; null if none. 
+	protected List<List<Province>> convoyRoutes = null;	// contains *defined* convoy routes; null if none. 
 	protected boolean _isViaConvoy = false;					// 'true' if army was explicitly ordered to convoy.
 	protected boolean _isConvoyIntent = false;				// 'true' if we determine that intent is to convoy. MUST be set to same initial value as _isViaConvoy
 	protected boolean _isAdjWithPossibleConvoy = false;		// 'true' if an army with an adjacent move has a possible convoy route move too
@@ -126,8 +126,15 @@ public class Move extends Order
 			throw new IllegalArgumentException("bad or missing route");
 		}
 		
-		convoyRoutes = new ArrayList(1);
-		convoyRoutes.add(convoyRoute);
+                
+                
+		convoyRoutes = new ArrayList<List<Province>>(1);
+                
+                final List<Province> convoyProvinceList = new ArrayList<Province>();
+                for (final Province province: convoyRoute) {
+                    convoyProvinceList.add(province);
+                }
+		convoyRoutes.add(convoyProvinceList);
 	}// Move()
 	
 	
@@ -230,16 +237,16 @@ public class Move extends Order
 	*	route if there are multiple routes). Returns null if not convoying
 	*	or no explicit route was defined.
 	*/
-	public Province[] getConvoyRoute()
+	public List<Province> getConvoyRoute()
 	{
-		return (convoyRoutes != null) ? (Province[]) convoyRoutes.get(0) : null;
+		return (convoyRoutes != null) ? convoyRoutes.get(0) : null;
 	}// getConvoyRoute()
 	
 	/** 
 	*	Returns, if set, all explicit convoy routes as an unmodifiable List.
 	*	Returns null if not convoying or no explicit route(s) were defined.
 	*/
-	public List getConvoyRoutes()
+	public List<List<Province>> getConvoyRoutes()
 	{
 		return (convoyRoutes != null) ? Collections.unmodifiableList(convoyRoutes) : null;
 	}// getConvoyRoute()
@@ -278,7 +285,9 @@ public class Move extends Order
 			final int size = convoyRoutes.size();
 			for(int i=0; i<size; i++)
 			{
-				final Province[] path = (Province[]) convoyRoutes.get(i);
+                            final List<Province> convoyRoute = convoyRoutes.get(i);
+                            
+				final Province[] path = convoyRoute.toArray(new Province[convoyRoute.size()]);
 				formatConvoyRoute(sb, path, true, true);
 				
 				// prepare for next path
@@ -318,7 +327,9 @@ public class Move extends Order
 			final int size = convoyRoutes.size();
 			for(int i=0; i<size; i++)
 			{
-				final Province[] path = (Province[]) convoyRoutes.get(i);
+                                final List<Province> convoyRoute = convoyRoutes.get(i);
+                                
+				final Province[] path = convoyRoute.toArray(new Province[convoyRoute.size()]);
 				formatConvoyRoute(sb, path, false, true);
 				
 				// prepare for next path
@@ -493,7 +504,9 @@ public class Move extends Order
 			// they are (all) theoretically valid
 			for(int routeIdx=0; routeIdx<convoyRoutes.size(); routeIdx++)
 			{
-				final Province[] route = (Province[]) convoyRoutes.get(routeIdx);
+                            final List<Province> convoyRoute = convoyRoutes.get(routeIdx);
+                            final int convoyRouteSize = convoyRoute.size();
+                            final Province[] route =  convoyRoute.toArray(new Province[convoyRouteSize]);
 				
 				// check that src, dest are included in path
 				if( route[0] != src.getProvince() 
@@ -616,13 +629,12 @@ public class Move extends Order
 					{
 						// if we have multiple routes, we don't fail until *all* paths fail.
 						boolean overall = false;
-						for(int routeIdx=0; routeIdx<convoyRoutes.size(); routeIdx++)
+						for(final List<Province> route: convoyRoutes)
 						{
-							final Province[] route = (Province[]) convoyRoutes.get(routeIdx);
 							overall = Path.isRouteLegal(adjudicator, route);
 							if(overall)	// if at least one is true, then we are OK
 							{
-								break;
+                                                            break;
 							}
 						}
 						
@@ -824,15 +836,15 @@ public class Move extends Order
 		// add moves to destination space, and supports of this space
 		OrderState thisOS = adjudicator.findOrderStateBySrc(getSource());
 		
-		ArrayList depMTDest = null;
-		ArrayList depSup = null;
-		ArrayList depSelfSup = null;
+		ArrayList<OrderState> depMTDest = null;
+		ArrayList<OrderState> depSup = null;
+		ArrayList<OrderState> depSelfSup = null;
 		
 		OrderState[] orderStates = adjudicator.getOrderStates();
 		for(int osIdx=0; osIdx<orderStates.length; osIdx++)
 		{
 			OrderState dependentOS = orderStates[osIdx];
-			Order order = dependentOS.getOrder();
+			final Order order = dependentOS.getOrder();
 			
 			if(order instanceof Move && order != this)
 			{
@@ -841,7 +853,7 @@ public class Move extends Order
 				// move to *destination* space (that are not this order)
 				if( move.getDest().isProvinceEqual(this.getDest()) )
 				{
-					if(depMTDest == null) { depMTDest = new ArrayList(5); }
+					if(depMTDest == null) { depMTDest = new ArrayList<OrderState>(5); }
 					depMTDest.add(dependentOS);
 				}
 				
@@ -863,14 +875,11 @@ public class Move extends Order
 				if(	support.getSupportedSrc().isProvinceEqual(this.getSource())
 					&& support.getSupportedDest().isProvinceEqual(this.getDest()) )
 				{
-					if( adjudicator.isSelfSupportedMove(dependentOS) )
-					{
-						if(depSelfSup == null) { depSelfSup = new ArrayList(5); }
+					if( adjudicator.isSelfSupportedMove(dependentOS) ) {
+						if(depSelfSup == null) { depSelfSup = new ArrayList<OrderState>(5); }
 						depSelfSup.add(dependentOS);
-					}
-					else
-					{
-						if(depSup == null) { depSup = new ArrayList(5); }
+					} else {
+						if(depSup == null) { depSup = new ArrayList<OrderState>(5); }
 						depSup.add(dependentOS);
 					}
 				}

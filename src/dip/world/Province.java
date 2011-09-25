@@ -66,7 +66,7 @@ import java.util.*;
 *	be handled as a separate object within the Province.
 *
 */
-public class Province implements java.io.Serializable, Comparable
+public class Province implements java.io.Serializable, Comparable<Province>
 {
 	
 	// immutable persistent fields
@@ -666,9 +666,9 @@ public class Province implements java.io.Serializable, Comparable
 	
 	
 	/** Compares this province to another, by the full name, ignoring case */
-	public int compareTo(Object obj)
+	public int compareTo(final Province obj)
 	{
-		return fullName.compareToIgnoreCase( ((Province) obj).fullName );
+		return fullName.compareToIgnoreCase( obj.fullName );
 	}// compareTo()
 	
 }// class Province

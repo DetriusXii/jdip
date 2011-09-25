@@ -32,7 +32,7 @@ import java.util.Map;
 *
 *
 */
-public class LRUCache extends LinkedHashMap 
+public class LRUCache<T> extends LinkedHashMap<String, T> 
 {
 	private int maxsize;
 	
@@ -49,7 +49,7 @@ public class LRUCache extends LinkedHashMap
 	}// LRUCache()
 	
 	
-	public Object put(Object key, Object value)
+	public T put(final String key, final T value)
 	{
 		return super.put(key, value);
 	}
@@ -58,7 +58,7 @@ public class LRUCache extends LinkedHashMap
 	/**
 	*	Override to enable elimination of oldest entries
 	*/
-	protected boolean removeEldestEntry(Map.Entry eldest)
+	protected boolean removeEldestEntry(final Map.Entry<String, T> eldest)
 	{
 		return (size() > maxsize); 
 	}// removeEldestEntry()

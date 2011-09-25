@@ -400,14 +400,14 @@ public class PressDialog extends XDialog
  	private class SortedPressTM extends AbstractTableModel 
 	{
 		private final int NUM_COLS = 5; 
-		private final java.util.List data;
+		private final java.util.List<PressMessage> data;
 		private int lastSortedCol = -1;
 		private boolean isLastSortedAscending = false;
 		
 		/** Create a Sorted Press Table Model */
 		public SortedPressTM() 
 		{   
-			data = Collections.synchronizedList(new ArrayList(50)); 
+			data = Collections.synchronizedList(new ArrayList<PressMessage>(50)); 
 		}// SortedPressTM
 		
 		/** Add a single PressMessage. */
@@ -420,9 +420,9 @@ public class PressDialog extends XDialog
 		/** Add multiple PressMessages */
 		public void addMessages(PressMessage[] pms)
 		{
-			for(int i=0; i<pms.length; i++)
+			for(final PressMessage pm: pms)
 			{
-				data.add(pms[i]);
+				data.add(pm);
 			}
 			resort();
 		}// addMessages()
@@ -573,7 +573,7 @@ public class PressDialog extends XDialog
 		/** Sort implementation */
 		private void sort(int col, boolean isAscending)
 		{
-			Comparator comparator = new PressMessageComparator(col, isAscending);
+			Comparator<PressMessage> comparator = new PressMessageComparator(col, isAscending);
 			Collections.sort(data, comparator);
 		}// sort()
 		
@@ -699,7 +699,7 @@ public class PressDialog extends XDialog
 	
 	
 	/** Generic Reversible Comparator, with null handling. */
-	private class PressMessageComparator implements Comparator
+	private class PressMessageComparator implements Comparator<PressMessage>
 	{
 		private int col = -1;
 		private boolean isAscending = false;
@@ -711,15 +711,9 @@ public class PressDialog extends XDialog
 		}// PressMessageComparator()
 		
 		/** Compare! */
-		public int compare(Object o1, Object o2)
+		public int compare(final PressMessage pm1, final PressMessage pm2)
 		{
 			int val = 0;
-			
-			PressMessage pm1 = (PressMessage) o1;
-			PressMessage pm2 = (PressMessage) o2;
-			
-			Object cmp1 = null;
-			Object cmp2 = null;
 			
 			switch(col)
 			{
@@ -744,52 +738,38 @@ public class PressDialog extends XDialog
 					}
 					
 					return val;
-				case 1:
-					cmp1 = pm1.getSubject();
-					cmp2 = pm2.getSubject();
+				case 1: {
+                                    
+					final String cmp1 = pm1.getSubject();
+                                        final String cmp2 = pm2.getSubject();
+                                        val = handleComparables(cmp1, cmp2);
 					break;
-				case 2:
-					cmp1 = pm1.getFrom().getNick();
-					cmp2 = pm2.getFrom().getNick();
+                                } case 2: {
+                                        final String cmp1 = pm1.getFrom().getNick();
+					final String cmp2 = pm2.getFrom().getNick();
+                                        val = handleComparables(cmp1, cmp2);
 					break;
-				case 3:
-					cmp1 = new Date(pm1.getTimeSent());
-					cmp2 = new Date(pm2.getTimeSent());
+                                } case 3: {
+					final Date cmp1 = new Date(pm1.getTimeSent());
+					final Date cmp2 = new Date(pm2.getTimeSent());
+					val = handleComparables(cmp1, cmp2);
+                                        break;
+                                } case 4: {
+                                        final Phase cmp1 = pm1.getPhase();
+					final Phase cmp2 = pm2.getPhase();
+                                        val = handleComparables(cmp1, cmp2);
 					break;
-				case 4:
-					cmp1 = pm1.getPhase();
-					cmp2 = pm2.getPhase();
-					break;
-				default:
+                                } default:
 					throw new IllegalStateException();
 			}
 			
-			// handle nulls
-			if(cmp1 == null && cmp2 == null) 
-			{
-				val = 0; 
-			}
-			else if(cmp1 == null)
-			{
-				val = -1; 
-			} 
-			else if(cmp2 == null)
-			{ 
-				val = 1; 
-			}
-			else
-			{
-				val = ((Comparable) cmp1).compareTo(cmp2);
-			}
 			
-			if(!isAscending)
-			{
-				val = -val;
-			}
-			
-			return val;
+			return !isAscending ? -val : val;
 		}// compare()
 		
+                private <T> int handleComparables(final Comparable<T> cmp1, final T cmp2) {
+                    return cmp1 == null && cmp2 == null ? 0 : cmp1 == null ? -1 : cmp2 == null ? 1 : cmp1.compareTo(cmp2);
+                }
 		/** 
 		*	Indicates if the *Comparator* is equal to another Comparator
 		*/

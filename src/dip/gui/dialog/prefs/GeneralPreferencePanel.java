@@ -63,6 +63,7 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.Map.Entry;
 
 /**
 *	General preferences.
@@ -102,7 +103,7 @@ public class GeneralPreferencePanel extends PreferencePanel
 	private static final int NUM_RECENT_FILES = 5;
 	
 	// LRU cache of files
-	private static LRUCache fileCache = null;
+	private static LRUCache<File> fileCache = null;
 	private static Collator collator = null;
 	
 	// UI Elements
@@ -441,14 +442,14 @@ public class GeneralPreferencePanel extends PreferencePanel
 			Preferences prefs = SharedPrefs.getUserNode();
 			
 			// get files
-			ArrayList al = new ArrayList(NUM_RECENT_FILES);
+			final ArrayList<File> al = new ArrayList<File>(NUM_RECENT_FILES);
 			for(int i=0; i<NUM_RECENT_FILES; i++)
 			{
 				String s = prefs.get(NODE_RECENT_FILE+String.valueOf(i), "");
 				if(s != null && s.length() > 0)
 				{
 					// do NOT add file if it doesn't exist.
-					File file = new File(s);
+					final File file = new File(s);
 					if(file.exists())
 					{
 						al.add( file );
@@ -457,11 +458,11 @@ public class GeneralPreferencePanel extends PreferencePanel
 			}
 			
 			// add to cache & create a String of just the name
-			fileCache = new LRUCache(NUM_RECENT_FILES);
+			fileCache = new LRUCache<File>(NUM_RECENT_FILES);
 			String[] s = new String[al.size()];
 			for(int i=0; i<al.size(); i++)
 			{
-				File file = (File) al.get(i);
+				final File file = al.get(i);
 				fileCache.put(file.getName(), file);
 				s[i] = file.getName();
 			}
@@ -484,7 +485,7 @@ public class GeneralPreferencePanel extends PreferencePanel
 	{
 		if(fileCache != null)
 		{
-			return (File) fileCache.get(name);
+			return fileCache.get(name);
 		}
 		return null;
 	}// getFileFromName()
@@ -496,19 +497,17 @@ public class GeneralPreferencePanel extends PreferencePanel
 		if(fileCache != null)
 		{
 			// load from cache; sort and check for file existence before returning
-			ArrayList names = new ArrayList(NUM_RECENT_FILES);
-			Iterator iter = fileCache.entrySet().iterator();
-			while(iter.hasNext())
-			{
-				Map.Entry mapEntry = (Map.Entry) iter.next();
-				File 	file = (File) mapEntry.getValue();
-				if(file.exists())
-				{
-					names.add( mapEntry.getKey() );
-				}
-			}
+			final ArrayList<String> names = new ArrayList<String>(NUM_RECENT_FILES);
+                        
+                        for(final Entry<String, File> entry: fileCache.entrySet()) {
+                            final File file = entry.getValue();
+                            if (file.exists()) {
+                                names.add(entry.getKey());
+                            }
+                        }
+                        
 			
-			String[] fileNames = (String[]) names.toArray(new String[names.size()]);
+			final String[] fileNames = names.toArray(new String[names.size()]);
 			Arrays.sort(fileNames, collator);
 			return fileNames;		
 		}

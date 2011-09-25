@@ -29,6 +29,7 @@ import dip.gui.ClientFrame;
 import cz.autel.dmi.HIGConstraints;
 import cz.autel.dmi.HIGLayout;
 
+import dip.order.ValidationOptions.Option;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -189,7 +190,7 @@ public class ValidationOptionsDialog extends HeaderDialog
 		// radio-button setup
 		String[] bText = dopts[currentIndex].getDisplayValues();
 		String[] bTips = dopts[currentIndex].getValueDescriptions();
-		Object[] oVals = dopts[currentIndex].getValues(); 	// possible values
+		final String[] oVals = dopts[currentIndex].getValues(); 	// possible values
 		
 		if(bTips.length != bText.length)
 		{
@@ -198,7 +199,7 @@ public class ValidationOptionsDialog extends HeaderDialog
 		}
 		
 		int nButtons = bText.length;
-		Object value = valOpts.getOption(dopts[currentIndex].getKey());	// currently selected value	
+		final Option value = valOpts.getOption(dopts[currentIndex].getKey());	// currently selected value	
 		
 		for(int i=0; i<radioButtons.length; i++)
 		{
@@ -234,7 +235,7 @@ public class ValidationOptionsDialog extends HeaderDialog
 			{
 				int listIdx = optionList.getSelectedIndex();
 				int idx = Integer.parseInt(e.getActionCommand());
-				valOpts.setOption(dopts[listIdx].getKey(), dopts[listIdx].getValues()[idx]);
+				valOpts.setOption(dopts[listIdx].getKey(), valOpts.getOption(idx));
 			}
 		}
 	}// nested class RBListener

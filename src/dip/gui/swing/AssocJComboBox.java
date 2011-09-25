@@ -260,7 +260,7 @@ public class AssocJComboBox extends JComboBox
 		/**
 		*	Collate internal display strings
 		*/
-		private static class AssocObjComparator implements Comparator
+		private static class AssocObjComparator implements Comparator<AssociatedObj>
 		{
 			private final Collator c;
 			
@@ -269,10 +269,10 @@ public class AssocJComboBox extends JComboBox
 				this.c = c;
 			}// AssocObjComparator()
 			
-			public int compare(Object o1, Object o2)
+			public int compare(final AssociatedObj o1, final AssociatedObj o2)
 			{
-				String display1 = ((AssociatedObj) o1).getDisplay();
-				String display2 = ((AssociatedObj) o2).getDisplay();
+				String display1 = o1.getDisplay();
+				String display2 = o2.getDisplay();
 				return c.compare(display1, display2);
 			}// compare()
 			

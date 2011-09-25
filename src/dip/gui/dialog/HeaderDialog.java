@@ -108,7 +108,7 @@ public class HeaderDialog extends XDialog
 	private JComponent		separator = null;
 	private Container		content = new JPanel();
 	private JPanel 			btnPanelHolder = null;	// holds btnPanel, and separator (if present)
-	private ArrayList		btnList = null;
+	private ArrayList<JButton>	btnList = null;
 	protected JEditorPane 	header = null;
 	
 	
@@ -124,7 +124,7 @@ public class HeaderDialog extends XDialog
 		btnPanel = new JPanel();
 		btnPanel.setLayout( new BoxLayout(btnPanel, BoxLayout.X_AXIS) );
 		btnPanel.setBorder(BorderFactory.createEmptyBorder(BTN_BAR_EDGE,BTN_BAR_EDGE,BTN_BAR_EDGE,BTN_BAR_EDGE));
-		btnList = new ArrayList();
+		btnList = new ArrayList<JButton>();
 		
 		// do layout
 		makeLayout();
@@ -164,7 +164,7 @@ public class HeaderDialog extends XDialog
 		
 		if(component instanceof JButton)
 		{
-			btnList.add(component);
+			btnList.add((JButton) component);
 			equalizeButtons();
 		}
 	}// addToButtonPanel()

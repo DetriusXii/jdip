@@ -44,7 +44,7 @@ import java.util.Iterator;
 *	(For example, "Phase.getSeasonType() == SeasonType.SPRING")
 *
 */
-public class Phase implements java.io.Serializable, Comparable
+public class Phase implements java.io.Serializable, Comparable<Phase>
 {
 	// internal constants: describes ordering of phases
 	// Setup is independent of this ordering.
@@ -161,9 +161,9 @@ public class Phase implements java.io.Serializable, Comparable
 	*	positive integer depending if the given Phase is less than, equal, or 
 	*	greater than (temporally) to this Phase.
 	*/
-	public int compareTo(Object obj)
+	public int compareTo(final Phase obj)
 	{
-		Phase phase = (Phase) obj;
+		Phase phase =  obj;
 		int result = 0;
 		
 		// year is dominant
@@ -287,12 +287,13 @@ public class Phase implements java.io.Serializable, Comparable
 			String lcIn = in.toLowerCase();
 			
 			// our token list (should be 3 or 4; whitespace/punctuation is ignored)
-			ArrayList tokList = new ArrayList(10);
+			final ArrayList<String> tokList = new ArrayList<String>(10);
 			
 			// get all tokens, ignoring ANY whitespace or punctuation; StringTokenizer is ideal for this
 			StringTokenizer st = new StringTokenizer(lcIn, " ,:;[](){}-_|/\\\"\'\t\n\r", false);
 			while(st.hasMoreTokens())
 			{
+                           
 				tokList.add( st.nextToken() );
 			}
 			
@@ -303,20 +304,16 @@ public class Phase implements java.io.Serializable, Comparable
 			}
 			
 			// parse until we run out of things to parse
-			Iterator iter = tokList.iterator();
-			while(iter.hasNext())
-			{
-				String tok = (String) iter.next();
-				
-				SeasonType tmpSeason = SeasonType.parse(tok);
-				seasonType = (tmpSeason == null) ? seasonType : tmpSeason;
-				
-				PhaseType tmpPhase = PhaseType.parse(tok);
-				phaseType = (tmpPhase == null) ? phaseType : tmpPhase;
-				
-				YearType tmpYear = YearType.parse(tok);
-				yearType = (tmpYear == null) ? yearType : tmpYear;
-			}
+                        for(final String token: tokList) {
+                            SeasonType tmpSeason = SeasonType.parse(token);
+                            seasonType = (tmpSeason == null) ? seasonType : tmpSeason;
+
+                            PhaseType tmpPhase = PhaseType.parse(token);
+                            phaseType = (tmpPhase == null) ? phaseType : tmpPhase;
+
+                            YearType tmpYear = YearType.parse(token);
+                            yearType = (tmpYear == null) ? yearType : tmpYear;
+                        }
 			
 			if(yearType == null || seasonType == null || phaseType == null)
 			{

@@ -37,6 +37,7 @@ import java.util.Iterator;
 
 import dip.order.Orderable;
 import dip.order.result.OrderResult;
+import dip.order.result.Result;
 
 /**
 *
@@ -64,15 +65,15 @@ import dip.order.result.OrderResult;
 public class TurnState implements Serializable
 {
 	// instance variables (we serialize all of this)
-	private Phase 		phase = null;				
-	private List     	resultList = null; 				// order results, post-adjudication
-	private Map			orderMap = null;				// Map of power=>orders
-	private boolean 	isSCOwnerChanged = false;		// 'true' if any supply centers changed ownership
-	private	Position	position = null;				// Position data (majority of game state)
-	private transient 	World world = null;				// makes it easier when we just pass a turnstate
-	private boolean 	isEnded = false;				// true if game over (won, draw, etc.)
-	private boolean 	isResolved = false;				// true if phase has been adjudicated
-	private transient 	HashMap resultMap = null;		// transient result map
+	private Phase phase = null;				
+	private List<Result> resultList = null; 				// order results, post-adjudication
+	private Map<Power, List<Orderable>> orderMap = null;				// Map of power=>orders
+	private boolean isSCOwnerChanged = false;		// 'true' if any supply centers changed ownership
+	private	Position position = null;				// Position data (majority of game state)
+	private transient World world = null;				// makes it easier when we just pass a turnstate
+	private boolean isEnded = false;				// true if game over (won, draw, etc.)
+	private boolean isResolved = false;				// true if phase has been adjudicated
+	private transient HashMap<Orderable, Boolean> resultMap = null;		// transient result map
 	
 	
 	/** Creates a TurnState object. */
@@ -90,8 +91,8 @@ public class TurnState implements Serializable
 		}
 		
 		this.phase = phase;
-		this.resultList = new ArrayList(80);
-		this.orderMap = new HashMap(29);
+		this.resultList = new ArrayList<Result>(80);
+		this.orderMap = new HashMap<Power, List<Orderable>>();
 	}// TurnState()
 	
 	/** 
@@ -153,14 +154,14 @@ public class TurnState implements Serializable
 	
 	
 	/** Returns the result list */
-	public List getResultList()
+	public List<Result> getResultList()
 	{
 		return resultList;
 	}// getResultList()
 	
 	
 	/** Sets the Result list, erasing any previously existing result list. */
-	public void setResultList(List list)
+	public void setResultList(final List<Result> list)
 	{
 		if(list == null)
 		{
@@ -199,22 +200,17 @@ public class TurnState implements Serializable
 	*	<p>
 	*	Manipulations to this list will not be reflected in the TurnState object.
 	*/
-	public List getAllOrders()
+	public List<Orderable> getAllOrders()
 	{
-		List list = new ArrayList(75);
+		final List<Orderable> list = new ArrayList<Orderable>();
 		
-		Iterator esIter = orderMap.entrySet().iterator();
-		while(esIter.hasNext())
-		{
-			Map.Entry mapEntry = (Map.Entry) esIter.next();
-			List orders = (List) mapEntry.getValue();
-			
-			Iterator ordIter = orders.iterator();
-			while(ordIter.hasNext())
-			{
-				list.add( ordIter.next() );
-			}
-		}
+                for(final Entry<Power, List<Orderable>> entry: orderMap.entrySet()) {
+                    final List<Orderable> orderableList = entry.getValue();
+                    for(final Orderable orderable: orderableList) {
+                        list.add(orderable);
+                    }
+                }
+                
 		
 		return list;
 	}// getOrderList()
@@ -235,17 +231,17 @@ public class TurnState implements Serializable
 	*	Note that modifications to the returned order List will be reflected
 	*	in the TurnState.
 	*/
-	public List getOrders(Power power)
+	public List<Orderable> getOrders(final Power power)
 	{
 		if(power == null)
 		{
 			throw new IllegalArgumentException("null power");
 		}
 		
-		List orderList = (List) orderMap.get(power);
+		List<Orderable> orderList = orderMap.get(power);
 		if(orderList == null)
 		{
-			orderList = new ArrayList(15);
+			orderList = new ArrayList<Orderable>();
 			orderMap.put(power, orderList);
 		}
 		
@@ -253,7 +249,7 @@ public class TurnState implements Serializable
 	}// getOrders()
 	
 	/** Sets the orders for the given Power, deleting any existing orders for the power */
-	public void setOrders(Power power, List list)
+	public void setOrders(final Power power, final List<Orderable> list)
 	{
 		if(power == null || list == null)
 		{
@@ -282,37 +278,31 @@ public class TurnState implements Serializable
 	*/
 	public boolean isOrderSuccessful(Orderable o)
 	{
-		if(!isResolved)
-		{
-			return true;
-		}
-		
-		if(resultMap == null)
-		{
-			resultMap = new HashMap(53);
-			Iterator iter = getResultList().iterator();
-			while(iter.hasNext())
-			{
-				Object obj = iter.next();
-				if(obj instanceof OrderResult)
-				{
-					OrderResult ordRes = (OrderResult) obj;
-					
-					// we only map SUCCESSFULL orders.
-					if(ordRes.getResultType() == OrderResult.ResultType.SUCCESS)
-					{
-						resultMap.put(ordRes.getOrder(), Boolean.TRUE);
-					}
-				}
-			}
-		}
-		
-		if(resultMap.get(o) == Boolean.TRUE)
-		{
-			return true;
-		}
-		
-		return false;
+            if(!isResolved)
+            {
+                    return true;
+            }
+
+            if(resultMap == null)
+            {
+                resultMap = new HashMap<Orderable, Boolean>();
+
+                for(final Result result: getResultList()) {
+                    if (result instanceof OrderResult) {
+                        final OrderResult orderResult = (OrderResult) result;
+                        if (orderResult.getResultType() == OrderResult.ResultType.SUCCESS) {
+                            resultMap.put(orderResult.getOrder(), Boolean.TRUE);
+                        }
+                    }
+                }    
+            }
+
+            if(resultMap.get(o) == Boolean.TRUE)
+            {
+                    return true;
+            }
+
+            return false;
 	}// isFailedOrder()
 	
 }// class TurnState

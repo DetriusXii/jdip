@@ -117,7 +117,7 @@ final class JudgeImportHistory
 		
 		// create a very strict validation object, loose seems to have some weird problems when importing.
 		valOpts = new ValidationOptions();
-		valOpts.setOption(ValidationOptions.KEY_GLOBAL_PARSING, ValidationOptions.VALUE_GLOBAL_PARSING_STRICT);
+		valOpts.setOption(ValidationOptions.KEY_GLOBAL_PARSING, ValidationOptions.OPTION_GLOBAL_PARSING_STRICT);
 		
 		processTurns();
 	}// JudgeImportHistory()
@@ -134,7 +134,7 @@ final class JudgeImportHistory
 		
 		// create a very strict validation object, loose seems to have some weird problems when importing.
 		valOpts = new ValidationOptions();
-		valOpts.setOption(ValidationOptions.KEY_GLOBAL_PARSING, ValidationOptions.VALUE_GLOBAL_PARSING_STRICT);
+		valOpts.setOption(ValidationOptions.KEY_GLOBAL_PARSING, ValidationOptions.OPTION_GLOBAL_PARSING_STRICT);
 		
 		processSingleTurn(turn);
 	}// JudgeImportHistory()
@@ -534,7 +534,8 @@ final class JudgeImportHistory
 					Log.println("JIH::procMove():OrderException! using loose validation....");
 					
 					//Try loosening the validation object
-					valOpts.setOption(ValidationOptions.KEY_GLOBAL_PARSING, ValidationOptions.VALUE_GLOBAL_PARSING_LOOSE);
+					
+                                        valOpts.setOption(ValidationOptions.KEY_GLOBAL_PARSING, ValidationOptions.OPTION_GLOBAL_PARSING_LOOSE);
 					
 					/* Try the order once more.
 					 * nJudge accepts illegal moves as valid as long as the syntax is valid.
@@ -561,7 +562,7 @@ final class JudgeImportHistory
 					}
 					
 					// Back to strict!
-					valOpts.setOption(ValidationOptions.KEY_GLOBAL_PARSING, ValidationOptions.VALUE_GLOBAL_PARSING_STRICT);					 
+					valOpts.setOption(ValidationOptions.KEY_GLOBAL_PARSING, ValidationOptions.OPTION_GLOBAL_PARSING_STRICT);					 
 				}
 			}
 			

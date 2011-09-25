@@ -65,9 +65,16 @@ public class World implements Serializable
 	
 	// instance variables
 	private SortedMap<Phase, TurnState> turnStates = null;			// turn data
-	private Map 					nonTurnData = null;			// non-turn data (misc data & per-player data)
-	private final dip.world.Map		map;						// the actual map (constant)
-	
+	private final Map<Power, Object> nonTurnData = new HashMap<Power, Object>(); // non-turn data (misc data & per-player data)
+	private final dip.world.Map map;					// the actual map (constant)
+	private VictoryConditions victoryConditions;
+        private Object globalState;
+        private GameMetadata gmd;
+        private final Map<Power, PlayerMetadata> playerMetadataMap = new HashMap<Power, PlayerMetadata>();
+        private UndoRedoManager urm;
+        private GameSetup gs;
+        private final PressStore ps = new DefaultPressStore();
+        private VariantInfo vi;
 	
 	/**
 	*	Reads a World object from a file.
@@ -155,7 +162,6 @@ public class World implements Serializable
 		this.map = map;
 		turnStates = 
                         Collections.<Phase, TurnState>synchronizedSortedMap(new TreeMap<Phase, TurnState>());	// synchronize on TreeMap
-		nonTurnData = new HashMap(17);
 	}// World()
 	
 	
@@ -188,26 +194,26 @@ public class World implements Serializable
 	/** Set the Global state object. This may be set to null. */
 	public void setGlobalState(Object state)
 	{
-		nonTurnData.put(KEY_GLOBAL_DATA, state);
+		this.globalState = state;
 	}// setGlobalState()
 	
 	/** Get the Global state object. This may return null. */
 	public Object getGlobalState()
 	{
-		return nonTurnData.get(KEY_GLOBAL_DATA);
+		return this.globalState;
 	}// getGlobalState()	
 	
 	
 	/** Set the Victory Conditions */
-	public void setVictoryConditions(VictoryConditions value)
+	public void setVictoryConditions(final VictoryConditions value)
 	{
-		nonTurnData.put(KEY_VICTORY_CONDITIONS, value);
+		this.victoryConditions = value;
 	}// setVictoryConditions()
 	
 	/** Get the Victory Conditions */
 	public VictoryConditions getVictoryConditions()
 	{
-		return (VictoryConditions) nonTurnData.get(KEY_VICTORY_CONDITIONS);
+		return this.victoryConditions;
 	}// getVictoryConditions()	
 	
 	
@@ -298,7 +304,7 @@ public class World implements Serializable
 	public List<TurnState> getAllTurnStates()
 	{
 		final Collection<TurnState> values = turnStates.values();
-		return new ArrayList(values);
+		return new ArrayList<TurnState>(values);
 	}// getAllTurnStates()
 	
 	
@@ -368,7 +374,7 @@ public class World implements Serializable
 	
 	
 	/** returns sorted (ascending) set of all Phases */
-	public Set getPhaseSet()
+	public Set<Phase> getPhaseSet()
 	{
 		return turnStates.keySet();
 	}// getPhaseSet()
@@ -382,13 +388,12 @@ public class World implements Serializable
 			throw new IllegalArgumentException("null metadata");
 		}
 		
-		nonTurnData.put(KEY_WORLD_METADATA, gmd);
+		this.gmd = gmd;
 	}// setGameMetadata()
 	
 	/** Gets the Game metadata. Never returns null. Does not return a copy. */
 	public GameMetadata getGameMetadata()
 	{
-		GameMetadata gmd = (GameMetadata) nonTurnData.get(KEY_WORLD_METADATA);
 		if(gmd == null)
 		{
 			gmd = new GameMetadata();
@@ -405,7 +410,7 @@ public class World implements Serializable
 		{
 			throw new IllegalArgumentException("null power or metadata");
 		}
-		nonTurnData.put(power, pmd);
+		playerMetadataMap.put(power, pmd);
 	}// setPlayerMetadata()
 	
 	/** Gets the metadata for a power. Never returns null. Does not return a copy. */
@@ -416,7 +421,7 @@ public class World implements Serializable
 			throw new IllegalArgumentException("null power");
 		}
 		
-		PlayerMetadata pmd = (PlayerMetadata) nonTurnData.get(power);
+		PlayerMetadata pmd = playerMetadataMap.get(power);
 		if(pmd == null)
 		{
 			pmd = new PlayerMetadata();
@@ -429,14 +434,14 @@ public class World implements Serializable
 	/** Sets the UndoRedo manager to be saved. This may be set to null. */
 	public void setUndoRedoManager(UndoRedoManager urm)
 	{
-		nonTurnData.put(KEY_UNDOREDOMANAGER, urm);
+		this.urm = urm;
 	}// setGlobalState()
 	
 	
 	/** Gets the UndoRedo manager that was saved. Null if none was saved. */
 	public UndoRedoManager getUndoRedoManager()
 	{
-		return (UndoRedoManager) nonTurnData.get(KEY_UNDOREDOMANAGER);
+		return this.urm;
 	}// getUndoRedoManager()
 	
 	
@@ -444,27 +449,23 @@ public class World implements Serializable
 	public void setGameSetup(GameSetup gs)
 	{
 		if(gs == null) { throw new IllegalArgumentException(); }
-		nonTurnData.put(KEY_GAME_SETUP, gs);
+		this.gs = gs;
 	}// setGameSetup()
 	
 	
 	/** Returns the GameSetup object */
 	public GameSetup getGameSetup()
 	{
-		return (GameSetup) nonTurnData.get(KEY_GAME_SETUP);
+		return this.gs;
 	}// getGameSetup()
 	
 	
 	/** Get the PressStore object, which stores and retreives Press messages. */
 	public synchronized PressStore getPressStore()
 	{
-		// create on demand
-		if(nonTurnData.get(KEY_PRESS_STORE) == null)
-		{
-			nonTurnData.put(KEY_PRESS_STORE, new DefaultPressStore());
-		}
 		
-		return (PressStore) nonTurnData.get(KEY_PRESS_STORE);
+		
+		return this.ps;
 	}// getPressStore()
 	
 	
@@ -472,12 +473,10 @@ public class World implements Serializable
 	/** Get the Variant Info object. This returns a Reference to the Variant information. */
 	public synchronized VariantInfo getVariantInfo()
 	{
-		VariantInfo vi = (VariantInfo) nonTurnData.get(KEY_VARIANT_INFO);
 		
 		if(vi == null)
 		{
 			vi = new VariantInfo();
-			nonTurnData.put(KEY_VARIANT_INFO, vi);
 		}
 		
 		return vi; 
@@ -486,7 +485,7 @@ public class World implements Serializable
 	/** Set the Variant Info object. */
 	public synchronized void setVariantInfo(VariantInfo vi)
 	{
-		nonTurnData.put(KEY_VARIANT_INFO, vi);
+		this.vi = vi;
 	}// getVariantInfo()
 	
 	

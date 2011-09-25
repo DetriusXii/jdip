@@ -760,11 +760,11 @@ public class ErrorDialog extends TextViewer
 	*/
 	public static class BugReportInfo
 	{
-		private final List list;
+		private final List<String> list;
 		
 		public BugReportInfo()
 		{
-			list = new LinkedList();
+			list = new LinkedList<String>();
 		}// BugInfo()
 		
 		/**

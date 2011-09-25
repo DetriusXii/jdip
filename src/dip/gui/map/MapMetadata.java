@@ -169,8 +169,10 @@ public class MapMetadata
 	
 	
 	// instance variables
-	private Map infoMap;				// placement info
-	private HashMap displayProps;		// display info
+	private Map<Province, InfoEntry> infoMap;				// placement info
+	private Map<String, Object> displayProps;		// display info
+        private Map<String, SymbolSize> symbolSizeMap;
+        private Map<Power, String> powerColorMap;
 	private final MapPanel mp;
 	private Point2D.Float dislodgedUnitOffset = null;
 	private boolean supressPlacementErrors = false;
@@ -202,8 +204,10 @@ public class MapMetadata
 		this.mp = mp;
 		this.sp = sp;
 		this.supressPlacementErrors = supressPlacementErrors;
-		infoMap = new HashMap(113);
-		displayProps = new HashMap(47);
+		infoMap = new HashMap<Province, InfoEntry>(113);
+		displayProps = new HashMap<String, Object>(47);
+                symbolSizeMap = new HashMap<String, SymbolSize>();
+                powerColorMap = new HashMap<Power, String>();
 		
 		Element root = mp.getSVGDocument().getRootElement();
 		parseDisplayMetadata(root);
@@ -224,7 +228,7 @@ public class MapMetadata
 	/** Get an InfoEntry */
 	public InfoEntry getInfoEntry(Province key)
 	{
-		return (InfoEntry) infoMap.get(key);
+		return infoMap.get(key);
 	}// getInfoEntry()
 	
 	/** 
@@ -263,8 +267,8 @@ public class MapMetadata
 		private final Point2D.Float unit;
 		private final Point2D.Float dislodgedUnit;
 		private final Point2D.Float sc;
-		private Map unitCoasts;
-		private Map dislodgedUnitCoasts;
+		private Map<Coast, Point2D.Float> unitCoasts;
+		private Map<Coast, Point2D.Float> dislodgedUnitCoasts;
 		
 		/** Create an InfoEntry object; if directional coasts, use setCoastMapings as well. */
 		public InfoEntry(Point2D.Float unit, Point2D.Float dislodgedUnit, 
@@ -283,7 +287,8 @@ public class MapMetadata
 		
 		
 		/** Sets coast data maps for multi-coastal provinces; if not set, default placement data is used. */
-		public void setCoastMappings(Map unitCoasts, Map dislodgedUnitCoasts)
+		public void setCoastMappings(final Map<Coast, Point2D.Float> unitCoasts, 
+                        final Map<Coast, Point2D.Float> dislodgedUnitCoasts)
 		{
 			this.unitCoasts = unitCoasts;
 			this.dislodgedUnitCoasts = dislodgedUnitCoasts;	
@@ -300,12 +305,12 @@ public class MapMetadata
 			
 			if(unitCoasts == null)
 			{
-				unitCoasts = new HashMap(3);
+				unitCoasts = new HashMap<Coast, Point2D.Float>(3);
 			}
 			
 			if(dislodgedUnitCoasts == null)
 			{
-				dislodgedUnitCoasts = new HashMap(3);
+				dislodgedUnitCoasts = new HashMap<Coast, Point2D.Float>(3);
 			}
 			
 			unitCoasts.put(coast, unitPt);
@@ -357,7 +362,7 @@ public class MapMetadata
 		StringBuffer sbKey = new StringBuffer(64);
 		sbKey.append( EL_SYMBOLSIZE );
 		sbKey.append( symbolName );
-		return (SymbolSize) displayProps.get(sbKey.toString());
+		return symbolSizeMap.get(sbKey.toString());
 	}// getSymbolSize()
 	
 	
@@ -365,12 +370,12 @@ public class MapMetadata
 	/** Gets a float metadata value */
 	public float getDisplayParamFloat(String key, float defaultValue)
 	{
-		String value = (String) displayProps.get(key);
-		if(value != null)
+		final Object value = displayProps.get(key);
+		if(value != null && value instanceof String)
 		{
 			try
 			{
-				return Float.parseFloat(value.trim());
+				return Float.parseFloat(((String) value).trim());
 			}
 			catch(NumberFormatException e)
 			{
@@ -383,12 +388,12 @@ public class MapMetadata
 	/** Gets an int metadata value */
 	public int getDisplayParamInt(String key, int defaultValue)
 	{
-		String value = (String) displayProps.get(key);
-		if(value != null)
+		final Object value = displayProps.get(key);
+		if(value != null && value instanceof String)
 		{
 			try
 			{
-				return Integer.parseInt(value.trim());
+				return Integer.parseInt(((String) value).trim());
 			}
 			catch(NumberFormatException e)
 			{
@@ -402,15 +407,15 @@ public class MapMetadata
 	/** Gets a boolean display metadata value */
 	public boolean getDisplayParamBoolean(String key, boolean defaultValue)
 	{
-		String value = (String) displayProps.get(key);
-		if(value != null)
+		final Object value = displayProps.get(key);
+		if(value != null && value instanceof String)
 		{
-			value = value.trim();
-			if("false".equalsIgnoreCase(value))
+			final String castValue = ((String) value).trim();
+			if("false".equalsIgnoreCase(castValue))
 			{
 				return false;
 			}
-			else if("true".equalsIgnoreCase(value))
+			else if("true".equalsIgnoreCase(castValue))
 			{
 				return true;
 			}
@@ -430,7 +435,7 @@ public class MapMetadata
 	*/
 	public String getOrderParamString(String orderElement, String attribute)
 	{
-		return (String) getOrderParam(orderElement, attribute);
+		return getOrderParam(orderElement, attribute);
 	}// getOrderParamString()
 	
 	/**
@@ -803,7 +808,7 @@ public class MapMetadata
 			{
 				el = (Element) nl.item(i);
 				
-				Power power = map.getPower( el.getAttribute(ATT_POWER).trim() );
+				final Power power = map.getPower( el.getAttribute(ATT_POWER).trim() );
 				if(power != null)
 				{
 					String color = el.getAttribute(ATT_COLOR).trim();
@@ -812,18 +817,17 @@ public class MapMetadata
 						throw new MapException(EL_POWERCOLOR+" color \""+el.getAttribute(ATT_COLOR)+"\" not specified.");
 					}
 				
-					displayProps.put(power, color);
+					powerColorMap.put(power, color);
 				}
 			}
 		}
 		
 		// verify all powers have a color
-		Power[] powers = map.getPowers();
-		for(int i=0; i<powers.length; i++)
+		for(final Power power: map.getPowers())
 		{
-			if(displayProps.get(powers[i]) == null)
+			if(powerColorMap.get(power) == null)
 			{
-				throw new MapException(EL_POWERCOLORS+": no color defined for power "+powers[i]);
+				throw new MapException(EL_POWERCOLORS+": no color defined for power "+power);
 			}
 		}
 		
@@ -841,7 +845,7 @@ public class MapMetadata
 	}// checkElement()
 	
 	/** Helper method: set an order parameter */
-	private void putOrderParam(String el, String att, Object value)
+	private void putOrderParam(String el, String att, final Object value)
 	throws MapException
 	{
 		if(el == null || att == null)
@@ -862,7 +866,7 @@ public class MapMetadata
 	
 	
 	/** Helper method: set an order parameter, but if it doesn't exist, don't complain. */
-	private void putOptionalOrderParam(String el, String att, Object value)
+	private void putOptionalOrderParam(String el, String att, final Object value)
 	throws MapException
 	{
 		if(el == null || att == null)
@@ -903,7 +907,7 @@ public class MapMetadata
 		sbKey.append( EL_SYMBOLSIZE );
 		sbKey.append( name );
 		
-		displayProps.put(sbKey.toString(), 
+		symbolSizeMap.put(sbKey.toString(), 
 			new SymbolSize(w,h, symbol.getScale(), el));
 	}// parseAndAddSymbolSize()
 	

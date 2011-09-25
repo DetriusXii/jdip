@@ -56,7 +56,7 @@ public class VictoryConditions implements java.io.Serializable
 	protected final int initialYear;			// starting game year
 	
 	// transient variables
-	protected transient List evalResults = null;
+	protected transient List<Result> evalResults = null;
 	
 	/** VictoryConditions constructor */
 	public VictoryConditions(int numSCForVictory, int maxYearsNoSCChange, int maxGameTimeYears,
@@ -133,7 +133,7 @@ public class VictoryConditions implements java.io.Serializable
 		
 		if(evalResults == null)
 		{
-			evalResults = new ArrayList(5);
+			evalResults = new ArrayList<Result>(5);
 		}
 		else
 		{

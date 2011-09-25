@@ -426,7 +426,7 @@ public class StdAdjudicator implements Adjudicator
 		
 		// step 3: perform a complete validation of all orders
 		ValidationOptions valOpts = new ValidationOptions();
-		valOpts.setOption(ValidationOptions.KEY_GLOBAL_PARSING, ValidationOptions.VALUE_GLOBAL_PARSING_STRICT);
+		valOpts.setOption(ValidationOptions.KEY_GLOBAL_PARSING, ValidationOptions.OPTION_GLOBAL_PARSING_STRICT);
 		
 		for(int osIdx=0; osIdx<orderStates.length; osIdx++)
 		{
@@ -1219,7 +1219,7 @@ public class StdAdjudicator implements Adjudicator
 		// step 3: perform a complete validation of all orders
 		// use the most strict validation options
 		ValidationOptions valOpts = new ValidationOptions();
-		valOpts.setOption(ValidationOptions.KEY_GLOBAL_PARSING, ValidationOptions.VALUE_GLOBAL_PARSING_STRICT);
+		valOpts.setOption(ValidationOptions.KEY_GLOBAL_PARSING, ValidationOptions.OPTION_GLOBAL_PARSING_STRICT);
 		
 		for(int osIdx=0; osIdx<orderStates.length; osIdx++)
 		{
@@ -1419,7 +1419,7 @@ public class StdAdjudicator implements Adjudicator
 		//
 		// use the most strict validation options
 		ValidationOptions valOpts = new ValidationOptions();
-		valOpts.setOption(ValidationOptions.KEY_GLOBAL_PARSING, ValidationOptions.VALUE_GLOBAL_PARSING_STRICT);
+		valOpts.setOption(ValidationOptions.KEY_GLOBAL_PARSING, ValidationOptions.OPTION_GLOBAL_PARSING_STRICT);
 		
 		ArrayList osList = new ArrayList(32);
 		

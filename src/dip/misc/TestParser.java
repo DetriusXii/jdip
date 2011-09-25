@@ -191,7 +191,8 @@ public class TestParser
 		
 		// set the validation options; lenient -- we only care about syntax!
 		valOpts = new ValidationOptions();
-		valOpts.setOption(ValidationOptions.KEY_GLOBAL_PARSING, ValidationOptions.VALUE_GLOBAL_PARSING_LOOSE);
+               
+		valOpts.setOption(ValidationOptions.KEY_GLOBAL_PARSING, ValidationOptions.OPTION_GLOBAL_PARSING_LOOSE);
 		
 		Iterator iter = cases.iterator();
 		while(iter.hasNext())
