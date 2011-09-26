@@ -27,6 +27,7 @@ import dip.world.TurnState;
 import dip.gui.ClientFrame;
 import dip.misc.Utils;
 
+import dip.order.result.Result;
 import java.util.List;
 import java.util.LinkedList;
 import javax.swing.undo.*;
@@ -46,7 +47,7 @@ public class UndoResolve extends XAbstractUndoableEdit
 	private final static String PRESENTATION_NAME_PREFIX = "Undo.resolve";
 	private TurnState resolvedTS;
 	private TurnState nextTS;
-	private List resolvedTSResults;
+	private List<Result> resolvedTSResults;
 	
 	
 	/**  Create an UndoResolve object. */
@@ -117,7 +118,7 @@ public class UndoResolve extends XAbstractUndoableEdit
 			//
 			// clear resolved results 
 			// set as unresolved
-			resolvedTS.setResultList(new LinkedList());
+			resolvedTS.setResultList(new LinkedList<Result>());
 			resolvedTS.setResolved(false);
 			
 			// nextTS:

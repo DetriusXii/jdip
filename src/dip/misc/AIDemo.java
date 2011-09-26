@@ -159,10 +159,10 @@ public class AIDemo
 		System.out.println("  prov full name: "+prov.getFullName());
 		System.out.println("  prov abbreviation: "+prov.getShortName());
 		System.out.println("  all TOUCHING provinces:");
-		Location[] touchLocs = prov.getAdjacentLocations(Coast.TOUCHING);
-		for(int i=0; i<touchLocs.length; i++)
+		final List<Location> touchLocs = prov.getAdjacentLocations(Coast.TOUCHING);
+		for(final Location location: touchLocs)
 		{
-			System.out.println("    "+touchLocs[i].getProvince());
+			System.out.println("    "+location.getProvince());
 		}
 		
 		
@@ -176,10 +176,10 @@ public class AIDemo
 		System.out.println("  same province?: "+loc1.isProvinceEqual(loc2));
 		System.out.println("  adjacent? "+loc1.isAdjacent(loc2));
 		System.out.println("  adjacent Locations to "+loc1.toString()+":");
-		Location[] adjLocs = loc1.getProvince().getAdjacentLocations(loc1.getCoast());
-		for(int i=0; i<adjLocs.length; i++)
+		final List<Location> adjLocs = loc1.getProvince().getAdjacentLocations(loc1.getCoast());
+		for(final Location location: adjLocs)
 		{
-			System.out.println("    "+adjLocs[i]);
+			System.out.println("    "+location);
 		}
 		
 		// a test: the province "spa" and the location "spa/sc" as well as 

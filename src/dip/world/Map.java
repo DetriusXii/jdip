@@ -449,12 +449,12 @@ public class Map implements Serializable
 	*	<p>
 	*	
 	*/
-	public Collection getProvincesMatchingClosest(String input)
+	public Collection<Province> getProvincesMatchingClosest(String input)
 	{
 		// return empty list
 		if(input == null || input.length() == 0)
 		{
-			return new ArrayList(1);
+			return new ArrayList<Province>(1);
 		}
 		
 		// first, try exact match.
@@ -474,12 +474,9 @@ public class Map implements Serializable
 		final Set<Province> ties = new HashSet<Province>();
 		
 		// if 2 or less, do no processing
-		if(input.length() <= 2)
-		{
+		if(input.length() <= 2) {
 			return new ArrayList<Province>(1);
-		}
-		else if(input.length() == 3)
-		{
+		} else if(input.length() == 3) {
 			// if we are only 3 chars, do a partial-first match
 			// against provinces and return that tie list (or,
 			// if no tie, return the province)
@@ -494,25 +491,19 @@ public class Map implements Serializable
 					ties.add(getProvince(name));
 				}
 			}
-		}
-		else
-		{
+		} else {
 			// compute Levenshteins on the match
 			// if there are ties, keep them.. for now
 			int bestDist = Integer.MAX_VALUE;
-			for(final String name: names)
-			{
+			for(final String name: names) {
 				// check closeness. Smaller is better.
 				final int distance = Distance.getLD(input, name);
 				
-				if(distance < bestDist)
-				{
+				if(distance < bestDist) {
 					ties.clear();
 					ties.add( getProvince(name) );
 					bestDist = distance;
-				}
-				else if(distance == bestDist)
-				{
+				} else if(distance == bestDist) {
 					ties.add( getProvince(name) );
 				}	
 			}	

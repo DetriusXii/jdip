@@ -197,19 +197,15 @@ public class ResultWriter
 	private String getPerPowerResults()
 	{
 		// Seperate results into OrderResults and 'regular' Results
-		final List<Result> orderResults = new ArrayList<Result>(128);
+		final List<OrderResult> orderResults = new ArrayList<OrderResult>(128);
 		final List<Result> otherResults = new ArrayList<Result>(64);
 		
 		final List<Result> resultList = turnState.getResultList();
 		for(final Result r: resultList) {
-			if(r.getPower() != null)
-			{
-				if(r instanceof OrderResult)
-				{
-					orderResults.add(r);
-				}
-				else
-				{
+			if(r.getPower() != null) {
+				if(r instanceof OrderResult) {
+					orderResults.add((OrderResult) r);
+				} else {
 					otherResults.add(r);
 				}
 			}

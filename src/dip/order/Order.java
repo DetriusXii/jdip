@@ -206,26 +206,20 @@ public abstract class Order extends Object implements Orderable, java.io.Seriali
 	*/
 	protected final void addSupportsOfAndMovesToSource(Adjudicator adjudicator)
 	{
-		OrderState thisOS = adjudicator.findOrderStateBySrc(getSource());
-		ArrayList depMTS = null;
-		ArrayList depSup = null;
+		final OrderState thisOS = adjudicator.findOrderStateBySrc(getSource());
+		final List<OrderState> depMTS = new ArrayList<OrderState>();
+		final List<OrderState> depSup = new ArrayList<OrderState>();
 		
-		OrderState[] orderStates = adjudicator.getOrderStates();
-		for(int osIdx=0; osIdx<orderStates.length; osIdx++)
-		{
-			OrderState dependentOS = orderStates[osIdx];
+		final OrderState[] orderStates = adjudicator.getOrderStates();
+		for(final OrderState dependentOS: orderStates) {
 			Order order = dependentOS.getOrder();
 			
 			if(order != this) // always exclude self
 			{
 				if( order instanceof Move
-					&& ((Move) order).getDest().isProvinceEqual(this.getSource()) )
-				{
-					if(depMTS == null) { depMTS = new ArrayList(5); }
+					&& ((Move) order).getDest().isProvinceEqual(this.getSource()) ) {
 					depMTS.add(dependentOS);
-				}
-				else if(order instanceof Support)
-				{
+				} else if(order instanceof Support) {
 					Support support = (Support) order;
 					
 					// if we don't check for hold-type support (Support.isSupportingHold() == true)
@@ -233,7 +227,6 @@ public abstract class Order extends Object implements Orderable, java.io.Seriali
 					if(	support.isSupportingHold()
 						&& support.getSupportedSrc().isProvinceEqual(this.getSource()) )
 					{
-						if(depSup == null) { depSup = new ArrayList(5); }
 						depSup.add(dependentOS);
 					}
 				}
@@ -241,13 +234,11 @@ public abstract class Order extends Object implements Orderable, java.io.Seriali
 		}
 		
 		// set supports / endangering moves in OrderState
-		if(depMTS != null)
-		{
+		if(!depMTS.isEmpty()) {
 			thisOS.setDependentMovesToSource(depMTS);
 		}
 		
-		if(depSup != null)
-		{
+		if(!depSup.isEmpty()) {
 			thisOS.setDependentSupports(depSup);
 		}
 	}// addSupportsOfAndMovesToSource()		

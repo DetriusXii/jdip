@@ -24,6 +24,8 @@ package dip.world;
 
 import dip.order.OrderException;
 import dip.misc.Utils;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -43,7 +45,7 @@ import dip.misc.Utils;
 public class Location implements Cloneable
 {
 	/** Constant defining an empty array of Location() objects */
-	public static final Location[] EMPTY = new Location[0];
+	public static final List<Location> EMPTY = new ArrayList<Location>(0);
 	
 	// il8n text strings
 	private static final String LOC_VWM_MULTICOAST = "LOC_VWM_MULTICOAST"; 
@@ -309,13 +311,11 @@ public class Location implements Cloneable
 			// then we should throw an exception
 			// (this prevents iterating completely thru all coasts each time)
 			// 
-			Location[] locs = from.getProvince().getAdjacentLocations(from.getCoast());
-			for(int i=0; i<locs.length; i++)
-			{
-				if(locs[i].getProvince() == newLoc.getProvince())
-				{
+			final List<Location> locs = from.getProvince().getAdjacentLocations(from.getCoast());
+			for(final Location location: locs) {
+				if(location.getProvince() == newLoc.getProvince()) {
 					adjCoasts++;
-					toCoast = locs[i].getCoast();
+					toCoast = location.getCoast();
 				}
 			}
 			

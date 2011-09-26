@@ -70,8 +70,8 @@ public final class splash
 		// hence the loose coupling.
 		try
 		{
-			Class cf = Class.forName("dip.gui.ClientFrame");
-			Method m = cf.getMethod("main", new Class[] {String[].class});
+                        Class<?> cf = Class.forName("dip.gui.ClientFrame");
+			final Method m = cf.getMethod("main", new Class[] {String[].class});
 			Object[] params = new Object[] { args };
 			m.invoke(null, params);
 			//time = (System.currentTimeMillis() - time);

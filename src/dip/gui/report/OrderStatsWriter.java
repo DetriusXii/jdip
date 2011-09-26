@@ -41,6 +41,7 @@ import dip.order.*;
 import dip.order.result.OrderResult;
 import dip.order.OrderFormatOptions;
 
+import dip.order.result.Result;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -338,14 +339,12 @@ public class OrderStatsWriter
 		private void collectStats(TurnState ts)
 		{
 			// create order-result mapping
-			HashMap resultMap = new HashMap(53);
-			Iterator iter = ts.getResultList().iterator();
-			while(iter.hasNext())
-			{
-				Object obj = iter.next();
-				if(obj instanceof OrderResult)
+			final HashMap<Orderable, Boolean> resultMap = new HashMap<Orderable, Boolean>(53);
+                        
+			for(final Result result: ts.getResultList()) {
+				if(result instanceof OrderResult)
 				{
-					OrderResult ordRes = (OrderResult) obj;
+					OrderResult ordRes = (OrderResult) result;
 					
 					// we only map SUCCESSFULL orders.
 					if(ordRes.getResultType() == OrderResult.ResultType.SUCCESS)
@@ -362,36 +361,26 @@ public class OrderStatsWriter
 				
 				s.isEliminated = ts.getPosition().isEliminated(allPowers[i]);
 				
-				iter = ts.getOrders(allPowers[i]).iterator();
-				while(iter.hasNext())
-				{
+                                for(final Orderable orderable: ts.getOrders(allPowers[i])) {
 					s.nOrders++;
 					
-					final Orderable order = (Orderable) iter.next();
-					final boolean success = (resultMap.get(order) == Boolean.TRUE);
+					final boolean success = (resultMap.get(orderable) == Boolean.TRUE);
 					
-					if(order instanceof Move)
-					{
+					if(orderable instanceof Move) {
 						s.nMoves++;
 						if(success) { s.nMovesOK++; }
-					}
-					else if(order instanceof Hold)
-					{
+					} else if(orderable instanceof Hold) {
 						s.nHolds++;
 						if(success) { s.nHoldsOK++; }
-					}
-					else if(order instanceof Convoy)
-					{
+					} else if(orderable instanceof Convoy) {
 						s.nConvoys++;
 						if(success) { s.nConvoysOK++; }
-					}
-					else if(order instanceof Support)
-					{
+					} else if(orderable instanceof Support) {
 						s.nSupports++;
 						if(success) { s.nSupportsOK++; }
 						
 						// self support?
-						final Support sup = (Support) order;
+						final Support sup = (Support) orderable;
 						final Unit supUnit = ts.getPosition().getUnit(sup.getSupportedSrc().getProvince());
 						if(supUnit != null)
 						{

@@ -319,18 +319,18 @@ public class Adjustment
 	*/
 	public static class AdjustmentInfoMap
 	{
-		private HashMap map;
+		private java.util.Map<Power, AdjustmentInfo> map;
 		
 		/** Create an AdjustmentInfoMap */
 		public AdjustmentInfoMap()
 		{
-			map = new HashMap(13);
+			map = new HashMap<Power, AdjustmentInfo>(13);
 		}// AdjustmentInfoMap()
 		
 		/** Create an AdjustmentInfoMap */
 		public AdjustmentInfoMap(int size)
 		{
-			map = new HashMap(size);
+			map = new HashMap<Power, AdjustmentInfo>(size);
 		}// AdjustmentInfoMap()
 		
 		/** Set AdjustmentInfo for a power. */
@@ -342,7 +342,7 @@ public class Adjustment
 		/** Gets AdjustmentInfo for a power. */
 		public AdjustmentInfo get(Power power)
 		{
-			return (AdjustmentInfo) map.get(power);
+			return map.get(power);
 		}// get()
 		
 		/** Clears all information from this object. */

@@ -536,23 +536,20 @@ public class StateWriter
 	*/
 	private java.util.Map getUnitsByPower()
 	{
-		java.util.Map pmap = new HashMap();
-		for(int i=0; i<allPowers.length; i++)
+		java.util.Map<Power, List<String>> pmap = new HashMap<Power, List<String>>();
+		for(final Power power: allPowers)
 		{
-			pmap.put(allPowers[i], new LinkedList());
+			pmap.put(power, new LinkedList<String>());
 		}
 		
 		Position position = turnState.getPosition();
 		Province[] provinces = position.getProvinces();
-		for(int i=0; i<provinces.length; i++)
-		{
-			Province province = provinces[i];
-			
+		for(final Province province: provinces) {
 			if(position.hasUnit(province))
 			{
-				Unit unit = position.getUnit(province);
-				List uList = (List) pmap.get( unit.getPower() );
-				StringBuffer sb = new StringBuffer(16);
+				final Unit unit = position.getUnit(province);
+				final List<String> uList = pmap.get( unit.getPower() );
+				final StringBuffer sb = new StringBuffer(16);
 				sb.append( unit.getType().getShortName() );
 				sb.append(' ');
 				sb.append( province.getShortName() );
@@ -563,7 +560,7 @@ public class StateWriter
 			{
 				// dislodged units are underlined
 				Unit unit = position.getDislodgedUnit(province);
-				List uList = (List) pmap.get( unit.getPower() );
+				final List<String> uList = pmap.get( unit.getPower() );
 				StringBuffer sb = new StringBuffer(16);
 				sb.append("<u>");
 				sb.append( unit.getType().getShortName() );
@@ -576,9 +573,8 @@ public class StateWriter
 		}
 		
 		// sort the lists.
-		for(int i=0; i<allPowers.length; i++)
-		{
-			List list = (List) pmap.get( allPowers[i] );
+		for(final Power power: allPowers) {
+			final List<String> list = pmap.get( power );
 			Collections.sort(list);
 		}
 		

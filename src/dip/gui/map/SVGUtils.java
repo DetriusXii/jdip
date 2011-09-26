@@ -273,7 +273,7 @@ public class SVGUtils
 	*	</ul>
 	*
 	*/
-	public static Map<Object, Node> tagFinderSVG(List lookList, Node root)
+	public static Map<Object, Node> tagFinderSVG(List<Object> lookList, Node root)
 	{
 		return tagFinderSVG(lookList, root, false);
 	}// tagFinderSVG	

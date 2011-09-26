@@ -30,6 +30,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 import java.util.Arrays;
+import java.util.List;
 /**
 *
 *	A Border limits movement or support between 2 provinces.
@@ -209,26 +210,18 @@ public class Border implements Serializable
 	throws InvalidBorderException
 	{
 		StringTokenizer st = new StringTokenizer(in, ", ");
-		ArrayList list = new ArrayList();
+		final List<Phase.SeasonType> list = new ArrayList<Phase.SeasonType>();
 		while(st.hasMoreTokens())
 		{
 			String tok = st.nextToken().trim();
 			Phase.SeasonType season = Phase.SeasonType.parse(tok);
-			if(season == null)
-			{
+			if(season == null) {
 				throw new InvalidBorderException("Border "+id+": season \""+tok+"\" is not recognized."); 
 			}
 			list.add(season);
 		}
 		
-		if(list.isEmpty())
-		{
-			return null;
-		}
-		else
-		{
-			return (Phase.SeasonType[]) list.toArray(new Phase.SeasonType[list.size()]);
-		}
+                return list.isEmpty() ? null : list.toArray(new Phase.SeasonType[list.size()]);
 	}// parseProhibitedSeasons()
 	
 	/** Parses the prohibited PhaseTypes (uses Phase.PhaseType.parse()) */
@@ -236,7 +229,7 @@ public class Border implements Serializable
 	throws InvalidBorderException
 	{
 		StringTokenizer st = new StringTokenizer(in, ", ");
-		ArrayList list = new ArrayList();
+		final List<Phase.PhaseType> list = new ArrayList<Phase.PhaseType>();
 		while(st.hasMoreTokens())
 		{
 			String tok = st.nextToken().trim();
@@ -249,14 +242,7 @@ public class Border implements Serializable
 			list.add(phase);
 		}
 		
-		if(list.isEmpty())
-		{
-			return null;
-		}
-		else
-		{
-			return (Phase.PhaseType[]) list.toArray(new Phase.PhaseType[list.size()]);
-		}
+                return list.isEmpty() ? null : list.toArray(new Phase.PhaseType[list.size()]);
 	}// parseProhibitedPhases()
 	
 	
@@ -359,7 +345,7 @@ public class Border implements Serializable
 	private Unit.Type[] parseUnitTypes(String in)
 	throws InvalidBorderException
 	{
-		ArrayList list = new ArrayList(10);
+		final ArrayList<Unit.Type> list = new ArrayList<Unit.Type>(10);
 		StringTokenizer st = new StringTokenizer(in,", ");
 		while(st.hasMoreTokens())
 		{
@@ -378,7 +364,7 @@ public class Border implements Serializable
 		}
 		else
 		{
-			return (Unit.Type[]) list.toArray(new Unit.Type[list.size()]);
+			return list.toArray(new Unit.Type[list.size()]);
 		}
 	}// parseUnitTypes()
 	
@@ -412,7 +398,7 @@ public class Border implements Serializable
 			throw new InvalidBorderException(Utils.getLocalString("Border.error.internal", "parseClasses2Objs()", e.getMessage()));
 		}
 		
-		ArrayList list = new ArrayList(10);
+		final List<Class<?>> list = new ArrayList<Class<?>>(10);
 		StringTokenizer st = new StringTokenizer(in,", ");
 		while(st.hasMoreTokens())
 		{
@@ -436,7 +422,7 @@ public class Border implements Serializable
 			list.add(cls);
 		}
 		
-		return (Class[]) list.toArray(new Class[list.size()]);
+		return list.toArray(new Class[list.size()]);
 	}// parseClasses2Objs()
 	
 	

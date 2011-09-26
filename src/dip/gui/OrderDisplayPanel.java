@@ -23,6 +23,7 @@
 package dip.gui;
 
 import dip.order.*;
+import dip.process.Adjudicator;
 import dip.world.*;
 import dip.gui.undo.*;
 import dip.gui.order.GUIOrder;
@@ -37,6 +38,7 @@ import dip.order.result.OrderResult;
 
 import cz.autel.dmi.*;		// HIGLayout
 
+import dip.world.Unit.Type;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.border.*;
@@ -417,26 +419,21 @@ public class OrderDisplayPanel extends JPanel
 			throw new IllegalStateException("not in editable state");
 		}
 		
-		LinkedHashMap map = new LinkedHashMap(19);
-		ArrayList ordersAdded = new ArrayList(orders.length);
-		ArrayList ordersDeleted = new ArrayList(orders.length);
+		final java.util.Map<Orderable, OrderException> map = 
+                        new LinkedHashMap<Orderable, OrderException>(19);
+		final List<Orderable> ordersAdded = new ArrayList<Orderable>(orders.length);
+		final List<Orderable> ordersDeleted = new ArrayList<Orderable>(orders.length);
 		
-		for(int i=0; i<orders.length; i++)
+		for(final Orderable order: orders)
 		{
-			Orderable order = orders[i];
 			boolean failed = false;
 			
-			try
-			{
+			try {
 				order.validate(turnState, valOpts, world.getRuleOptions());
 				checkAdjustments(order.getPower());
-			}
-			catch(OrderWarning ow)
-			{
+			} catch(OrderWarning ow) {
 				map.put(order, ow);
-			}
-			catch(OrderException oe)
-			{
+			} catch(OrderException oe) {
 				map.put(order, oe);
 				failed = true;
 			}
@@ -463,11 +460,11 @@ public class OrderDisplayPanel extends JPanel
 			Orderable[] tmpDel = null;
 			if(ordersDeleted.size() > 0)
 			{
-				tmpDel = (Orderable[]) ordersDeleted.toArray(new Orderable[ordersAdded.size()]);
+				tmpDel = ordersDeleted.toArray(new Orderable[ordersAdded.size()]);
 				clientFrame.fireMultipleOrdersDeleted(tmpDel);
 			}
 			
-			Orderable[] tmpAdd = (Orderable[]) ordersAdded.toArray(new Orderable[ordersAdded.size()]);
+			Orderable[] tmpAdd = ordersAdded.toArray(new Orderable[ordersAdded.size()]);
 			clientFrame.fireMultipleOrdersCreated(tmpAdd);
 			
 			if(undoable)
@@ -539,21 +536,17 @@ public class OrderDisplayPanel extends JPanel
 	public synchronized boolean removeOrders(Orderable[] orders, boolean undoable)
 	{
 		int count = 0;
-		ArrayList deletedOrderList = new ArrayList(orders.length);
+		final List<Orderable> deletedOrderList = new ArrayList<Orderable>(orders.length);
 		
-		for(int i=0; i<orders.length; i++)
-		{
-			Orderable order = orders[i];
-			
-			if(isOrderable(order))
-			{
+		for(final Orderable order: orders) {
+			if(isOrderable(order)) {
 				assert(removeOrderFromTS(order));
 				deletedOrderList.add(order);
 				count++;
 			}
 		}
 			
-		Orderable[] deletedOrders = (Orderable[]) deletedOrderList.toArray(new Orderable[deletedOrderList.size()]);
+		Orderable[] deletedOrders = deletedOrderList.toArray(new Orderable[deletedOrderList.size()]);
 		
 		if(undoable)
 		{
@@ -592,19 +585,17 @@ public class OrderDisplayPanel extends JPanel
 		{
 			// clear the orders from the turnstate.
 			// keep cleared orders in a temporary arraylist
-			ArrayList deletedOrders = new ArrayList(100);
-			for(int i=0; i<orderablePowers.length; i++)
-			{
-				List orders = turnState.getOrders(orderablePowers[i]);
-				if(orders.size() > 0)
-				{
+			final ArrayList<Orderable> deletedOrders = new ArrayList<Orderable>(100);
+			for(int i=0; i<orderablePowers.length; i++) {
+				final List<Orderable> orders = turnState.getOrders(orderablePowers[i]);
+				if(orders.size() > 0) {
 					deletedOrders.addAll(orders);
 					orders.clear();
 				}
 			}
 			
 			// create a temporary order array
-			deletedOrderArray = (Orderable[]) deletedOrders.toArray(new Orderable[deletedOrders.size()]);
+			deletedOrderArray = deletedOrders.toArray(new Orderable[deletedOrders.size()]);
 		}
 		
 		
@@ -816,11 +807,11 @@ public class OrderDisplayPanel extends JPanel
 		
 		//synchronized(clientFrame.getLock())
 		{
-			List orders = turnState.getOrders(order.getPower());
-			Iterator iter = orders.iterator();
+			final List<Orderable> orders = turnState.getOrders(order.getPower());
+			Iterator<Orderable> iter = orders.iterator();
 			while(iter.hasNext())
 			{
-				Orderable listOrder = (Orderable) iter.next();
+				final Orderable listOrder = iter.next();
 				if( listOrder.getSource().isProvinceEqual(order.getSource()) )
 				{
 					replacedOrder = listOrder;
@@ -850,11 +841,11 @@ public class OrderDisplayPanel extends JPanel
 	*	for a unit (province) exist, only the first will be removed.
 	*	This returns <b>true</b> if the order was found and removed.
 	*/
-	private boolean removeOrderFromTS(Orderable order)
+	private boolean removeOrderFromTS(final Orderable order)
 	{      
 		//synchronized(clientFrame.getLock())
 		{
-			List orders = turnState.getOrders(order.getPower());
+			final List<Orderable> orders = turnState.getOrders(order.getPower());
 			return orders.remove(order);
 		}
 	}// removeOrderFromTS()
@@ -864,8 +855,7 @@ public class OrderDisplayPanel extends JPanel
 	*	If power is not in the list of Orderable powers, return false. 
 	*	Also return false if turnstate has been resolved.
 	*/
-	private boolean isOrderable(Orderable order)
-	{
+	private boolean isOrderable(Orderable order) {
 		// we are reviewing orders
 		if(turnState.isResolved())
 		{
@@ -873,10 +863,9 @@ public class OrderDisplayPanel extends JPanel
 		}
 		
 		
-		for(int i=0; i<orderablePowers.length; i++)
+		for(final Power power: orderablePowers)
 		{
-			if(orderablePowers[i] == order.getPower())
-			{
+			if(power == order.getPower()) {
 				return true;
 			}
 		}
@@ -1051,13 +1040,13 @@ public class OrderDisplayPanel extends JPanel
 	*/
 	private class OrderListModel extends AbstractListModel
 	{
-		private ArrayList list;
+		private ArrayList<DisplayOrder> list;
 		private DOComparator comparator;
 		
 		/** Create an OrderListModel object */
 		public OrderListModel()
 		{
-			list = new ArrayList(50);
+			list = new ArrayList<DisplayOrder>(50);
 			comparator = new DOSortProvince();	// default comparator 
 		}// OrderListModel()
 		
@@ -1068,7 +1057,7 @@ public class OrderDisplayPanel extends JPanel
 		}// getSize()
 		
 		/** Returns the object (DisplayOrder) at the given index. */
-		public Object getElementAt(int index)
+		public Orderable getElementAt(int index)
 		{
 			return list.get(index);
 		}// getElementAt()
@@ -1184,12 +1173,10 @@ public class OrderDisplayPanel extends JPanel
 			// no displayed-power checking is required here
 			synchronized(list)
 			{
-				Iterator iter = list.iterator();
-				while(iter.hasNext())
-				{
-					DisplayOrder displayOrder = (DisplayOrder) iter.next();
-					if(displayOrder.getOrder() == order)
-					{
+				Iterator<DisplayOrder> iter = list.iterator();
+				while(iter.hasNext()) {
+					final DisplayOrder displayOrder = iter.next();
+					if(displayOrder.getOrder() == order) {
 						iter.remove();
 					}
 				}
@@ -1205,16 +1192,13 @@ public class OrderDisplayPanel extends JPanel
 			// no displayed-power checking is required here
 			synchronized(list)
 			{
-				Iterator iter = list.iterator();
-				while(iter.hasNext())
-				{
-					DisplayOrder displayOrder = (DisplayOrder) iter.next();
+				final Iterator<DisplayOrder> iter = list.iterator();
+				while(iter.hasNext()) {
+					final DisplayOrder displayOrder = (DisplayOrder) iter.next();
 					final Orderable doOrder = displayOrder.getOrder();
 					
-					for(int i=0; i<orders.length; i++)
-					{
-						if(doOrder == orders[i])
-						{
+					for(int i=0; i<orders.length; i++) {
+						if(doOrder == orders[i]) {
 							iter.remove();
 						}
 					}
@@ -1225,34 +1209,28 @@ public class OrderDisplayPanel extends JPanel
 		}// removeDisplayOrders()
 		
 		/** Removes all DisplayOrders from the list */
-		public void removeAllOrders()
-		{
-			synchronized(list)
-			{
+		public void removeAllOrders() {
+			synchronized(list) {
 				list.clear();
 				sort();
 			}
 		}// removeAllDisplayOrders()
 		
 		/** Update displayed powers from TurnState*/
-		public void updateFromTurnState()
-		{
+		public void updateFromTurnState() {
 			// when the displayed powers change, we need to completely
 			// recreate the displayed power list from the turnstate, adding
 			// only the 'allowed' powers.
 			//
 			assert(turnState != null);
 			
-			synchronized(list)
-			{
+			synchronized(list) {
 				list.clear();
 				
 				Iterator iter = turnState.getAllOrders().iterator();
-				while(iter.hasNext())
-				{
+				while(iter.hasNext()) {
 					Orderable order = (Orderable) iter.next();
-					if(isDisplayable(order))
-					{
+					if(isDisplayable(order)) {
 						list.add(createDisplayOrder(order));
 					}
 				}
@@ -1415,7 +1393,7 @@ public class OrderDisplayPanel extends JPanel
 	*	<p>
 	*	The Orderable object of a DisplayOrder is immutable.
 	*/
-	private final class DisplayOrder
+	private final class DisplayOrder implements Orderable
 	{
 		// instance variables
 		private final Orderable order;
@@ -1474,11 +1452,76 @@ public class OrderDisplayPanel extends JPanel
 			
 			return sb.toString();
 		}// toString()
+
+        @Override
+        public Location getSource() {
+            return order.getSource();
+        }
+
+        @Override
+        public Type getSourceUnitType() {
+            return order.getSourceUnitType();
+        }
+
+        @Override
+        public Power getPower() {
+            return order.getPower();
+        }
+
+        @Override
+        public String getFullName() {
+            return order.getFullName();
+        }
+
+        @Override
+        public String getBriefName() {
+            return order.getFullName();
+        }
+
+        @Override
+        public String toBriefString() {
+            return order.toBriefString();
+        }
+
+        @Override
+        public String toFullString() {
+            return order.toFullString();
+        }
+
+        @Override
+        public String getDefaultFormat() {
+            return order.getDefaultFormat();
+        }
+
+        @Override
+        public String toFormattedString(OrderFormatOptions ofo) {
+            return order.toFormattedString(ofo);
+        }
+
+        @Override
+        public void validate(TurnState state, ValidationOptions valOpts, RuleOptions ruleOpts) throws OrderException {
+            order.validate(state, valOpts, ruleOpts);
+        }
+
+        @Override
+        public void verify(Adjudicator adjudicator) {
+            order.verify(adjudicator);
+        }
+
+        @Override
+        public void determineDependencies(Adjudicator adjudicator) {
+            order.determineDependencies(adjudicator);
+        }
+
+        @Override
+        public void evaluate(Adjudicator adjudicator) {
+            order.evaluate(adjudicator);
+        }
 	}// inner class DisplayOrder
 	
 	
 	/** DOComparator class offers highlight-marking support */
-	private abstract class DOComparator implements Comparator
+	private abstract class DOComparator implements Comparator<DisplayOrder>
 	{
 		private boolean isAscending = true;
 		
@@ -1492,9 +1535,9 @@ public class OrderDisplayPanel extends JPanel
 		*	The compare method. This essentially returns the result of
 		*	compareDisplayOrders() unless the sort is reversed.
 		*/
-		public final int compare(Object o1, Object o2)
+		public final int compare(final DisplayOrder o1, final DisplayOrder o2)
 		{
-			final int result = compareDisplayOrders((DisplayOrder) o1, (DisplayOrder) o2);
+			final int result = compareDisplayOrders(o1, o2);
 			return ((isAscending) ? result : -result);
 		}// compare()
 		

@@ -112,7 +112,7 @@ public class SCHistoryWriter
 		}
 		
 		// find all provinces w/supply centers
-		List scList = new ArrayList();
+		final List<Province> scList = new ArrayList<Province>();
 		final Province[] provs = w.getMap().getProvinces();
 		for(final Province prov: provs) {
 			if(prov.hasSupplyCenter()) {
@@ -231,18 +231,18 @@ public class SCHistoryWriter
 	{
 		// cols: # of appropriate turns + 1 (first column is the province name)
 		//
-		ArrayList turnList = new ArrayList(100);	// array of TurnStates
+		final ArrayList<TurnState> turnList = new ArrayList<TurnState>(100);	// array of TurnStates
 		
 		// add initial phase
 		turnList.add(world.getInitialTurnState());
-		
-		Iterator iter = world.getAllTurnStates().iterator();
+		                
+		final Iterator<TurnState> iter = world.getAllTurnStates().iterator();
 		while(iter.hasNext())
 		{
 			// we want the RETREAT or MOVE phase for a fall season, 
 			// but not both (a unit could retreat into a SC; thus we need to check)
 			//
-			TurnState ts = (TurnState) iter.next();
+			TurnState ts = iter.next();
 			Phase phase = ts.getPhase();
 			if(phase.getSeasonType() == Phase.SeasonType.FALL)
 			{
@@ -250,7 +250,7 @@ public class SCHistoryWriter
 				{
 					if(iter.hasNext())
 					{
-						TurnState nextTS = (TurnState) iter.next();
+						TurnState nextTS = iter.next();
 						if(nextTS.getPhase().getPhaseType() == Phase.PhaseType.RETREAT)
 						{
 							ts = nextTS;
@@ -292,7 +292,7 @@ public class SCHistoryWriter
 			
 			for(int scIdx=0; scIdx<scProvs.length; scIdx++)
 			{
-				Power p = pos.getSupplyCenterOwner(scProvs[scIdx]);
+				final Power p = pos.getSupplyCenterOwner(scProvs[scIdx]);
 				array[scIdx + 1][i] = p;
 			}
 		}

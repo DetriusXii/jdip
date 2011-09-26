@@ -151,7 +151,8 @@ public class ClientMenu
 	
 	// instance variables
 	private JMenuBar menuBar;
-	private HashMap menuMap;
+	private java.util.Map<Item, JMenuItem> menuMap;
+        private java.util.Map<Power, JMenuItem> menuPowerMap;
 	private ClientFrame clientFrame = null;
 	//private static Font menuFont = new Font("SansSerif", Font.PLAIN, 12);
 	
@@ -249,7 +250,8 @@ public class ClientMenu
 		
 		// create menu bar
 		menuBar = new JMenuBar();
-		menuMap = new HashMap(31);
+		menuMap = new HashMap<Item, JMenuItem>(31);
+                menuPowerMap = new HashMap<Power, JMenuItem>();
 		
 		// create menus
 		JMenu menu = null;
@@ -464,7 +466,7 @@ public class ClientMenu
 	/** Get a JMenuItem given an Item (usually a specified constant) */
 	public JMenuItem getMenuItem(Item item)
 	{
-		JMenuItem menuItem = (JMenuItem) menuMap.get(item);
+		JMenuItem menuItem = menuMap.get(item);
 		if(menuItem != null)
 		{
 			return menuItem;
@@ -473,46 +475,39 @@ public class ClientMenu
 	}// getMenuItem()
 	
 	/** Via Power */
-	private JMenuItem getMenuItem(Power power)
-	{
-		JMenuItem menuItem = (JMenuItem) menuMap.get(power);
-		if(menuItem != null)
-		{
+	private JMenuItem getMenuItem(Power power) {
+		final JMenuItem menuItem = menuPowerMap.get(power);
+		if(menuItem != null) {
 			return menuItem;
 		}
 		throw new IllegalArgumentException("Undefined or null Item");
 	}// getMenuItem()
 	
 	/** Get the JMenuBar */
-	public JMenuBar getJMenuBar()
-	{
+	public JMenuBar getJMenuBar() {
 		return menuBar;
 	}// getJMenuBar()
 	
 	
-	public boolean	isEnabled(Item item)
-	{
-		JMenuItem menuItem = getMenuItem(item);
+	public boolean	isEnabled(Item item) {
+		final JMenuItem menuItem = getMenuItem(item);
 		return menuItem.isEnabled();
 	}// isEnabled()
 	
 	// NOTE: this WILL NOT WORK on RB menu items!!
-	public void setEnabled(Item item, boolean value)
-	{
-		JMenuItem menuItem = getMenuItem(item);
+	public void setEnabled(final Item item, final boolean value) {
+		final JMenuItem menuItem = getMenuItem(item);
 		menuItem.setEnabled(value);
 	}// setEnabled()
 	
 	
-	public boolean isVisible(Item item)
-	{
-		JMenuItem menuItem = getMenuItem(item);
+	public boolean isVisible(final Item item) {
+		final JMenuItem menuItem = getMenuItem(item);
 		return menuItem.isVisible();
 	}// isVisible()
 	
-	public void setVisible(Item item, boolean value)
-	{
-		JMenuItem menuItem = getMenuItem(item);
+	public void setVisible(final Item item, final boolean value) {
+		final JMenuItem menuItem = getMenuItem(item);
 		menuItem.setVisible(value);
 	}// setVisible()
 	
@@ -998,7 +993,7 @@ public class ClientMenu
 			}
 			
 			orderMenu.add(menuItem);
-			menuMap.put(powers[i], menuItem);	// atypical; for internal use only
+			menuPowerMap.put(powers[i], menuItem);	// atypical; for internal use only
 		}
 	}// updatePowers()
 	
@@ -1007,17 +1002,15 @@ public class ClientMenu
 	public Power[] getOrderDrawingPowers()
 	{
 		// some powers are selected. determine which.
-		ArrayList list = new ArrayList(powers.length);
+		final ArrayList<Power> list = new ArrayList<Power>(powers.length);
 		
-		for(int i=0; i<powers.length; i++)
-		{
-			if( getSelected(powers[i]) )
-			{
-				list.add(powers[i]);
+		for(final Power power: powers) {
+			if( getSelected(power) ) {
+				list.add(power);
 			}
 		}
 		
-		return (Power[]) list.toArray(new Power[list.size()]);
+		return list.toArray(new Power[list.size()]);
 	}// getOrderDrawingPowers()
 	
 	

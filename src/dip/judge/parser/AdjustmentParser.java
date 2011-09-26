@@ -60,8 +60,8 @@ public class AdjustmentParser
 	// INSTANCE VARIABLES
 	private dip.world.Map map = null;
 	
-	private List ownerList = null;
-	private List adjustList = null;
+	private List<OwnerInfo> ownerList = null;
+	private List<AdjustInfo> adjustList = null;
 	private Pattern regexAdjust = null;
 	
 	private OwnerInfo[] ownerInfo = null;
@@ -259,8 +259,8 @@ public class AdjustmentParser
 	throws IOException
 	{
 		// create lists
-		ownerList = new LinkedList();
-		adjustList = new LinkedList();
+		ownerList = new LinkedList<OwnerInfo>();
+		adjustList = new LinkedList<AdjustInfo>();
 		
 		// create patterns
 		regexAdjust = Pattern.compile(ADJUST_REGEX);
@@ -288,8 +288,8 @@ public class AdjustmentParser
 		
 		
 		// create the output array
-		ownerInfo = (OwnerInfo[]) ownerList.toArray(new OwnerInfo[ownerList.size()]);
-		adjustInfo = (AdjustInfo[]) adjustList.toArray(new AdjustInfo[adjustList.size()]);
+		ownerInfo = ownerList.toArray(new OwnerInfo[ownerList.size()]);
+		adjustInfo = adjustList.toArray(new AdjustInfo[adjustList.size()]);
 		
 		// cleanup
 		br.close();

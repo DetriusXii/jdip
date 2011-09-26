@@ -120,7 +120,7 @@ public class GUIMoveExplicit extends Move implements GUIOrder
 	
 	
 	/** Creates a GUIMoveExplicit */
-	protected GUIMoveExplicit(Power power, Location src, Unit.Type srcUnitType, Location dest, List routes)
+	protected GUIMoveExplicit(Power power, Location src, Unit.Type srcUnitType, Location dest, List<List<Province>> routes)
 	{
 		super(power, src, srcUnitType, dest, routes);
 	}// GUIMoveExplicit()

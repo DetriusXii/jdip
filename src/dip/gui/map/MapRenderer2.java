@@ -41,6 +41,7 @@ import dip.world.Unit;
 import java.util.LinkedList;
 import java.util.Iterator;
 
+import java.util.List;
 import org.w3c.dom.svg.SVGDocument;
 
 import org.apache.batik.swing.JSVGCanvas;
@@ -91,7 +92,7 @@ public abstract class MapRenderer2
 	// instance variables
 	//
 	private boolean isReady = false;		// internal flag indicating if turnstate has been set
-	private LinkedList tempQueue = null;
+	private List<RenderCommand> tempQueue = null;
 	protected final MapPanel mapPanel;
 	protected CFPropertyListener propListener = null;
 	protected final JSVGCanvas svgCanvas;
@@ -114,7 +115,7 @@ public abstract class MapRenderer2
 		propListener = new CFPropertyListener();
 		mapPanel.getClientFrame().addPropertyChangeListener(propListener);
 		
-		tempQueue = new LinkedList();
+		tempQueue = new LinkedList<RenderCommand>();
 		
 		Log.printTimed(mp.startTime, "MR2 constructor end");
 	}// MapRenderer()
@@ -152,10 +153,9 @@ public abstract class MapRenderer2
 	*	Execute a RenderCommand. No commands are executed until the TurnState
 	*	has been set.
 	*/
-	public synchronized void execRenderCommand(RenderCommand rc)
+	public synchronized void execRenderCommand(final RenderCommand rc)
 	{
-		if(rc instanceof RenderCommandFactory.RCSetTurnstate)
-		{
+		if(rc instanceof RenderCommandFactory.RCSetTurnstate) {
 			// focus
 			mapPanel.requestFocusInWindow();
 			
@@ -165,37 +165,29 @@ public abstract class MapRenderer2
 			clearAndExecute(rc, null);
 			
 			// dequeue pending events, if any
-			if(!tempQueue.isEmpty())
-			{
+			if(!tempQueue.isEmpty()) {
 				Log.println("MR2::execRenderCommand(): removing pending events from queue. size: ", 
 					String.valueOf(tempQueue.size()));
 					
-				RunnableQueue rq = getRunnableQueue();
-				if(rq != null)
-				{
-					Iterator iter = tempQueue.iterator();
-					while(iter.hasNext())
-					{
-						rq.invokeLater( ((RenderCommand) iter.next()) );
-					}
-					
-					tempQueue.clear();
+                                
+				final RunnableQueue rq = getRunnableQueue();
+				if(rq != null) {
+                                    for(final RenderCommand renderCommand: tempQueue) {
+                                        rq.invokeLater(renderCommand);
+                                    }
+                                       
+                                    tempQueue.clear();
 				}
 			}
-		}
-		else if(isReady)
-		{
+		} else if(isReady) {
 			// a RCSetTurnstate() has been issued. We can accept render events.
 			// if we have queued events, add them.
 			Log.println("MR2::execRenderCommand(): adding to RunnableQueue: ", rc);
-			RunnableQueue rq = getRunnableQueue();
-			if(rq != null)
-			{
+			final RunnableQueue rq = getRunnableQueue();
+			if(rq != null) {
 				rq.invokeLater(rc);
 			}
-		}
-		else
-		{
+		} else {
 			// we are not yet ready -- add the rendering events to a temporary queue.
 			Log.println("MR2::execRenderCommand(): adding to tempQueue: ", rc);
 			tempQueue.add(rc);
@@ -204,8 +196,7 @@ public abstract class MapRenderer2
 	
 	
 	/** Clean up any resources used by the MapRenderer. */
-	public void close() 
-	{
+	public void close() {
 		isReady = false;
 		mapPanel.getClientFrame().removePropertyChangeListener(propListener);
 	}// close()
