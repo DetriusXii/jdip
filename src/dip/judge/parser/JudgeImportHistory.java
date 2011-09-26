@@ -178,15 +178,15 @@ final class JudgeImportHistory {
         // get home supply center information from the oldPosition object
         // and store it in HSCInfo object array, so that it can be set during each successive 
         // turn.
-        ArrayList hscList = new ArrayList(50);
+        final List<HSCInfo> hscList = new ArrayList<HSCInfo>(50);
         Province[] provinces = map.getProvinces();
-        for (int i = 0; i < provinces.length; i++) {
-            Power power = oldPosition.getSupplyCenterHomePower(provinces[i]);
+        for (final Province province: provinces) {
+            Power power = oldPosition.getSupplyCenterHomePower(province);
             if (power != null) {
-                hscList.add(new HSCInfo(provinces[i], power));
+                hscList.add(new HSCInfo(province, power));
             }
         }
-        homeSCInfo = (HSCInfo[]) hscList.toArray(new HSCInfo[hscList.size()]);
+        homeSCInfo = hscList.toArray(new HSCInfo[hscList.size()]);
 
         // process all but the final phase
         for (int i = firstMovePhase; i < turns.length - 1; i++) {
@@ -413,7 +413,7 @@ final class JudgeImportHistory {
         }
         // create TurnState
         TurnState ts = makeTurnState(turn);
-        List results = ts.getResultList();
+        final List<Result> results = ts.getResultList();
 
         Log.println("JIH::procMove(): ", ts.getPhase(), "; positionPlacement: ", String.valueOf(positionPlacement));
 
@@ -546,9 +546,8 @@ final class JudgeImportHistory {
 
             // now that all orders are parsed, and all units are cleared, put
             // unit in the proper place.
-            Iterator iter = results.iterator();
-            while (iter.hasNext()) {
-                Result result = (Result) iter.next();
+            
+            for(final Result result: results) {
                 if (result instanceof OrderResult) {
                     OrderResult ordResult = (OrderResult) result;
                     Orderable order = ordResult.getOrder();
@@ -646,7 +645,7 @@ final class JudgeImportHistory {
         // create TurnState
         final TurnState ts = makeTurnState(turn);
         final Position position = ts.getPosition();
-        final List results = ts.getResultList();
+        final List<Result> results = ts.getResultList();
         final RuleOptions ruleOpts = world.getRuleOptions();
 
         Log.println("JIH::procRetreat(): ", ts.getPhase(), "; positionPlacement: ", String.valueOf(positionPlacement));
@@ -780,7 +779,7 @@ final class JudgeImportHistory {
 
         // create TurnState
         final TurnState ts = makeTurnState(turn);
-        final List results = ts.getResultList();
+        final List<Result> results = ts.getResultList();
         final RuleOptions ruleOpts = world.getRuleOptions();
 
         Log.println("JIH::procAdjust(): ", ts.getPhase());
@@ -831,7 +830,7 @@ final class JudgeImportHistory {
                             + "getResults() != 1");
                 }
 
-                final Result result = (Result) njo.getResults().get(0);
+                final Result result = njo.getResults().get(0);
 
                 // if result is a substituted result, the player defaulted,
                 // and the Judge inserted a Disband order
@@ -900,7 +899,7 @@ final class JudgeImportHistory {
 
             // set orders in turnstate
             for (int i = 0; i < powers.length; i++) {
-                ts.setOrders(powers[i], (LinkedList) orderMap.get(powers[i]));
+                ts.setOrders(powers[i], orderMap.get(powers[i]));
             }
         }
 

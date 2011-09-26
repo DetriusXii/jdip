@@ -772,7 +772,7 @@ public class Move extends Order
 				if(unit.getPower().equals(this.getPower()))
 				{
 					final OrderState os = adj.findOrderStateBySrc(prov);
-					final Order order = os.getOrder();
+					final Orderable order = os.getOrder();
 					if(order instanceof Convoy)
 					{
 						final Convoy convoy = (Convoy) order;
@@ -844,7 +844,7 @@ public class Move extends Order
 		for(int osIdx=0; osIdx<orderStates.length; osIdx++)
 		{
 			OrderState dependentOS = orderStates[osIdx];
-			final Order order = dependentOS.getOrder();
+			final Orderable order = dependentOS.getOrder();
 			
 			if(order instanceof Move && order != this)
 			{

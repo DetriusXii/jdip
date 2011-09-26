@@ -58,7 +58,7 @@ public class AIDemo
 	/** Directory name where variants are stored */
 	private static final String VARIANT_DIR	= "variants";
 	private static final String VARIANT_NAME = "Standard";
-	
+	private static final int NUM_GERMAN_ORDERS = 2;
 	
 	
 	/** Command-line entry point */
@@ -260,10 +260,10 @@ public class AIDemo
 	*	<p>
 	*	We return an Array of Lists (a somewhat unusual construct...)
 	*/
-	private List[] createOrders(Map map, Position pos)
+	private List<List<Order>> createOrders(Map map, Position pos)
 	{
 		// get the OrderFactory. The default order factory is OrderFactory.getDefault().
-		OrderFactory orderFactory = OrderFactory.getDefault();
+		final OrderFactory orderFactory = OrderFactory.getDefault();
 		
 		// power constants (note: we could have set these globally, as they
 		// are the same, referentially, as when we obtained them in 
@@ -277,7 +277,7 @@ public class AIDemo
 		// 	A war S lvn-pru
 		// 	A lvn-pru
 		//	A mos-lvn
-		List russianOrders = new ArrayList();
+		final List<Order> russianOrders = new ArrayList<Order>();
 		russianOrders.add(orderFactory.createSupport(russia, 
 						  makeLocation(pos, map.getProvince("war")),
 						  Unit.Type.ARMY,
@@ -300,21 +300,21 @@ public class AIDemo
 		
 		// we're just making 2 sets of german orders
 		//
-		List[] germanOrders = new List[2];
+		final List<List<Order>> germanOrders = new ArrayList<List<Order>>(2);
 		
 		// German Orders: 1
 		// ================
 		// 	A pru-war
 		// 	A sil S A pru-war
 		//	A gal S A pru-war
-		germanOrders[0] = new ArrayList();
-		germanOrders[0].add(orderFactory.createMove(
+		final List<Order> firstGermanOrder = new ArrayList<Order>();
+		firstGermanOrder.add(orderFactory.createMove(
 							germany,
 						  	makeLocation(pos, map.getProvince("pru")),
 							Unit.Type.ARMY,
 						  	makeLocation(pos, map.getProvince("war"))
 						  	));
-		germanOrders[0].add(orderFactory.createSupport(
+		firstGermanOrder.add(orderFactory.createSupport(
 							germany, 
 						  	makeLocation(pos, map.getProvince("sil")),
 						  	Unit.Type.ARMY,
@@ -323,7 +323,7 @@ public class AIDemo
 							Unit.Type.ARMY,
 						  	makeLocation(pos, map.getProvince("war"))
 						  	));
-		germanOrders[0].add(orderFactory.createSupport(
+		firstGermanOrder.add(orderFactory.createSupport(
 							germany, 
 						  	makeLocation(pos, map.getProvince("gal")),
 						  	Unit.Type.ARMY,
@@ -332,15 +332,15 @@ public class AIDemo
 							Unit.Type.ARMY,
 						  	makeLocation(pos, map.getProvince("war"))
 						  	));
-						  
+		germanOrders.add(firstGermanOrder);				  
 		
 		// German Orders: 2
 		// ================
 		// 	A pru S A sil-war
 		// 	A sil-war
 		//	A gal S A sil-war
-		germanOrders[1] = new ArrayList();
-		germanOrders[1].add(orderFactory.createSupport(
+		final List<Order> secondGermanOrder = new ArrayList<Order>();
+		secondGermanOrder.add(orderFactory.createSupport(
 							germany, 
 						  	makeLocation(pos, map.getProvince("pru")),
 						  	Unit.Type.ARMY,
@@ -349,13 +349,13 @@ public class AIDemo
 							Unit.Type.ARMY,
 						  	makeLocation(pos, map.getProvince("war"))
 						  	));
-		germanOrders[1].add(orderFactory.createMove(
+		secondGermanOrder.add(orderFactory.createMove(
 							germany,
 							makeLocation(pos, map.getProvince("sil")),
 							Unit.Type.ARMY,
 							makeLocation(pos, map.getProvince("war"))
 							));
-		germanOrders[1].add(orderFactory.createSupport(
+		secondGermanOrder.add(orderFactory.createSupport(
 							germany, 
 							makeLocation(pos, map.getProvince("gal")),
 						  	Unit.Type.ARMY,
@@ -364,19 +364,19 @@ public class AIDemo
 							Unit.Type.ARMY,
 						  	makeLocation(pos, map.getProvince("war"))
 						  	));
-		
+		germanOrders.add(secondGermanOrder);
 		
 		// create combined orders sets for all powers
 		//
-		List[] orderLists = new List[2];
-		for(int i=0; i<orderLists.length; i++)
-		{
-			orderLists[i] = new ArrayList();
-			orderLists[i].addAll(russianOrders);
-			orderLists[i].addAll(germanOrders[i]);
+		final List<List<Order>> orderLists = new ArrayList<List<Order>>();
+		for(int i=0; i<NUM_GERMAN_ORDERS; i++) {
+			final List<Order> orderList = new ArrayList<Order>();
+                        orderList.addAll(russianOrders);
+                        orderList.addAll(germanOrders.get(i));
+                        orderLists.add(orderList);
 		}
 		
-		System.out.println("Created "+orderLists.length+" sets of orders to evaluate.");
+		System.out.println("Created "+orderLists.size()+" sets of orders to evaluate.");
 		
 		return orderLists;
 	}// createOrders()

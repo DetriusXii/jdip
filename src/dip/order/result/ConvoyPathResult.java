@@ -46,9 +46,9 @@ public class ConvoyPathResult extends OrderResult
 	
 	
 	/** Create a ConvoyPathResult */
-	public ConvoyPathResult(Orderable order, List path)
+	public ConvoyPathResult(Orderable order, final List<Province> path)
 	{
-		this(order, (Province[]) path.toArray(new Province[path.size()]));
+		this(order, path.toArray(new Province[path.size()]));
 	}// ConvoyPathResult()
 	
 	/** Create a ConvoyPathResult */

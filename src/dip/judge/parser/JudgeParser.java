@@ -186,8 +186,8 @@ public class JudgeParser
 			Matcher m = pattern.matcher(line);
 			if(m.find())
 			{
-				LinkedList names = new LinkedList();
-				LinkedList email = new LinkedList();
+				final LinkedList<String> names = new LinkedList<String>();
+				final LinkedList<String> email = new LinkedList<String>();
 				
 				// now read each player UNTIL we get an empty line (or of length < 4)
 				line = reader.readLine();
@@ -224,8 +224,8 @@ public class JudgeParser
 					line = reader.readLine();
 				}
 				
-				playerNames = (String[]) names.toArray(new String[names.size()]);
-				playerEmails = (String[]) email.toArray(new String[email.size()]);
+				playerNames = names.toArray(new String[names.size()]);
+				playerEmails = email.toArray(new String[email.size()]);
 				return;
 			}
 			

@@ -91,12 +91,13 @@ public class Path extends Object {
      *				for this to work.</li>
      *	</ul>				
      */
-    public Tristate getConvoyRouteEvaluation(Move move, Location invalidLoc, List actualPath) {
+    public Tristate getConvoyRouteEvaluation(Move move, Location invalidLoc, 
+            final List<Province> actualPath) {
         if (move == null) {
             throw new IllegalArgumentException();
         }
 
-        final List explicitRoutes = move.getConvoyRoutes();
+        final List<List<Province>> explicitRoutes = move.getConvoyRoutes();
 
         if (explicitRoutes == null) {
             // implicit paths.
@@ -112,14 +113,12 @@ public class Path extends Object {
 
             boolean hasUncertainRoute = false;		// true if >= 1 route is uncertain, but not failed.
 
-            Iterator iter = explicitRoutes.iterator();
-            while (iter.hasNext()) {
-                final Province[] route = (Province[]) iter.next();
+            for(final List<Province> route: explicitRoutes) {
                 boolean isFailed = true;
                 boolean isUncertain = false;
 
-                for (int i = 1; i < (route.length - 1); i++) {
-                    final Province province = route[i];
+                for (int i = 1; i < (route.size() - 1); i++) {
+                    final Province province = route.get(i);
                     OrderState os = adjudicator.findOrderStateBySrc(province);
                     Orderable order = os.getOrder();
                     if (order instanceof Convoy) {
@@ -164,7 +163,7 @@ public class Path extends Object {
                 // return success. Return path, too.
                 if (!isFailed && !isUncertain) {
                     if (actualPath != null) {
-                        actualPath.addAll(Arrays.asList(route));
+                        actualPath.addAll(route);
                     }
                     return Tristate.SUCCESS;
                 }
@@ -465,8 +464,9 @@ public class Path extends Object {
      *		fail (no path), or if we are uncertain.
      *	
      */
-    public Tristate getConvoyRouteEvaluation(Location src, Location dest, Location invalid, List validPath) {
-        List path = new ArrayList(12);
+    public Tristate getConvoyRouteEvaluation(Location src,
+            Location dest, Location invalid, final List<Province> validPath) {
+        final List<Location> path = new ArrayList<Location>(12);
         SuperConvoyPathEvaluator spe = null;
         boolean isPathFound = false;
 
@@ -477,8 +477,7 @@ public class Path extends Object {
             // note: our path, if found, may be longer than required (due to
             // breadth-first search. So iterate until we find the dest.
             if (validPath != null) {
-                for (int i = 0; i < path.size(); i++) {
-                    Location loc = (Location) path.get(i);
+                for (final Location loc : path) {
                     validPath.add(loc.getProvince());
                     if (dest.isProvinceEqual(loc)) {
                         break;
@@ -515,7 +514,7 @@ public class Path extends Object {
      *
      */
     protected boolean findPathBreadthFirst(Location src, Location dest,
-            Location current, List path, PathEvaluator pathEvaluator) {
+            Location current, final List<Location> path, PathEvaluator pathEvaluator) {
         // Step 1: add current location to path
         path.add(current);
 
@@ -528,11 +527,11 @@ public class Path extends Object {
 
         // Step 3: find all adjacent locations to the current location.
         // note that we ONLY add a location if it is ok'd by the PathEvaluator.
-        List adjLocs = new LinkedList();
+        final List<Location> adjLocs = new LinkedList<Location>();
         for (int i = 0; i < Coast.ALL_COASTS.length; i++) {
             final List<Location> locations = current.getProvince().getAdjacentLocations(Coast.ALL_COASTS[i]);
 
-            for (final Location testLoc: locations) {
+            for (final Location testLoc : locations) {
                 if (pathEvaluator.evaluate(testLoc)) {
                     adjLocs.add(testLoc);
                 }
@@ -757,12 +756,12 @@ public class Path extends Object {
 
         int dist = 0;
 
-        HashMap visited = new HashMap(119);
+        final java.util.Map<Province, Boolean> visited = new HashMap<Province, Boolean>(119);
         visited.put(src, Boolean.TRUE);
 
-        ArrayList toCheck = new ArrayList(32);
-        ArrayList nextToCheck = new ArrayList(32);
-        ArrayList swapTmp = null;
+        List<Province> toCheck = new ArrayList<Province>(32);
+        List<Province> nextToCheck = new ArrayList<Province>(32);
+        List<Province> swapTmp = null;
         toCheck.add(src);
 
         while (true) {
@@ -770,8 +769,7 @@ public class Path extends Object {
             dist++;
 
             // iterate toCheck, create nextToCheck list
-            for (int z = 0; z < toCheck.size(); z++) {
-                Province p = (Province) toCheck.get(z);
+            for (final Province p : toCheck) {
                 if (p == dest) {
                     return dist;
                 }
@@ -795,7 +793,7 @@ public class Path extends Object {
 
                 // NEW CODE: using Coast.TOUCHING
                 final List<Location> locs = p.getAdjacentLocations(Coast.TOUCHING);
-                for (final Location location: locs) {
+                for (final Location location : locs) {
                     final Province ckp = location.getProvince();
 
                     if (visited.get(ckp) == null) {
@@ -842,7 +840,7 @@ public class Path extends Object {
         // quick check: dest: next to at least 1 sea/conv coastal province
         final List<Location> dLocs = dest.getAdjacentLocations(Coast.TOUCHING);
         boolean isOk = false;
-        for (final Location location: dLocs) {
+        for (final Location location : dLocs) {
             final Province p = location.getProvince();
             if (p.isConvoyableCoast() || p.isSea()) {
                 isOk = true;
@@ -861,14 +859,14 @@ public class Path extends Object {
         // that are adjacent to the current node. A path cannot use the same
         // TreeNode more than once, so we use addUniqueChild() to ensure this.
         //
-        LinkedList queue = new LinkedList();
+        final LinkedList<TreeNode> queue = new LinkedList<TreeNode>();
         queue.addLast(root);
         while (queue.size() > 0) {
-            TreeNode node = (TreeNode) queue.removeFirst();
-            Province prov = node.getProvince();
+            final TreeNode node = queue.removeFirst();
+            final Province prov = node.getProvince();
             final List<Location> locs = prov.getAdjacentLocations(Coast.TOUCHING);
             for (final Location location : locs) {
-                Province p = location.getProvince();
+                final Province p = location.getProvince();
                 if (p.equals(dest)) {
                     // special case. dest is NOT nescessarily a convoyable coast,
                     // and is not Sea, and should not be evaluated with TreeBuilder.

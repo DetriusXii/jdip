@@ -34,6 +34,7 @@ import dip.order.result.OrderResult;
 import dip.order.result.OrderResult.ResultType;
 import dip.misc.Log;
 
+import dip.world.Province;
 import java.util.List;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -62,7 +63,7 @@ public class RetreatChecker {
     // instance variables
 
     private transient final Position position;
-    private transient final ArrayList filteredMoveResults;
+    private transient final List<RCMoveResult> filteredMoveResults;
 
     /**
      *	Create a RetreatChecker.
@@ -240,22 +241,21 @@ public class RetreatChecker {
      *	generate one RCMoveResult object, which holds the pertinent information
      *	about that Move order.
      */
-    private ArrayList makeFMRList(List turnStateResults) {
-        ArrayList mrList = new ArrayList(64);
-        HashMap map = new HashMap(119);	// key: move source province; value: RCMoveResult
+    private List<RCMoveResult> makeFMRList(final List<Result> turnStateResults) {
+        final List<RCMoveResult> mrList = new ArrayList<RCMoveResult>(64);
+        final java.util.Map<Province, RCMoveResult> map = 
+                new HashMap<Province, RCMoveResult>(119);	// key: move source province; value: RCMoveResult
 
-        Iterator iter = turnStateResults.iterator();
-        while (iter.hasNext()) {
-            Object obj = iter.next();
-            if (obj instanceof OrderResult) {
-                OrderResult or = (OrderResult) obj;
-                Orderable order = or.getOrder();
+        for(final Result result: turnStateResults) {
+            if (result instanceof OrderResult) {
+                final OrderResult or = (OrderResult) result;
+                final Orderable order = or.getOrder();
                 if (order instanceof Move) {
                     // see if we have an entry for this Move; if so, 
                     // set options; if not, create an entry.
                     // This avoids duplicate entries per Move.
                     //
-                    RCMoveResult rcmr = (RCMoveResult) map.get(order.getSource().getProvince());
+                    RCMoveResult rcmr = map.get(order.getSource().getProvince());
                     if (rcmr == null) {
                         rcmr = new RCMoveResult(or);
                         map.put(order.getSource().getProvince(), rcmr);

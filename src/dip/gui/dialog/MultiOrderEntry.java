@@ -150,8 +150,8 @@ public class MultiOrderEntry
 	private boolean process(String text)
 	{
 		int nOrders = 0;
-		List exList = new ArrayList();
-		List failList = new ArrayList();
+		final List<String> exList = new ArrayList<String>();
+		final List<String> failList = new ArrayList<String>();
 		
 		try
 		{

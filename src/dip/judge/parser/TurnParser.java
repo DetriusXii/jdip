@@ -101,7 +101,7 @@ public class TurnParser
 		Pattern isResultsPattern = Pattern.compile(RESULT_SUBJ_REGEX);
 		
 		
-		LinkedList turnList = new LinkedList();
+		final LinkedList<Turn> turnList = new LinkedList<Turn>();
 		BufferedReader reader = new BufferedReader(new StringReader(input));
 		
 		String line = reader.readLine();
@@ -184,7 +184,7 @@ public class TurnParser
 		}
 		
 		// convert to array
-		turns = (Turn[]) turnList.toArray(new Turn[turnList.size()]);
+		turns = turnList.toArray(new Turn[turnList.size()]);
 	}// parseTurns()
 	
 	

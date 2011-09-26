@@ -403,7 +403,7 @@ public class Border implements Serializable
 		while(st.hasMoreTokens())
 		{
 			String tok = st.nextToken();
-			Class cls = null;
+			Class<?> cls = null;
 			
 			try
 			{

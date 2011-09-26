@@ -284,7 +284,7 @@ public class DislodgedParser
 		//System.out.println("-----");
 		
 		// create a list of Dislodged units
-		List disList = new LinkedList();
+		final List<DislodgedInfo> disList = new LinkedList<DislodgedInfo>();
 		
 		// Create patterns
 		Pattern destroyed = Pattern.compile(DESTROYED_REGEX);
@@ -331,7 +331,7 @@ public class DislodgedParser
 			}
 		}
 		
-		dislodgedInfo = (DislodgedInfo[]) disList.toArray(new DislodgedInfo[disList.size()]);
+		dislodgedInfo = disList.toArray(new DislodgedInfo[disList.size()]);
 	}// parseInput()
 		
 	

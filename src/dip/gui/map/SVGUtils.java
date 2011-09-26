@@ -273,13 +273,13 @@ public class SVGUtils
 	*	</ul>
 	*
 	*/
-	public static Map<Object, Node> tagFinderSVG(List<Object> lookList, Node root)
+	public static Map<Object, Node> tagFinderSVG(List<? extends Object> lookList, Node root)
 	{
 		return tagFinderSVG(lookList, root, false);
 	}// tagFinderSVG	
 	
 	/** As above, but allows any SVG element to be returned */
-	public static Map<Object, Node> tagFinderSVG(List<Object> lookList, Node root, boolean anySVGElement)
+	public static Map<Object, Node> tagFinderSVG(List<? extends Object> lookList, Node root, boolean anySVGElement)
 	{
 		final List<Object> list = new ArrayList<Object>(lookList);
 		final Map<Object, Node> map = new HashMap<Object, Node>( (4 * lookList.size())/3 );

@@ -24,6 +24,7 @@ package dip.process;
 
 import dip.order.Order;
 import dip.order.Move;
+import dip.order.Orderable;
 import dip.order.Support;
 import dip.world.Province;
 import dip.world.Location;
@@ -81,7 +82,7 @@ public final class OrderState
 	private static final OrderState[] OS_EMPTY = new OrderState[0];
 	
 	
-	private Order order = null;
+	private Orderable order = null;
 	
 	
 	private int defense_max = MAX_VALUE;
@@ -117,7 +118,7 @@ public final class OrderState
 	*	this and adjudicators should be able to create new OrderState objects,
 	*	although other classes can definately use them.
 	*/
-	protected OrderState(Order order)
+	protected OrderState(Orderable order)
 	{
 		if(order == null)
 		{
@@ -131,7 +132,7 @@ public final class OrderState
 	
 	// GET methods
 	/** Get the Order for this OrderState. */
-	public Order getOrder()				{ return order; }
+	public Orderable getOrder()				{ return order; }
 	/** Get if we are part of a circular movement chain. */
 	public boolean isCircular()			{ return isCircular; }
 	/** Get the evaluation state. */
