@@ -97,7 +97,7 @@ public class VictoryConditions implements java.io.Serializable
 	*	Returns the Result(s) of evaluate(). This will return an empty list if
 	*	evaluate() has not been called or returned false.
 	*/
-	public List getEvaluationResults()
+	public List<Result> getEvaluationResults()
 	{
 		return evalResults;
 	}// getEvaluationResults()

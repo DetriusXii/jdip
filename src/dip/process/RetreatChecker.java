@@ -73,7 +73,7 @@ public class RetreatChecker {
      *	first TurnState (this can happen if the game is edited), it is allowed.
      */
     public RetreatChecker(TurnState current) {
-        List results = null;
+        List<Result> results;
 
         TurnState last = current.getWorld().getPreviousTurnState(current);
         if (last == null) {
@@ -82,7 +82,7 @@ public class RetreatChecker {
             World w = current.getWorld();
             if (w.getInitialTurnState() == current) {
                 //Log.println("     no previous turnstate, and we are first; creating results");
-                results = new ArrayList();
+                results = new ArrayList<Result>();
             } else {
                 throw new IllegalStateException("No Previous Turn State!!");
             }
@@ -101,7 +101,7 @@ public class RetreatChecker {
      *	Useful for when the previous TurnState has not yet been inserted
      *	into the World object.
      */
-    public RetreatChecker(TurnState current, List previousTurnStateResults) {
+    public RetreatChecker(TurnState current, List<Result> previousTurnStateResults) {
         if (current == null || previousTurnStateResults == null) {
             throw new IllegalStateException("null arguments!");
         }

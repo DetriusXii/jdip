@@ -129,8 +129,8 @@ public class StdAdjudicator implements Adjudicator {
         this.world = ts.getWorld();
         this.ruleOpts = world.getRuleOptions();
         this.resultList = ts.getResultList();
-        this.osMap = new HashMap(119);
-        this.substOrders = new ArrayList(16);
+        this.osMap = new HashMap<Province, OrderState>(119);
+        this.substOrders = new ArrayList<OrderState>(16);
     }// StdAdjudicator()
 
     /** Process the orders. */

@@ -1091,7 +1091,7 @@ public class Move extends Order
 					// HOWEVER, we can indicate the path taken as a result of this move, 
 					// if we haven't already.
 					//
-					List validPath = new ArrayList(10);
+					final List<Province> validPath = new ArrayList<Province>(10);
 					path.getConvoyRouteEvaluation(this, null, validPath);
 					adjudicator.addResult(new ConvoyPathResult(this, validPath));
 					thisOS.setFoundConvoyPath(true);

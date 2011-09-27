@@ -39,7 +39,7 @@ import java.util.*;
  *	be replaced by the static methods based on findAllSeaPaths().
  *
  */
-public class Path extends Object {
+public class Path {
 
     private final Position position;
     private final Adjudicator adjudicator;
@@ -355,7 +355,7 @@ public class Path extends Object {
      */
     public boolean isPossibleConvoyRoute(Location src, Location dest) {
         if (src.getProvince().isCoastal() && dest.getProvince().isCoastal()) {
-            List path = new ArrayList(12);
+            final List<Location> path = new ArrayList<Location>(12);
             PathEvaluator pe = new AnyConvoyPathEvaluator();
 
             return findPathBreadthFirst(src, dest, src, path, pe);
@@ -372,8 +372,8 @@ public class Path extends Object {
      *	could convoy the desired army from src to dest, but may not
      *	have convoy orders to do so.
      */
-    public List getConvoyRoute(Location src, Location dest) {
-        List path = new ArrayList();
+    public List<Location> getConvoyRoute(Location src, Location dest) {
+        final List<Location> path = new ArrayList<Location>();
 
         PathEvaluator pe = new AnyConvoyPathEvaluator();
         findPathBreadthFirst(src, dest, src, path, pe);
@@ -391,7 +391,7 @@ public class Path extends Object {
      *	
      */
     public boolean isLegalConvoyRoute(Location src, Location dest) {
-        List path = new ArrayList(12);
+        final List<Location> path = new ArrayList<Location>(12);
         PathEvaluator pe = new LegalConvoyPathEvaluator(src, dest);
         return findPathBreadthFirst(src, dest, src, path, pe);
     }// isLegalConvoyRoute()
@@ -405,8 +405,8 @@ public class Path extends Object {
      *	</ol>
      *	
      */
-    public List getLegalConvoyRoute(Location src, Location dest) {
-        List path = new ArrayList(12);
+    public List<Location> getLegalConvoyRoute(Location src, Location dest) {
+        final List<Location> path = new ArrayList<Location>(12);
         PathEvaluator pe = new LegalConvoyPathEvaluator(src, dest);
         findPathBreadthFirst(src, dest, src, path, pe);
         return path;
@@ -417,7 +417,7 @@ public class Path extends Object {
      *	'invalid' Location is set to null.
      *			
      */
-    public Tristate getConvoyRouteEvaluation(Location src, Location dest, List validPath) {
+    public Tristate getConvoyRouteEvaluation(Location src, Location dest, final List<Province> validPath) {
         return getConvoyRouteEvaluation(src, dest, null, validPath);
     }// getConvoyRouteEvaluation()
 
@@ -979,7 +979,7 @@ public class Path extends Object {
         private final TreeNode parent;
         private final Province prov;
         private final int depth;
-        private List kids;
+        private final List<TreeNode> kids;
 
         /** Create a TreeNode. Null parent is the root. Null Location not ok. */
         public TreeNode(TreeNode parent, Province prov) {
@@ -1057,12 +1057,12 @@ public class Path extends Object {
             // first: do a BFS to find all leaf nodes (no kids).
             // we'll store these in a list, and then iterate back
             // up using getParent().
-            LinkedList leafNodeList = new LinkedList();
-            LinkedList queue = new LinkedList();
+            final LinkedList<TreeNode> leafNodeList = new LinkedList<TreeNode>();
+            final LinkedList<TreeNode> queue = new LinkedList<TreeNode>();
 
             queue.addLast(this);
             while (queue.size() > 0) {
-                TreeNode n = (TreeNode) queue.removeFirst();
+                TreeNode n = queue.removeFirst();
 
                 if (n.isLeaf()) {
                     leafNodeList.addLast(n);
@@ -1084,12 +1084,12 @@ public class Path extends Object {
          *
          */
         public Province[][] getAllBranchesTo(Province end) {
-            LinkedList leafNodeList = new LinkedList();
-            LinkedList queue = new LinkedList();
+            final LinkedList<TreeNode> leafNodeList = new LinkedList<TreeNode>();
+            final LinkedList<TreeNode> queue = new LinkedList<TreeNode>();
 
             queue.addLast(this);
             while (queue.size() > 0) {
-                TreeNode n = (TreeNode) queue.removeFirst();
+                TreeNode n = queue.removeFirst();
 
                 if (n.isLeaf() && n.getProvince().equals(end)) {
                     leafNodeList.addLast(n);

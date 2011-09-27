@@ -1079,7 +1079,7 @@ public class NJudgeOrderParser {
      *	</ul>
      *	The given results are returned in the List.
      */
-    private List createResults(ParseContext pc, Orderable order, final List<String> stringResults)
+    private List<Result> createResults(ParseContext pc, Orderable order, final List<String> stringResults)
             throws OrderException {
         final List<Result> results = new ArrayList<Result>(stringResults.size());
 

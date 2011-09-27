@@ -1330,7 +1330,7 @@ public final class TestSuite {
         return null;
     }// getKeyType()
 
-    private List getListForKeyType(String keyType) {
+    private List<String> getListForKeyType(String keyType) {
         return keyMap.get(keyType);
     }// getListForKeyType()
 

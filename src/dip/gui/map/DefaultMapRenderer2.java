@@ -160,7 +160,7 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
     protected final HashMap<Object, Node> layerMap;		// layers to which we render; keyed by LAYER; includes label layers
     private final HashMap renderSettings;	// control rendering options.
     private final HashMap<String, Location> locMap;			// maps multicoastal province ids -> Location objects for multicoastal provinces
-    private final HashMap[] powerOrderMap;
+    private final HashMap<Power, SVGElement>[] powerOrderMap;
     private HashMap oldRenderSettings;		// old render settings
     private final dip.world.Map worldMap;	// World Map reference
     private TurnState turnState = null;					// current TurnState
@@ -192,7 +192,7 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
         // setup object maps
         trackerMap = new HashMap<Province, Tracker>(113);
         renderSettings = new HashMap(11);
-        layerMap = new HashMap(11);
+        layerMap = new HashMap<Object, Node>(11);
         locMap = new HashMap<String, Location>(17);
 
         // power order hashmap (now with z-axis) setup

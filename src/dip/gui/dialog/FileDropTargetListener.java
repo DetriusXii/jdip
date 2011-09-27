@@ -50,18 +50,25 @@ public abstract class FileDropTargetListener extends DropTargetAdapter {
                 Object obj = xfer.getTransferData(DataFlavor.javaFileListFlavor);
 
                 if (obj instanceof java.util.List) {
-                    final java.util.List<File> list = (java.util.List) obj;
+                    final java.util.List list = (java.util.List) obj;
                     if (!list.isEmpty()) {
-                        final ArrayList fileList = new ArrayList<File>(list.size());
+                        final List<File> unconvertedFileList = new ArrayList<File>();
+                        for (final Object object: list) {
+                            if (object instanceof File) {
+                                unconvertedFileList.add((File) object);
+                            }
+                        }
+                        
+                        final List<File> fileList = new ArrayList<File>(list.size());
 
-                        for (final File originalFile : list) {
+                        for (final File originalFile: unconvertedFileList) {
                             File file = convertFile(originalFile);
                             if (file != null) {
                                 fileList.add(file);
                             }
                         }
 
-                        processDroppedFiles((File[]) fileList.toArray(new File[fileList.size()]));
+                        processDroppedFiles(fileList.toArray(new File[fileList.size()]));
                     }
 
                     dtde.dropComplete(true);
