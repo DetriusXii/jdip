@@ -36,7 +36,7 @@ public abstract class RenderCommandFactory
 	/** */
 	public abstract RCRenderProvince createRCRenderProvince(MapRenderer2 mr, Province province);
 	/** */
-	public abstract RCSetLabel createRCSetLabel(MapRenderer2 mr, Object labelValue);
+	public abstract RCSetLabel createRCSetLabel(MapRenderer2 mr, final String labelValue);
 	/** */
 	public abstract RCSetDisplaySC createRCSetDisplaySC(MapRenderer2 mr, boolean value);
 	/** */
@@ -191,10 +191,10 @@ public abstract class RenderCommandFactory
 	/** Change how labels are displayed */
 	protected static abstract class RCSetLabel extends RenderCommand
 	{
-		protected final Object labelValue;
+		protected final String labelValue;
 		
 		/** Constructor */
-		public RCSetLabel(MapRenderer2 mr, Object labelValue)
+		public RCSetLabel(MapRenderer2 mr, final String labelValue)
 		{
 			super(mr);
 			if( labelValue != MapRenderer2.VALUE_LABELS_NONE 

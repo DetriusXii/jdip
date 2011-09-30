@@ -177,7 +177,7 @@ public class MapPanel extends JPanel
 	private MP_DocumentListener documentListener = null;
 	private MP_GVTTreeBuilderListener treeBuilderListener = null;
 	
-	private Object oldLabelLevel = null;
+	private String oldLabelLevel = null;
 	
 	// for timing information
 	protected long startTime = 0L;
@@ -1117,7 +1117,7 @@ public class MapPanel extends JPanel
 		// cleanup this
 		if(mapRenderer != null)
 		{
-			oldLabelLevel = mapRenderer.getRenderSetting(MapRenderer2.KEY_LABELS);
+			oldLabelLevel = mapRenderer.getRenderValueLabelSetting(MapRenderer2.KEY_LABELS);
 			mapRenderer.close();
 			mapRenderer = null;
 		}

@@ -416,7 +416,7 @@ public class VariantManager {
             }
 
             Collections.sort(list);
-            vm.symbolPacks = new ArrayList<SymbolPack>();
+            vm.symbolPacks = new ArrayList<SymbolPack>(list);
         }
 
         return vm.symbolPacks;
@@ -706,8 +706,8 @@ public class VariantManager {
 
     /** Singleton */
     private VariantManager() {
-        variantMap = new HashMap(53);
-        symbolMap = new HashMap(17);
+        variantMap = new HashMap<String, MapRec>(53);
+        symbolMap = new HashMap<String, MapRec>(17);
         isInWebstart = isInWebstart();
     }// VariantManager()
 

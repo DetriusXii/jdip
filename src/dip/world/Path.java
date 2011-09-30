@@ -988,7 +988,7 @@ public class Path {
             }
             this.parent = parent;
             this.prov = prov;
-            this.kids = new ArrayList(4);	// ?? vs. linkedlist
+            this.kids = new ArrayList<TreeNode>(4);	// ?? vs. linkedlist
             this.depth = (parent == null) ? 0 : (parent.getDepth() + 1);
         }// TreeNode()
 

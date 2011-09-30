@@ -483,7 +483,7 @@ public class NJudgeOrderParser {
     }// tokenize()
 
     /** Creates a List with a single result */
-    private static List createResultList(Result aResult) {
+    private static List<Result> createResultList(Result aResult) {
         final List<Result> list = new ArrayList<Result>(1);
         list.add(aResult);
         return list;

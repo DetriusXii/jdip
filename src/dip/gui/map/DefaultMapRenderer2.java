@@ -158,10 +158,14 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
     // instance variables
     protected final Map<Province, Tracker> trackerMap;			// for rendering units & dislodged units; keyed by Province
     protected final HashMap<Object, Node> layerMap;		// layers to which we render; keyed by LAYER; includes label layers
-    private final HashMap renderSettings;	// control rendering options.
+    private final Map<String, Boolean> renderSettings;	// control rendering options.
+    private final Map<String, List<Power>> renderPowerSetting = new HashMap<String, List<Power>>();
     private final HashMap<String, Location> locMap;			// maps multicoastal province ids -> Location objects for multicoastal provinces
-    private final HashMap<Power, SVGElement>[] powerOrderMap;
-    private HashMap oldRenderSettings;		// old render settings
+    private final List<Map<Power, SVGGElement>> powerOrderMap;
+    private final Map<String, String> renderValueLabelSetting = new HashMap<String, String>();
+    private final Map<String, Boolean> oldRenderSettings =  new HashMap<String, Boolean>();
+    private final Map<String, List<Power>> oldRenderPowerSetting = new HashMap<String, List<Power>>();// old render settings
+    private final Map<String, String> oldRenderValueLabelSetting = new HashMap<String, String>();
     private final dip.world.Map worldMap;	// World Map reference
     private TurnState turnState = null;					// current TurnState
     private final Province[] provinces;
@@ -191,14 +195,14 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
 
         // setup object maps
         trackerMap = new HashMap<Province, Tracker>(113);
-        renderSettings = new HashMap(11);
+        renderSettings = new HashMap<String, Boolean>(11);
         layerMap = new HashMap<Object, Node>(11);
         locMap = new HashMap<String, Location>(17);
 
         // power order hashmap (now with z-axis) setup
-        powerOrderMap = new HashMap[Z_LAYER_NAMES.length];
-        for (int i = 0; i < powerOrderMap.length; i++) {
-            powerOrderMap[i] = new HashMap(11);
+        powerOrderMap = new ArrayList<Map<Power, SVGGElement>>(Z_LAYER_NAMES.length);
+        for (int i = 0; i < Z_LAYER_NAMES.length; i++) {
+            powerOrderMap.add(new HashMap<Power, SVGGElement>(11));
         }
 
         // set default render settings
@@ -206,10 +210,15 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
         renderSettings.put(KEY_SHOW_SUPPLY_CENTERS, Boolean.TRUE);
         renderSettings.put(KEY_SHOW_UNITS, Boolean.TRUE);
         renderSettings.put(KEY_SHOW_DISLODGED_UNITS, Boolean.TRUE);
-        renderSettings.put(KEY_SHOW_ORDERS_FOR_POWERS, powers);
+        
+        final List<Power> powerList = new ArrayList<Power>();
+        for (final Power power: powers) {
+            powerList.add(power);
+        }
+        renderPowerSetting.put(KEY_SHOW_ORDERS_FOR_POWERS, powerList);
         renderSettings.put(KEY_SHOW_UNORDERED, Boolean.FALSE);
         renderSettings.put(KEY_INFLUENCE_MODE, Boolean.FALSE);
-        renderSettings.put(KEY_LABELS, VALUE_LABELS_NONE);
+        renderValueLabelSetting.put(KEY_LABELS, VALUE_LABELS_NONE);
 
         // get map metadata
         mapMeta = new MapMetadata(mapPanel, sp, mapPanel.getClientFrame().isMMDSuppressed());
@@ -443,19 +452,43 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
     }// setTurnState()
 
     /** Get a map rendering setting */
-    public Object getRenderSetting(Object key) {
+    public Boolean getRenderSetting(final String key) {
         synchronized (renderSettings) {
             return renderSettings.get(key);
         }
     }// getRenderSetting()
 
     /** Internally set a Render Setting */
-    protected void setRenderSetting(Object key, Object value) {
+    protected void setRenderSetting(final String key, final Boolean value) {
         synchronized (renderSettings) {
             renderSettings.put(key, value);
         }
     }// setRenderSetting()
 
+    public List<Power> getRenderPowerSetting(final String key) {
+        synchronized(renderPowerSetting) {
+            return renderPowerSetting.get(key);
+        }
+    }
+    
+    protected void setRenderPowerSetting(final String key, final List<Power> powers) {
+        synchronized(renderPowerSetting) {
+            renderPowerSetting.put(key, powers);
+        }
+    }
+    
+    public String getRenderValueLabelSetting(final String key) {
+        synchronized(renderValueLabelSetting) {
+            return renderValueLabelSetting.get(key);
+        }
+    } 
+    
+    protected void setRenderValueLabelSetting(final String key, final String value) {
+        synchronized(renderValueLabelSetting) {
+            renderValueLabelSetting.put(key, value);
+        }
+    }
+    
     /** Get the Symbol Name for the given unit type */
     public String getSymbolName(Unit.Type unitType) {
         if (unitType == Unit.Type.ARMY) {
@@ -493,7 +526,7 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
                 public void run() {
                     SVGGElement orderLayer = (SVGGElement) layerMap.get(LAYER_ORDERS);
 
-                    for (int z = (powerOrderMap.length - 1); z >= 0; z--) {
+                    for (int z = (powerOrderMap.size() - 1); z >= 0; z--) {
                         // determine which order layer we should use.
                         if (z == 0) {
                             // special case: this has its own explicit group in the SVG file
@@ -532,7 +565,7 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
 
                             gElement.setAttributeNS(null, SVGConstants.SVG_ID_ATTRIBUTE, sb.toString());
                             orderLayer.appendChild(gElement);
-                            powerOrderMap[z].put(powers[i], gElement);
+                            powerOrderMap.get(z).put(powers[i], gElement);
                         }
                     }
                 }
@@ -560,7 +593,7 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
      *
      */
     private SVGGElement getPowerSVGGElement(Power p, int z) {
-        return (SVGGElement) powerOrderMap[z].get(p);
+        return powerOrderMap.get(z).get(p);
     }// getPowerSVGGElement()
 
     /**
@@ -568,7 +601,7 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
      *	This manipulates all layers for a given power.
      */
     private void setPowerOrderVisibility(Power p, boolean isVisible) {
-        for (int i = 0; i < powerOrderMap.length; i++) {
+        for (int i = 0; i < powerOrderMap.size(); i++) {
             setElementVisibility(getPowerSVGGElement(p, i), isVisible);
         }
     }// setPowerOrderVisibility()
@@ -578,21 +611,21 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
      *	determine which orders should be displayed.
      */
     protected void unsyncSetVisiblePowers() {
-        Power[] displayedPowers = (Power[]) getRenderSetting(KEY_SHOW_ORDERS_FOR_POWERS);
+        final List<Power> displayedPowers = getRenderPowerSetting(KEY_SHOW_ORDERS_FOR_POWERS);
 
         // displayedPowers contains the powers that are visible.
         // go thru all powers, setting the visibility 
-        for (int i = 0; i < powers.length; i++) {
+        for (final Power power: powers) {
             boolean isVisible = false;
-            for (int j = 0; j < displayedPowers.length; j++) {
-                if (powers[i] == displayedPowers[j]) {
+            for (final Power dPower: displayedPowers) {
+                if (power == displayedPowers) {
                     isVisible = true;
                     break;
                 }
             }
 
             // set visibility
-            setPowerOrderVisibility(powers[i], isVisible);
+            setPowerOrderVisibility(power, isVisible);
         }
     }// unsyncSetVisiblePowers()
 
@@ -601,7 +634,7 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
      *	Power layer G parent elements remain unaltered.
      */
     protected void unsyncRemoveAllOrdersFromDOM() {
-        for (int z = 0; z < powerOrderMap.length; z++) {
+        for (int z = 0; z < powerOrderMap.size(); z++) {
             for (int i = 0; i < powers.length; i++) {
                 SVGGElement powerNode = getPowerSVGGElement(powers[i], z);
 
@@ -645,15 +678,39 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
             // now clear the render settings
             synchronized (renderSettings) {
                 // copy old render settings
-                oldRenderSettings = (HashMap) renderSettings.clone();
-
+                
+                oldRenderSettings.clear();
+                for(final Map.Entry<String, Boolean> me: renderSettings.entrySet()) {
+                    oldRenderSettings.put(me.getKey(), me.getValue());
+                }
+                
+                
+                
                 // if 'show unordered' was enabled, we must first disable it.
                 if (oldRenderSettings.get(MapRenderer2.KEY_SHOW_UNORDERED) == Boolean.TRUE) {
                     renderSettings.put(MapRenderer2.KEY_SHOW_UNORDERED, Boolean.FALSE);
                 }
 
                 renderSettings.clear();
-                renderSettings.put(MapRenderer2.KEY_SHOW_ORDERS_FOR_POWERS, new Power[0]);
+
+            }
+            
+            synchronized(renderPowerSetting) {
+                oldRenderPowerSetting.clear();
+                for(final Map.Entry<String, List<Power>> me: renderPowerSetting.entrySet()) {
+                    oldRenderPowerSetting.put(me.getKey(), me.getValue());
+                }
+                
+                renderPowerSetting.clear();
+                renderPowerSetting.put(MapRenderer2.KEY_SHOW_ORDERS_FOR_POWERS, new ArrayList<Power>());
+            }
+            
+            synchronized(renderValueLabelSetting) {
+                oldRenderValueLabelSetting.clear();
+                for(final Map.Entry<String, String> me: renderValueLabelSetting.entrySet()) {
+                    renderValueLabelSetting.put(me.getKey(), me.getValue());
+                }
+                renderValueLabelSetting.clear();
             }
 
             // hide layers we don't want (units, orders, sc)
@@ -669,9 +726,9 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
             elLayer = (SVGElement) layerMap.get(LAYER_MAP);	// always show map in influence mode
             setElementVisibility(elLayer, true);
 
-            Power[] visiblePowers = (Power[]) oldRenderSettings.get(MapRenderer2.KEY_SHOW_ORDERS_FOR_POWERS);
-            for (int i = 0; i < visiblePowers.length; i++) {
-                setPowerOrderVisibility(visiblePowers[i], false);
+            final List<Power> visiblePowers = oldRenderPowerSetting.get(MapRenderer2.KEY_SHOW_ORDERS_FOR_POWERS);
+            for (final Power power: visiblePowers) {
+                setPowerOrderVisibility(power, false);
             }
 
             // reset renderSetting influence state, since we just cleared it
@@ -695,13 +752,23 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
             // this must be set for unsyncUpdateProvince to work correctly
             // we also want to reset the KEY_INFLUENCE_MODE
             synchronized (renderSettings) {
-                Iterator iter = oldRenderSettings.entrySet().iterator();
-                while (iter.hasNext()) {
-                    Map.Entry me = (Map.Entry) iter.next();
+                for(final Map.Entry<String, Boolean> me: oldRenderSettings.entrySet()) {
                     renderSettings.put(me.getKey(), me.getValue());
                 }
 
                 renderSettings.put(MapRenderer2.KEY_INFLUENCE_MODE, Boolean.FALSE);
+            }
+            
+            synchronized(renderPowerSetting) {
+                for(final Map.Entry<String, List<Power>> me: oldRenderPowerSetting.entrySet()) {
+                    renderPowerSetting.put(me.getKey(), me.getValue());
+                }
+            }
+            
+            synchronized(renderValueLabelSetting) {
+                for(final Map.Entry<String, String> me: oldRenderValueLabelSetting.entrySet()) {
+                    renderValueLabelSetting.put(me.getKey(), me.getValue());
+                }
             }
 
             // update province CSS values
@@ -728,7 +795,6 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
                     ((Boolean) getRenderSetting(KEY_SHOW_MAP)).booleanValue());
 
             // destroy old render settings
-            oldRenderSettings = null;
 
             // enable menu items [late]
             cm.setEnabled(ClientMenu.VIEW_ORDERS, !value);
@@ -1210,6 +1276,9 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
 
         return false;
     }// isOrdered()
+
+
+   
 
     /** 
      *	Keeps track of the DOM Elements and other info to monitor changes; ONE (and only one)
