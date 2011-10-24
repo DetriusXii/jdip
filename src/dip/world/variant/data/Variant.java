@@ -285,7 +285,7 @@ public class Variant implements Cloneable, Comparable<Variant> {
     }// compareTo()
 
     /** Finds the MapGraphic by name; case insensitive. */
-    public MapGraphic getMapGrapic(String mgName) {
+    public MapGraphic getMapGraphic(String mgName) {
         if (mapGraphics != null) {
             for (int i = 0; i < mapGraphics.length; i++) {
                 if (mapGraphics[i].getName().equalsIgnoreCase(mgName)) {
