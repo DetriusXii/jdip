@@ -62,7 +62,11 @@ import dip.world.TurnState;
 public class F2FOrderDisplayPanel extends OrderDisplayPanel {
     // i18n constants
 
-    private static final String SUBMIT_BUTTON_TEXT = "F2FODP.button.submit.text";
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static final String SUBMIT_BUTTON_TEXT = "F2FODP.button.submit.text";
     private static final String SUBMIT_BUTTON_TIP = "F2FODP.button.submit.tooltip";
     private static final String ALLPOWERS_TAB_LABEL = "F2FODP.tab.label.allpowers";
     private static final String CONFIRM_TITLE = "F2FODP.confirm.title";

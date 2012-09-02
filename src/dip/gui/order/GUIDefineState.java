@@ -43,6 +43,11 @@ import dip.world.Unit;
 public class GUIDefineState extends DefineState implements GUIOrder
 {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** Creates a GUIDefineState */
 	protected GUIDefineState()
 	{

@@ -46,6 +46,11 @@ package dip.order;
 public class OrderWarning extends OrderException
 {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** Create an OrderWarning. */
 	public OrderWarning(String text)
 	{

@@ -43,6 +43,11 @@ import dip.order.OrderException;
 
 public final class Coast implements java.io.Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	// transient data
 	transient static private Pattern[] patterns = null;
 	

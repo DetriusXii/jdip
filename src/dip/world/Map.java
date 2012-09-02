@@ -47,6 +47,10 @@ import dip.order.OrderException;
 */
 public class Map implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// constants
 	private static final int MAP_SIZE = 211; 	// should be prime
 	private static final int POWER_SIZE = 17;	// should be prime

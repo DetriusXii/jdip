@@ -151,6 +151,10 @@ public class Unit implements java.io.Serializable, Cloneable
 	*/
 	public static class Type extends Object implements java.io.Serializable
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		// internal i18n key constants
 		private static final String UNIT_TYPE_PREFIX			= "unit.type.";
 		private static final String UNIT_TYPE_BRIEF_SUFFIX 		= ".brief";

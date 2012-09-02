@@ -275,7 +275,11 @@ public class RetreatChecker {
      */
     private class RCMoveResult extends OrderResult {
 
-        private final Move move;
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		private final Move move;
         private boolean isSuccess = false;
         private boolean isByConvoy = false;
         private boolean isValid = true;

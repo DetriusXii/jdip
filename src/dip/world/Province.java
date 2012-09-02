@@ -71,7 +71,11 @@ land + (!single) + (any combination of north/south/west/east)
  */
 public class Province implements java.io.Serializable, Comparable<Province> {
 
-    // immutable persistent fields
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	// immutable persistent fields
     private final String fullName; 				// fullName MUST BE UNIQUE
     private final String shortNames[]; 			// always has AT LEAST one, and all are globally unique
     private final int index;					// contiguous index

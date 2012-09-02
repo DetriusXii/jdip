@@ -41,6 +41,10 @@ import dip.world.Unit;
 */
 public class DefineState extends Order
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// il8n constants
 	private static final String DEFSTATE_NO_UNIT_TYPE = "DEFSTATE_NO_UNIT_TYPE";
 	private static final String DEFSTATE_FORMAT = "DEFSTATE_FORMAT";

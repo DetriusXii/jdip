@@ -71,6 +71,10 @@ import dip.world.Phase;
 
 public class PressDialog extends XDialog
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// i18n constants
 	//
 	private static final String PD_GETMAIL_ICON 	= "press.button.getmail.icon";
@@ -595,6 +599,11 @@ public class PressDialog extends XDialog
 	/** Render the sorted columns with an up/down arrow. */
 	private class SortHeaderRenderer extends DefaultTableCellRenderer
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, 
 			boolean isSelected, boolean hasFocus, int row, int column)
@@ -642,6 +651,10 @@ public class PressDialog extends XDialog
 	*/
 	private class PMCellRenderer extends DefaultTableCellRenderer
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		private final Font boldFont;
 		private final DateFormat dtInstance;
 		
@@ -933,6 +946,11 @@ public class PressDialog extends XDialog
 	*/
 	private class MessagePanel extends JPanel
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		private JEditorPane body;
 		
 		private JTextField subject;

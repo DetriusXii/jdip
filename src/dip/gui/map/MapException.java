@@ -25,6 +25,11 @@ package dip.gui.map;
 
 public class MapException extends java.lang.Exception
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** Constructs a new exception with null as its detail message. */
 	public MapException()
 	{

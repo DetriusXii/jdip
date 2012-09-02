@@ -66,6 +66,10 @@ import dip.world.Unit;
  */
 public abstract class Order extends Object implements Orderable, java.io.Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// resource keys
 	private static final String ORD_VAL_NOUNIT = "ORD_VAL_NOUNIT";
 	private static final String ORD_VAL_BADPOWER = "ORD_VAL_BADPOWER";

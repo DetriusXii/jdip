@@ -63,6 +63,10 @@ import dip.world.variant.data.Variant;
 */
 public class NGDRuleOptions extends JPanel implements NewGameDialog.NGDTabPane
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// constants
 	private static final String TAB_NAME			= "NGDRuleOpts.tab.name";
 	private static final String BUTTON_RESET 		= "NGDRuleOpts.button_reset";

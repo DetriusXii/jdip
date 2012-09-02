@@ -44,6 +44,10 @@ public class ValidationOptions implements Serializable, Cloneable
 {
 	// Contants: never internationalized.
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// global: parsing strictness
 	// NOTE: for il8n:
 	//		NAME = key for il8n name

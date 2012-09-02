@@ -63,6 +63,10 @@ import dip.world.metadata.PlayerMetadata;
 */
 public class MetadataDialog extends HeaderDialog
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// il8n constants
 	private static final String TITLE = "MetadataDialog.title";
 	private static final String HEADER_LOCATION = "MetadataDialog.location.header";
@@ -230,6 +234,10 @@ public class MetadataDialog extends HeaderDialog
 	
 	private class GamePanel extends JPanel
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		private JTextPane notes = new JTextPane();
 		private JTextField comment = new JTextField(COLUMNS_LONG);
 		private JTextField gameName = new JTextField(COLUMNS_LONG);
@@ -320,6 +328,10 @@ public class MetadataDialog extends HeaderDialog
 	
 	private class PlayerPanel extends JPanel
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		private JTextPane notes = new JTextPane();
 		private JTextField name = new JTextField(COLUMNS);
 		private JTextField uri = Utils.createURITextField(COLUMNS);

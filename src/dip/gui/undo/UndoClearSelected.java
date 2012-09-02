@@ -39,6 +39,10 @@ import dip.misc.Utils;
 
 public class UndoClearSelected extends CompoundEdit implements java.io.Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final static String PRESENTATION_NAME = "Undo.order.clearselected";
 	
 	public UndoClearSelected()

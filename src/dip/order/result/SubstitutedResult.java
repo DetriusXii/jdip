@@ -36,6 +36,10 @@ import dip.order.Orderable;
 */
 public class SubstitutedResult extends OrderResult
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Orderable newOrder = null;
 	
 	

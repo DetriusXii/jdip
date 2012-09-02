@@ -29,6 +29,12 @@ package dip.world;
 */
 public class Power implements Comparable<Power>, java.io.Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
 	// constants for name array; always stored in this order.
 	private static final int FULL_NAME	= 0;	// required
 

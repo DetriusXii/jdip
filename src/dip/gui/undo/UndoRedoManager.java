@@ -43,6 +43,12 @@ import dip.misc.Log;
 */
 public class UndoRedoManager extends UndoManager
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
 	// the max number of undo/redo events we can hold
 	private static final int 	MAX_UNDOS			= 1000;
 	

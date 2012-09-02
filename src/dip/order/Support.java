@@ -48,6 +48,10 @@ import dip.world.Unit;
 */
 public class Support extends Order
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// il8n constants
 	private static final String SUPPORT_VAL_NOSELF = "SUPPORT_VAL_NOSELF";
 	private static final String SUPPORT_VAL_NOMOVE = "SUPPORT_VAL_NOMOVE";

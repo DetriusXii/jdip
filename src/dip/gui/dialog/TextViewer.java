@@ -86,6 +86,11 @@ import dip.misc.Utils;
 */
 public class TextViewer extends HeaderDialog
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** "Loading" HTML message */
 	private static final String WAIT_MESSAGE = "TextViewer.message.wait";
 	

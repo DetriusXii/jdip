@@ -49,6 +49,11 @@ import dip.world.Unit;
 */
 public class GUIRemove extends Remove implements GUIOrder
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	// i18n
 	public static final String NO_UNITS_TO_REMOVE = "GUIRemove.no_removes";
 	

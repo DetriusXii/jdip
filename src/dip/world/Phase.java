@@ -41,6 +41,11 @@ import dip.misc.Utils;
 */
 public class Phase implements java.io.Serializable, Comparable<Phase>
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	// internal constants: describes ordering of phases
 	// Setup is independent of this ordering.
 	// ordering: (for a given year)
@@ -391,6 +396,10 @@ public class Phase implements java.io.Serializable, Comparable<Phase>
 	*/
 	public static class SeasonType implements Serializable, Comparable
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		// always-accepted english constants for SeasonTypes
 		protected static final String CONST_SPRING 	= "SPRING";
 		protected static final String CONST_FALL 	= "FALL";
@@ -617,6 +626,10 @@ public class Phase implements java.io.Serializable, Comparable<Phase>
 	*/
 	public static class PhaseType implements Serializable, Comparable
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		// always-accepted english constants for phase types
 		// these MUST be in lower case
 		protected static final String CONST_ADJUSTMENT = "adjustment";

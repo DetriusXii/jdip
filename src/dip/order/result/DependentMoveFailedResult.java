@@ -38,6 +38,10 @@ import dip.order.Orderable;
 */
 public class DependentMoveFailedResult extends OrderResult
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// instance fields
 	private Orderable dependentOrder = null;
 	

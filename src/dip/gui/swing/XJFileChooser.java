@@ -383,6 +383,12 @@ public class XJFileChooser
 	*/
 	private class CheckedJFileChooser extends JFileChooser
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+
 		public CheckedJFileChooser()
 		{
 			super((File) null);

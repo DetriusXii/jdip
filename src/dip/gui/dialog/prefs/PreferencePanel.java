@@ -32,6 +32,13 @@ package dip.gui.dialog.prefs;
 public abstract class PreferencePanel extends javax.swing.JPanel
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
+
+	/**
 	*	Apply changes made by user.
 	*
 	*/

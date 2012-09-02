@@ -39,6 +39,11 @@ import dip.world.Unit;
 */
 public class Waive extends Order
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	// il8n constants
 	private static final String WAIVE_FORMAT = "WAIVE_FORMAT";
 	

@@ -57,6 +57,10 @@ import dip.order.ValidationOptions.Option;
 */
 public class ValidationOptionsDialog extends HeaderDialog
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// i18n constants
 	private static final String DIALOG_TITLE = "VOD.title";
 	private static final String INIT_TEXT = "VOD.starttext";

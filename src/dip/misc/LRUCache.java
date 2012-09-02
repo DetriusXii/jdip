@@ -34,6 +34,10 @@ import java.util.Map;
 */
 public class LRUCache<T> extends LinkedHashMap<String, T> 
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int maxsize;
 	
 	

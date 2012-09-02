@@ -37,6 +37,10 @@ import dip.misc.Utils;
 */
 public class EmptyControlBar extends ControlBar
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// same icon as used by 'best fit' in ViewControlBar 
 	private static final String ICON_ZOOM_FIT	= "resource/common/icons/24x24/Refresh24.gif";
 	

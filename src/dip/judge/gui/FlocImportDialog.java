@@ -53,6 +53,10 @@ import dip.world.World;
 */
 public class FlocImportDialog extends HeaderDialog implements FlocImportCallback
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// i18n constants
 	private static final String TITLE 			= "FlocImportDialog.title";
 	private static final String HEADER_LOCATION = "FlocImportDialog.header.location";

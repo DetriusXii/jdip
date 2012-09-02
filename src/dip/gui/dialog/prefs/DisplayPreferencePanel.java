@@ -101,7 +101,7 @@ public class DisplayPreferencePanel extends PreferencePanel
 	
 	private JCheckBox cbPossessive;
 	private JCheckBox cbDot;
-	private JComboBox arrowBox;
+	private JComboBox<String> arrowBox;
 	
 	private JLabel example;
 	
@@ -294,7 +294,7 @@ public class DisplayPreferencePanel extends PreferencePanel
 		cbDot.setSelected(orderFormat.getEndWithDot());
 		cbDot.addChangeListener(ecl);
 		
-		arrowBox = new JComboBox(OrderFormatOptions.ARROWS);
+		arrowBox = new JComboBox<String>(OrderFormatOptions.ARROWS);
 		arrowBox.setEditable(false);
 		arrowBox.setPrototypeDisplayValue("MMM");
 		arrowBox.setSelectedItem(orderFormat.getArrow());
@@ -347,10 +347,14 @@ public class DisplayPreferencePanel extends PreferencePanel
 	*/
 	private static class ChoiceSelection extends JPanel
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		private ButtonGroup bg;
 		private JRadioButton brief;
 		private JRadioButton full;
-		private JComboBox styleBox;
+		private JComboBox<String> styleBox;
 		private JLabel label;
 		private JCheckBox checkBox = null;
 		private boolean allowPlural = false;
@@ -387,7 +391,7 @@ public class DisplayPreferencePanel extends PreferencePanel
 			label = new JLabel(labelText);
 			
 			// combobox 
-			styleBox = new JComboBox(Utils.parseCSV(
+			styleBox = new JComboBox<String>(Utils.parseCSV(
 				Utils.getLocalString(I18N_STYLE_NAMES)));
 			styleBox.setPrototypeDisplayValue("MMMMMMMMMM");
 			styleBox.setEditable(false);

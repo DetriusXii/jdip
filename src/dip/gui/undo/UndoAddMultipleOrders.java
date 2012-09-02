@@ -39,6 +39,10 @@ import dip.order.Orderable;
 */	
 public class UndoAddMultipleOrders extends XAbstractUndoableEdit
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// instance variables
 	private final static String PRESENTATION_NAME_PREFIX = "Undo.order.add.multiple";
 	private Orderable[] orders;

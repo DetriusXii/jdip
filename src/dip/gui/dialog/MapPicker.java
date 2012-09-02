@@ -40,6 +40,10 @@ import dip.world.variant.data.Variant;
 public class MapPicker extends HeaderDialog
 {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// i18n constants
 	private static final String TITLE = "MapPicker.title";
 	private static final String HEADER_LOCATION = "MapPicker.location.header";

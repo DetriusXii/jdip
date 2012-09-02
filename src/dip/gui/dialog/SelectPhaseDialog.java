@@ -49,6 +49,10 @@ import dip.world.Phase;
 */
 public class SelectPhaseDialog extends HeaderDialog
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// i18n constants
 	private static final String TITLE = "SPD.title";
 	private static final String HEADER_LOCATION = "SPD.location.header";

@@ -41,6 +41,10 @@ import dip.world.Province;
 */
 public class DislodgedResult extends OrderResult
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// instance fields
 	private Location[] retreatLocations = null; 
 	private Province dislodger = null;

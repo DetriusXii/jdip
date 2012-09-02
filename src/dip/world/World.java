@@ -62,15 +62,10 @@ import dip.world.metadata.PlayerMetadata;
 */
 public class World implements Serializable
 {
-	// constants for non-turn-data lookup
-	private static final String KEY_GLOBAL_DATA = "_global_data_";
-	private static final String KEY_VICTORY_CONDITIONS = "_victory_conditions_";
-	
-	private static final String KEY_WORLD_METADATA = "_world_metadata_";
-	private static final String KEY_UNDOREDOMANAGER = "_undo_redo_manager_";
-	private static final String KEY_GAME_SETUP = "_game_setup_";
-	private static final String KEY_PRESS_STORE = "_press_store_";
-	private static final String KEY_VARIANT_INFO = "_variant_info_";
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	
 	// instance variables
 	private SortedMap<Phase, TurnState> turnStates = null;			// turn data

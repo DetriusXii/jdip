@@ -55,7 +55,11 @@ import dip.world.variant.data.Variant;
 public class NGDStartOptions extends JPanel implements NewGameDialog.NGDTabPane {
     // constants
 
-    private static final int BORDER = 5;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static final int BORDER = 5;
     private static final String TAB_NAME = "NGDoptions.tab.name";
     private static final String BUTTON_RESET = "NGDoptions.button_reset";
     private static final String LABEL_TIME = "NGDoptions.label_time";

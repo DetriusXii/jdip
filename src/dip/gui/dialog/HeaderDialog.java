@@ -519,6 +519,10 @@ public class HeaderDialog extends XDialog
 	*/
 	public static class GradientXJEditorPane extends XJEditorPane
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		// header inset (inner-margin)
 		private static final int MARGIN = 5;
 		

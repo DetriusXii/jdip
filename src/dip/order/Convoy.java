@@ -48,6 +48,10 @@ import dip.world.Unit;
 
 public class Convoy extends Order
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// il8n constants
 	private static final String CONVOY_SEA_FLEETS = "CONVOY_SEA_FLEETS";
 	private static final String CONVOY_ONLY_ARMIES = "CONVOY_ONLY_ARMIES";

@@ -69,6 +69,11 @@ import dip.misc.Utils;
 */
 public class GeneralPreferencePanel extends PreferencePanel
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	// constants
 	public static final int BORDER = 10;
 	

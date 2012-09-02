@@ -248,6 +248,10 @@ public class RuleOptions implements Serializable
 	*/
 	public static class OptionValue implements Serializable
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		// instance variables
 		final String name;
 		

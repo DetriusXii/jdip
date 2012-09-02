@@ -41,6 +41,10 @@ import javax.swing.UIManager;
 */
 public class GradientJLabel extends JPanel
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	final JLabel label;
 	
 	/** Create a GradientJLabel */

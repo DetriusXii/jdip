@@ -35,6 +35,10 @@ import dip.order.Orderable;
 */
 public class OrderResult extends Result
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// instance fields
 	/** The ResultType */
 	protected ResultType resultType = null;
@@ -193,6 +197,10 @@ public class OrderResult extends Result
 	*/
 	public static class ResultType implements Serializable, Comparable
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		// key constants
 		private static final String KEY_VALIDATION_FAILURE = "VALIDATION_FAILURE";
 		private static final String KEY_SUCCESS = "SUCCESS";

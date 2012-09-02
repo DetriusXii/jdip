@@ -35,6 +35,11 @@ import java.net.URI;
 */
 public class PlayerMetadata implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	// constants
 	private static final String EMPTY = "";
 	

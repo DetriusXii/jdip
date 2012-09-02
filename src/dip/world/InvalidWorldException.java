@@ -31,6 +31,11 @@ package dip.world;
 public class InvalidWorldException extends Exception
 {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** Create an InvalidWorldException */
 	public InvalidWorldException(String message)
 	{

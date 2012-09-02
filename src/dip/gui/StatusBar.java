@@ -39,6 +39,10 @@ import javax.swing.border.EtchedBorder;
 */
 public class StatusBar extends JPanel
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final JTextField text;
 	private final JTextField mode;
 	private final static String INITIAL_MESSAGE = "";

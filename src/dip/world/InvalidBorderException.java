@@ -29,6 +29,11 @@ package dip.world;
 class InvalidBorderException extends Exception
 {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** Create an InvalidBorderException */
 	public InvalidBorderException(String message)
 	{

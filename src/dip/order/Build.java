@@ -45,6 +45,10 @@ import dip.world.Unit;
 
 public class Build extends Order
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// il8n constants
 	private static final String BUILD_MULTICOAST = "BUILD_MULTICOAST";
 	private static final String BUILD_HOME_SUPPLY = "BUILD_HOME_SUPPLY";

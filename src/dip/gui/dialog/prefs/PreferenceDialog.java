@@ -45,6 +45,10 @@ import dip.misc.Utils;
 */
 public class PreferenceDialog extends HeaderDialog
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// constants
 	private static final String TITLE = "PreferenceDialog.title";
 	private static final String HEADER_LOCATION = "PreferenceDialog.header";

@@ -42,6 +42,11 @@ import dip.world.Unit;
 */
 public class Hold extends Order
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	// il8n
 	private static final String HOLD_FORMAT = "HOLD_FORMAT";
 	

@@ -59,6 +59,10 @@ import dip.world.Unit;
  */
 public class OrderControlBar extends ViewControlBar
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// action commands: movement phase
 	private final static String MODE_HOLD = "MODE_HOLD";
 	private final static String MODE_MOVE = "MODE_MOVE";

@@ -98,6 +98,10 @@ public class BCSpinner extends JSpinner
 	
 	private static class SpinnerYearTypeModel extends AbstractSpinnerModel
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		private YearType value;
 		private int minimum, maximum;
 		

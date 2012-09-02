@@ -86,6 +86,11 @@ import dip.world.variant.data.Variant;
 */
 public class MapPanel extends JPanel
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	// constants
 	// il8n localizers
 	private static final String MP_VARIANT_NOT_FOUND = "MapPanel.error.novariant";

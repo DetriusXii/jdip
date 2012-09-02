@@ -46,6 +46,11 @@ import java.util.Map;
 */
 public class Position implements java.io.Serializable, Cloneable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	// size constants; these should be prime
 	private static final int POWER_SIZE = 17;
 	
@@ -698,6 +703,10 @@ public class Position implements java.io.Serializable, Cloneable
 	/** All mutable Province data is kept here */
 	private class ProvinceData implements java.io.Serializable
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		// instance variables
 		private Unit 	unit = null;
 		private Unit 	dislodgedUnit = null;
@@ -811,6 +820,10 @@ public class Position implements java.io.Serializable, Cloneable
 	/** All mutable Power data is kept here */
 	private class PowerData implements java.io.Serializable
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		// instance variables
 		private boolean isEliminated = false;
 		

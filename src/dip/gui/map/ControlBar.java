@@ -40,6 +40,10 @@ import dip.world.Location;
 */
 public abstract class ControlBar extends JToolBar implements DOMUIEventHandler
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	protected final MapPanel mapPanel;
 	
 	

@@ -31,6 +31,11 @@ package dip.world.variant;
 public class NoVariantsException extends Exception
 {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public NoVariantsException(String message)
 	{
 		super(message);

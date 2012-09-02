@@ -63,6 +63,10 @@ import dip.world.Unit;
 */
 public class EditControlBar extends ViewControlBar
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// i18n constants
     private static final String POWER_LABEL          = "EdtConBar.label.power";
     private static final String BUTTON_TEXT_ARMY     = "EdtConBar.button.text.army";

@@ -90,6 +90,10 @@ import dip.world.variant.VariantManager;
 */
 public class ClientFrame extends JFrame
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// public property constants for PropertyChange events
 	/** Event indicating that a World object was created */
 	public static final String EVT_WORLD_CREATED = "EVT_WORLD_CREATED";

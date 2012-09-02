@@ -38,6 +38,11 @@ import dip.world.Province;
 */	
 public class UndoEditSCOwner extends XAbstractUndoableEdit
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static final String PRESENTATION_NAME = "Undo.edit.changescowner";
 
 	// instance variables

@@ -51,6 +51,10 @@ public class GUIHold extends Hold implements GUIOrder
 {
 	// i18n keys
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// instance variables
 	private transient final static int REQ_LOC = 1;
 	private transient int currentLocNum = 0;

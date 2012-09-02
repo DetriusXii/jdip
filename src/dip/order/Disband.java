@@ -41,6 +41,11 @@ import dip.world.Unit;
 */
 public class Disband extends Order
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	// il8n
 	private static final String DISBAND_FORMAT = "DISBAND_FORMAT";
 	
