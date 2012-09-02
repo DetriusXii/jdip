@@ -21,19 +21,21 @@
 //
 package dip.order;
 
+import dip.misc.Log;
+import dip.misc.Utils;
 import dip.order.result.OrderResult.ResultType;
-
-import dip.world.*;
-
 import dip.process.Adjudicator;
 import dip.process.OrderState;
 import dip.process.Tristate;
-
-import dip.misc.Log;
-import dip.misc.Utils;
-
-import java.util.List;
-import java.util.Iterator;
+import dip.world.Border;
+import dip.world.Coast;
+import dip.world.Location;
+import dip.world.Path;
+import dip.world.Position;
+import dip.world.Power;
+import dip.world.RuleOptions;
+import dip.world.TurnState;
+import dip.world.Unit;
 
 
 /**
@@ -194,17 +196,20 @@ public class Support extends Order
 	
 	
 	
+	@Override
 	public String getFullName()
 	{
 		return orderNameFull;
 	}// getName()
 	
+	@Override
 	public String getBriefName()				
 	{
 		return orderNameBrief;
 	}// getBriefName()
 	
 	
+	@Override
 	public String getDefaultFormat()
 	{
 		if(isSupportingHold())
@@ -216,6 +221,7 @@ public class Support extends Order
 	}// getFormatBrief()
 	
 	
+	@Override
 	public String toBriefString()
 	{
 		StringBuffer sb = new StringBuffer(64);
@@ -238,6 +244,7 @@ public class Support extends Order
 	}// toBriefString()
 	
 	
+	@Override
 	public String toFullString()
 	{
 		StringBuffer sb = new StringBuffer(128);
@@ -262,6 +269,7 @@ public class Support extends Order
 	
 	
 	
+	@Override
 	public boolean equals(Object obj)
 	{
 		if(obj instanceof Support)
@@ -280,6 +288,7 @@ public class Support extends Order
 	}// equals()	
 	
 	
+	@Override
 	public void validate(TurnState state, ValidationOptions valOpts, RuleOptions ruleOpts)
 	throws OrderException
 	{
@@ -374,6 +383,7 @@ public class Support extends Order
 	*	At this time, we do not check for narrowing conventions in a support order.
 	*
 	*/
+	@Override
 	public void verify(Adjudicator adjudicator)
 	{
 		String failureText = null;					
@@ -445,6 +455,7 @@ public class Support extends Order
 	*		<li>Support to this space (only considered if attacked, to prevent dislodgement)
 	*	</ol>
 	*/
+	@Override
 	public void determineDependencies(Adjudicator adjudicator)
 	{
 		addSupportsOfAndMovesToSource(adjudicator);
@@ -505,6 +516,7 @@ public class Support extends Order
 				only 2.c.3.b.3, 2.b.1.b result in UNCERTAIN success results.
 		</pre>
 	*/
+	@Override
 	public void evaluate(Adjudicator adjudicator)
 	{
 		Log.println("--- evaluate() dip.order.Support ---");

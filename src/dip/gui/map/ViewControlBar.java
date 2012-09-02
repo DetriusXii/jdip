@@ -22,34 +22,23 @@
 //
 package dip.gui.map;
 
-import dip.world.Location;
-
-import dip.misc.Utils;
-import dip.gui.order.GUIOrder;
-
-import java.awt.geom.*;
-
-import javax.swing.JButton;
-import javax.swing.ActionMap;
-
-import javax.swing.*;
-import org.apache.batik.swing.*;
-import java.awt.geom.AffineTransform;
-import java.awt.event.ActionEvent;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.geom.AffineTransform;
 
-import org.apache.batik.swing.JSVGCanvas; 
-import org.apache.batik.dom.events.DOMKeyEvent;
-import org.w3c.dom.events.MouseEvent;
-
-import org.apache.batik.*;
-import org.apache.batik.dom.*;
-import org.apache.batik.util.*;
-import org.w3c.dom.svg.*;
-import org.w3c.dom.svg.SVGSVGElement;
+import javax.swing.AbstractAction;
+import javax.swing.JButton;
 
 import org.apache.batik.bridge.ViewBox;
+import org.apache.batik.dom.events.DOMKeyEvent;
 import org.apache.batik.gvt.CanvasGraphicsNode;
+import org.apache.batik.swing.JSVGCanvas;
+import org.w3c.dom.events.MouseEvent;
+import org.w3c.dom.svg.SVGSVGElement;
+
+import dip.gui.order.GUIOrder;
+import dip.misc.Utils;
+import dip.world.Location;
 
 
 /**
@@ -100,6 +89,7 @@ public class ViewControlBar extends ControlBar
 	}// ViewControlBar()
 	
 	/** Called when the mouse pointer enters a province */
+	@Override
 	public void mouseOver(MouseEvent me, Location loc)
 	{
 		if(loc == null)
@@ -113,6 +103,7 @@ public class ViewControlBar extends ControlBar
 	}// mouseOver()
 	
 	/** Called when the mouse pointer leaves a province */
+	@Override
 	public void mouseOut(MouseEvent me, Location loc)
 	{
 		mapPanel.statusBarUtils.clearText();
@@ -120,6 +111,7 @@ public class ViewControlBar extends ControlBar
 	
 	
 	/** Handles ZoomIn / ZoomOut / Revert key functionality. */
+	@Override
 	public void keyPressed(DOMKeyEvent ke, Location loc)
 	{
 		int charCode = ke.getCharCode();	// note: getKeyCode() DOES NOT WORK
@@ -149,6 +141,7 @@ public class ViewControlBar extends ControlBar
 		// 
 		fit = add(new AbstractAction()
 		{
+			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
 				JSVGCanvas canvas = mapPanel.getJSVGCanvas();

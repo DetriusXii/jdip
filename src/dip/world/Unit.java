@@ -22,7 +22,6 @@
 //
 package dip.world;
 
-import dip.order.Order;
 import dip.misc.Utils;
 
 
@@ -38,6 +37,7 @@ import dip.misc.Utils;
 
 public class Unit implements java.io.Serializable, Cloneable
 {
+	private static final long serialVersionUID = 1L;
 	// instance variables
 	protected final Unit.Type type;
 	protected final Power owner;
@@ -97,6 +97,7 @@ public class Unit implements java.io.Serializable, Cloneable
 	public Unit.Type getType() 			{ return type; }
 	
 	/** Returns if two Units are equivalent. */
+	@Override
 	public boolean equals(final Object obj)
 	{
 		if(obj == this)
@@ -118,6 +119,7 @@ public class Unit implements java.io.Serializable, Cloneable
 	*	strict implementation of clone(); a constructor is
 	*	invoked for performance reasons.
 	*/
+	@Override
 	public Object clone()
 	{
 		return new Unit(owner, type, coast);
@@ -125,6 +127,7 @@ public class Unit implements java.io.Serializable, Cloneable
 	
 	
 	/** Displays internal object values. For debugging use only! */
+	@Override
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer(64);
@@ -202,6 +205,7 @@ public class Unit implements java.io.Serializable, Cloneable
 		}// getShortName();
 			
 		/** Get the short name */
+		@Override
 		public String toString()
 		{
 			return shortName;
@@ -214,6 +218,7 @@ public class Unit implements java.io.Serializable, Cloneable
 		}// getFullNameWithArticle()
 		
 		/** Returns the hashcode */
+		@Override
 		public int hashCode()
 		{
 			return name.hashCode();

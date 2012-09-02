@@ -39,18 +39,16 @@ import dip.misc.Utils;
 import dip.order.Build;
 import dip.order.Disband;
 import dip.order.Move;
-import dip.order.NJudgeOrderParser;
 import dip.order.NJudgeOrderParser.NJudgeOrder;
-import dip.order.Order;
 import dip.order.OrderException;
 import dip.order.OrderFactory;
 import dip.order.Orderable;
 import dip.order.Remove;
 import dip.order.ValidationOptions;
 import dip.order.result.DislodgedResult;
-import dip.order.result.SubstitutedResult;
 import dip.order.result.OrderResult;
 import dip.order.result.Result;
+import dip.order.result.SubstitutedResult;
 import dip.process.Adjustment;
 import dip.world.Location;
 import dip.world.Phase;
@@ -707,9 +705,9 @@ final class JudgeImportHistory {
             // now that all orders are parsed, and all units are cleared, put
             // unit in the proper place.
             //
-            Iterator iter = results.iterator();
+            Iterator<Result> iter = results.iterator();
             while (iter.hasNext()) {
-                Result result = (Result) iter.next();
+                Result result = iter.next();
                 if (result instanceof OrderResult) {
                     OrderResult ordResult = (OrderResult) result;
                     Orderable order = ordResult.getOrder();

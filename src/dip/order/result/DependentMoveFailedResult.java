@@ -21,12 +21,9 @@
 //
 package dip.order.result;
 
-import dip.order.Orderable;
-import dip.order.OrderFormat;
-import dip.order.OrderFormatOptions;
-import dip.world.Location;
-import dip.world.Province;
 import dip.misc.Utils;
+import dip.order.OrderFormatOptions;
+import dip.order.Orderable;
 
 
 /**
@@ -66,6 +63,7 @@ public class DependentMoveFailedResult extends OrderResult
 	*	Creates an appropriate internationalized text 
 	*	message given the set and unset parameters.
 	*/
+	@Override
 	public String getMessage(OrderFormatOptions ofo)
 	{
 		/*
@@ -81,6 +79,7 @@ public class DependentMoveFailedResult extends OrderResult
 	/**
 	*	Primarily for debugging.
 	*/
+	@Override
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer(256);

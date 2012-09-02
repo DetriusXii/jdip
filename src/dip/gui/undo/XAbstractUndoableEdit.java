@@ -22,10 +22,8 @@
 //
 package dip.gui.undo;
 
-import dip.order.Orderable;
-import dip.gui.OrderDisplayPanel;
 
-import javax.swing.undo.*;
+import javax.swing.undo.AbstractUndoableEdit;
 
 
 /**
@@ -36,6 +34,7 @@ import javax.swing.undo.*;
 */	
 public abstract class XAbstractUndoableEdit extends AbstractUndoableEdit implements java.io.Serializable
 {
+	private static final long serialVersionUID = 1L;
 	protected UndoRedoManager undoRedoManager = null;
 	
 	/**

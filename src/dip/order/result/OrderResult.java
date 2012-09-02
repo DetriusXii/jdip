@@ -21,9 +21,9 @@
 //
 package dip.order.result;
 
-import dip.order.Orderable;
-
 import java.io.Serializable;
+
+import dip.order.Orderable;
 
 /**
 *	A message sent to a specific Power that refers to a specific order.
@@ -86,6 +86,7 @@ public class OrderResult extends Result
 	}// getOrder()
 	
 	/** For debugging */
+	@Override
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer(180);
@@ -112,6 +113,7 @@ public class OrderResult extends Result
 	*	If power is null, it will be first in ascending order.
 	* 	If message may be empty, but never is null.
 	*/
+	@Override
 	public int compareTo(Result o)
 	{
 		if(o instanceof OrderResult)
@@ -241,12 +243,14 @@ public class OrderResult extends Result
 		*/
 		
 		/** For debugging: return the name */
+		@Override
 		public String toString()
 		{
 			return key;
 		}// toString()
 		
 		/** Sorts the result type */
+		@Override
 		public int compareTo(Object obj)
 		{
 			ResultType rt = (ResultType) obj;

@@ -22,13 +22,14 @@
 //
 package dip.gui.map;
 
-import dip.misc.Utils;
-
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import javax.swing.Box;
+
 import javax.swing.AbstractAction;
+import javax.swing.Box;
 import javax.swing.JButton;
+
+import dip.misc.Utils;
 
 /**
 *	Does nothing, except take up space.
@@ -49,6 +50,7 @@ public class EmptyControlBar extends ControlBar
 		// are that of a toolbar button.
 		JButton fit = add(new AbstractAction()
 		{
+			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
 				// nothing here!

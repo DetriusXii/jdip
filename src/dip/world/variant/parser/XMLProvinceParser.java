@@ -22,19 +22,26 @@
 //
 package dip.world.variant.parser;
 
-import dip.world.variant.data.ProvinceData;
-import dip.world.variant.data.BorderData;
-import dip.misc.Log;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.StringTokenizer;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import org.xml.sax.ErrorHandler;
-import org.w3c.dom.*;
+
+import dip.misc.Log;
+import dip.world.variant.data.BorderData;
+import dip.world.variant.data.ProvinceData;
 
 /**
  *	Parses an XML ProvinceData description.
@@ -102,12 +109,14 @@ public class XMLProvinceParser implements ProvinceParser {
     }// close()
 
     /** Returns the ProvinceData objects, or an empty list. */
-    public ProvinceData[] getProvinceData() {
+    @Override
+	public ProvinceData[] getProvinceData() {
         return provinceList.toArray(new ProvinceData[provinceList.size()]);
     }// getProvinceData()
 
     /** Returns the BorderData objects, or an empty list. */
-    public BorderData[] getBorderData() {
+    @Override
+	public BorderData[] getBorderData() {
         return borderList.toArray(new BorderData[borderList.size()]);
     }// getBorderData()
 

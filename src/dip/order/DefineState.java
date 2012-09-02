@@ -21,11 +21,14 @@
 //
 package dip.order;
 
-import dip.world.*;
-
 import dip.misc.Utils;
 import dip.process.Adjudicator;
 import dip.process.OrderState;
+import dip.world.Location;
+import dip.world.Power;
+import dip.world.RuleOptions;
+import dip.world.TurnState;
+import dip.world.Unit;
 
 /**
 *
@@ -68,11 +71,13 @@ public class DefineState extends Order
 		super();
 	}// DefineState()
 	
+	@Override
 	public String getFullName()
 	{
 		return orderNameFull;
 	}// getName()
 	
+	@Override
 	public String getBriefName()
 	{
 		return orderNameBrief;
@@ -81,12 +86,14 @@ public class DefineState extends Order
 	
 	
 	// order formatting
+	@Override
 	public String getDefaultFormat()
 	{
 		return orderFormatString;
 	}// getFormatBrief()
 	
 	
+	@Override
 	public String toBriefString()
 	{
 		StringBuffer sb = new StringBuffer(64);
@@ -95,6 +102,7 @@ public class DefineState extends Order
 	}// toBriefString()
 	
 	
+	@Override
 	public String toFullString()
 	{
 		StringBuffer sb = new StringBuffer(128);
@@ -105,6 +113,7 @@ public class DefineState extends Order
 	
 	
 	
+	@Override
 	public boolean equals(Object obj)
 	{
 		if(obj instanceof DefineState)
@@ -126,6 +135,7 @@ public class DefineState extends Order
 	*	to define the units and their positions for a test scenario. 
 	*
 	*/
+	@Override
 	public void validate(TurnState state, ValidationOptions valOpts, RuleOptions ruleOpts)
 	throws OrderException
 	{	
@@ -134,6 +144,7 @@ public class DefineState extends Order
 	}// validate()
 	
 	/** DefineState orders do not require verification. */
+	@Override
 	public void verify(Adjudicator adjudicator)
 	{
 		OrderState thisOS = adjudicator.findOrderStateBySrc(getSource());
@@ -141,9 +152,11 @@ public class DefineState extends Order
 	}// verify()
 	
 	/** Empty method: DefineState orders do not require dependency determination. */
+	@Override
 	public void determineDependencies(Adjudicator adjudicator)	{}
 	
 	/** Empty method: DefineState orders do not require evaluation logic. */
+	@Override
 	public void evaluate(Adjudicator adjudicator)
 	{
 		// do nothing

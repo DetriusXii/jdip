@@ -104,7 +104,8 @@ public class MapGraphic {
     }
 
     /** For debugging only! */
-    public String toString() {
+    @Override
+	public String toString() {
         StringBuffer sb = new StringBuffer(256);
         sb.append(this.getClass().getName());
         sb.append('[');

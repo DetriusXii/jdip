@@ -23,6 +23,7 @@
 package dip.misc;
 
 import java.io.File;
+
 import javax.swing.filechooser.FileFilter;
 
 /**
@@ -98,6 +99,7 @@ public class SimpleFileFilter extends FileFilter
 	}// SimpleFileFilter()
 	
 	/** Get the Description provided */
+	@Override
 	public String getDescription()
 	{
 		return description;
@@ -110,6 +112,7 @@ public class SimpleFileFilter extends FileFilter
 	}// getExtension()
 	
 	/** Implementation of FileFilter */
+	@Override
 	public boolean accept(File f)
 	{
 		if(f != null) 

@@ -22,26 +22,36 @@
 //
 package dip.gui;
 
-import dip.misc.Utils;
-import dip.world.Power;
-import dip.gui.dialog.prefs.GeneralPreferencePanel;
-import dip.gui.dialog.ErrorDialog;
-import dip.world.World;
-import dip.tool.ToolManager;
-import dip.tool.Tool;
-import dip.gui.map.MapRenderer2;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.Arrays;
-import java.awt.event.KeyEvent;
-import java.awt.event.InputEvent;
-import javax.swing.*;
-import java.awt.event.*;
-import java.lang.reflect.*;
 import java.awt.Toolkit;
-
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+
+import javax.swing.ButtonGroup;
+import javax.swing.Icon;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JSeparator;
+import javax.swing.KeyStroke;
+
+import dip.gui.dialog.ErrorDialog;
+import dip.gui.dialog.prefs.GeneralPreferencePanel;
+import dip.gui.map.MapRenderer2;
+import dip.misc.Utils;
+import dip.tool.Tool;
+import dip.tool.ToolManager;
+import dip.world.Power;
+import dip.world.World;
 /**
 *	Implements many menu methods, and constructs the menus.
 *	<p>
@@ -631,6 +641,7 @@ public class ClientMenu
 	
 	private class RecentFileListener implements ActionListener
 	{
+		@Override
 		public void actionPerformed(ActionEvent e)
 		{
 			JMenuItem jmi = (JMenuItem) e.getSource();
@@ -1018,6 +1029,7 @@ public class ClientMenu
 	/** Order menu listener */
 	private class OrderMenuListener implements ActionListener
 	{
+		@Override
 		public void actionPerformed(ActionEvent e)
 		{
 			JMenuItem jmi = (JMenuItem) e.getSource();
@@ -1059,12 +1071,14 @@ public class ClientMenu
 	*/
 	private class ModeListener extends AbstractCFPListener
 	{
+		@Override
 		public void actionWorldCreated(World w)
 		{
 			Power[] thePowers = w.getMap().getPowers();
 			updatePowers(thePowers);
 		}// actionWorldCreated()
 		
+		@Override
 		public void actionModeChanged(String mode)
 		{
 			if(mode == ClientFrame.MODE_NONE)
@@ -1148,6 +1162,7 @@ public class ClientMenu
 		}// ReflexiveActionListener
 		
 		/** Call the target method */
+		@Override
 		public void actionPerformed(ActionEvent evt)
 		{
 			try

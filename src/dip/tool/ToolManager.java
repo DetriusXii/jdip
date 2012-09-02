@@ -22,17 +22,18 @@
 //
 package dip.tool;
 
-import dip.misc.Log;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.ArrayList;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.net.*;
-import java.util.*;
-import java.util.jar.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.jar.Attributes;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
+import java.util.zip.ZipFile;
+
+import dip.misc.Log;
 
 /**
  *
@@ -77,7 +78,7 @@ public class ToolManager {
             // do not attempt if URL is null.
             if (foundToolURLs[i] != null) {
                 try {
-                    JarFile jarFile = new JarFile(foundToolFiles[i], true, JarFile.OPEN_READ);
+                    JarFile jarFile = new JarFile(foundToolFiles[i], true, ZipFile.OPEN_READ);
                     Manifest manifest = jarFile.getManifest();
                     Attributes attr = manifest.getMainAttributes();
                     mainClassNames[i] = attr.getValue(Attributes.Name.MAIN_CLASS);

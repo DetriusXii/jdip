@@ -25,6 +25,7 @@ package dip.gui.swing;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+
 import javax.swing.JTextPane;
 
 /**
@@ -35,6 +36,7 @@ import javax.swing.JTextPane;
 public class XJTextPane extends JTextPane
 {
 	/** Override paint with new RenderingHints */
+	@Override
 	public void paint(Graphics g)
 	{
 		Graphics2D g2 = (Graphics2D) g;

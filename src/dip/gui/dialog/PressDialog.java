@@ -22,31 +22,51 @@
 //
 package dip.gui.dialog;
 
-import dip.world.Phase;
-import dip.gui.swing.XJScrollPane;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Insets;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 
-import dip.net.message.PressMessage;
-import dip.net.message.MID;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JEditorPane;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
+import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumnModel;
 
 import cz.autel.dmi.HIGConstraints;
 import cz.autel.dmi.HIGLayout;
-
-
-import dip.gui.*;
+import dip.gui.swing.XJScrollPane;
 import dip.misc.Utils;
-import dip.misc.Help;
-
-import javax.swing.*;
-import javax.swing.table.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.event.*;
-import javax.swing.border.*;
-
-import dip.net.message.*;
-
-import java.util.*;
-import java.text.*;
+import dip.net.message.MID;
+import dip.net.message.PressMessage;
+import dip.world.Phase;
 
 
 public class PressDialog extends XDialog
@@ -232,6 +252,7 @@ public class PressDialog extends XDialog
 		final JTableHeader header = msgTable.getTableHeader();
 		header.addMouseListener(new MouseAdapter()
 		{
+			@Override
 			public void mouseClicked(MouseEvent e)
 			{
 				int col = header.columnAtPoint(e.getPoint());
@@ -242,6 +263,7 @@ public class PressDialog extends XDialog
 		ListSelectionModel rowSM = msgTable.getSelectionModel();
 		rowSM.addListSelectionListener(new ListSelectionListener()
 		{
+			@Override
 			public void valueChanged(ListSelectionEvent e)
 			{
 				//Ignore extra messages.
@@ -343,15 +365,19 @@ public class PressDialog extends XDialog
 		
 		
 		/** Message sender. May never be null. */
+		@Override
 		public MID getFrom() { return from; }
 		
 		/** Message recipients. Never null. May be zero-length if broadcast. */
+		@Override
 		public MID[] getTo() { return new MID[] {to, to}; }
 		
 		/** Message subject. May be null if there is no subject. */
+		@Override
 		public String getSubject() { return subj; }
 		
 		/** Message body. Never null; may be empty (""). */
+		@Override
 		public String getMessage() { return body; }
 		
 		/** 
@@ -359,24 +385,31 @@ public class PressDialog extends XDialog
 		*	May be null if sent before a game has started, or after
 		*	a game has ended.
 		*/
+		@Override
 		public Phase getPhase() { return phase; }
 		
 		/** Time when message arrived. 0 if unknown. */
+		@Override
 		public long getTimeReceived() { return System.currentTimeMillis(); }
 		
 		/** Time when message was sent. 0 if unknown. */
+		@Override
 		public long getTimeSent()  { return System.currentTimeMillis(); }
 		
 		/** True if this message has been read */
+		@Override
 		public boolean isRead() { return isRead; }
 		
 		/** True if this message has been replied to */
+		@Override
 		public boolean isRepliedTo() { return isReplied; }
 		
 		/** Set whether this message has been read */
+		@Override
 		public void setRead(boolean value) {}
 		
 		/** Set whether this message has been replied to */
+		@Override
 		public void setRepliedTo(boolean value){}		
 	}
 	// END TESTING
@@ -417,42 +450,17 @@ public class PressDialog extends XDialog
 			resort();
 		}// addMessage()
 		
-		/** Add multiple PressMessages */
-		public void addMessages(PressMessage[] pms)
-		{
-			for(final PressMessage pm: pms)
-			{
-				data.add(pm);
-			}
-			resort();
-		}// addMessages()
-		
-		
-		/** Remove a single PressMessage */
-		public void removeMessage(PressMessage pm)
-		{
-			data.remove(pm);
-			resort();
-		}// removeMessage()
-		
-		
-		/** Remove multiple PressMessages */
-		public void removeMessages(PressMessage[] pms)
-		{
-			data.removeAll( Arrays.asList(pms) );
-			resort();
-		}// removeMessages()
-		
 		/** Get the PressMessage for a Row */
 		public PressMessage getRow(int row)
 		{
-			return (PressMessage) data.get(row);
+			return data.get(row);
 		}// getRow()
 		
 		/** Get the value at the corresponding row and column. */
+		@Override
 		public Object getValueAt(int row, int col)
 		{
-			PressMessage pm = (PressMessage) data.get(row);
+			PressMessage pm = data.get(row);
 			
 			switch(col)
 			{
@@ -478,6 +486,7 @@ public class PressDialog extends XDialog
 		
 		
 		/** Return the column name */
+		@Override
 		public String getColumnName(int column) 
 		{
 			return HEADERS[column];
@@ -485,12 +494,14 @@ public class PressDialog extends XDialog
 		
 		
 		/** Always returns Object.class so we can use our fancy cell renderer */
+		@Override
 		public Class getColumnClass(int columnIndex)
 		{
 			return Object.class;
 		}// getColumnClass()
 		
 		/** Returns the number of rows */
+		@Override
 		public int getRowCount()
 		{
 			return data.size();
@@ -498,6 +509,7 @@ public class PressDialog extends XDialog
 		
 		
 		/** Returns the number of columns (constant) */
+		@Override
 		public int getColumnCount()
 		{
 			return NUM_COLS;
@@ -583,6 +595,7 @@ public class PressDialog extends XDialog
 	/** Render the sorted columns with an up/down arrow. */
 	private class SortHeaderRenderer extends DefaultTableCellRenderer
 	{
+		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, 
 			boolean isSelected, boolean hasFocus, int row, int column)
 		{
@@ -640,6 +653,7 @@ public class PressDialog extends XDialog
 		}// PMCellRenderer()
 		
 		/** Render. Assumes tableModel is a SortedPressTM, and knows the columns, too. */
+		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value,
                  boolean isSelected, boolean hasFocus, int row, int column) 
 		{
@@ -711,6 +725,7 @@ public class PressDialog extends XDialog
 		}// PressMessageComparator()
 		
 		/** Compare! */
+		@Override
 		public int compare(final PressMessage pm1, final PressMessage pm2)
 		{
 			int val = 0;
@@ -773,6 +788,7 @@ public class PressDialog extends XDialog
 		/** 
 		*	Indicates if the *Comparator* is equal to another Comparator
 		*/
+		@Override
 		public boolean equals(Object obj)
 		{
 			return false;	// for safety.
@@ -806,6 +822,7 @@ public class PressDialog extends XDialog
 		}
 		
 		/** Paint the Icon */
+		@Override
 		public void paintIcon(Component c, Graphics g, int x, int y)
 		{
 			if(isUp)
@@ -819,12 +836,14 @@ public class PressDialog extends XDialog
 		}// paintIcon()
 		
 		/** Width */
+		@Override
 		public int getIconWidth()
 		{
 			return size;
 		}// getIconWidth()
 		
 		/** Height */
+		@Override
 		public int getIconHeight()
 		{
 			return size;
@@ -928,7 +947,7 @@ public class PressDialog extends XDialog
 			setupBody();
 			
 			JScrollPane jsp = new XJScrollPane(body);
-			jsp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); 
+			jsp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER); 
 			
 			setLayout(new BorderLayout());
 			

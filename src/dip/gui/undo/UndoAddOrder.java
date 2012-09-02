@@ -22,10 +22,10 @@
 //
 package dip.gui.undo;
 
-import dip.order.Orderable;
-import dip.gui.OrderDisplayPanel;
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
 
-import javax.swing.undo.*;
+import dip.order.Orderable;
 
 
 /**
@@ -35,6 +35,7 @@ import javax.swing.undo.*;
 */	
 public class UndoAddOrder extends XAbstractUndoableEdit implements java.io.Serializable
 {
+	private static final long serialVersionUID = 1L;
 	// instance variables
 	private Orderable order;
 	
@@ -45,11 +46,13 @@ public class UndoAddOrder extends XAbstractUndoableEdit implements java.io.Seria
 		this.order = order;
 	}// UndoAddOrder
 	
+	@Override
 	public String getPresentationName()
 	{
 		return order.getFullName();
 	}// getPresentationName()
 	
+	@Override
 	public void redo()
 	throws CannotRedoException
 	{
@@ -57,6 +60,7 @@ public class UndoAddOrder extends XAbstractUndoableEdit implements java.io.Seria
 		undoRedoManager.getOrderDisplayPanel().addOrder(order, false);
 	}// redo()
 	
+	@Override
 	public void undo()
 	throws CannotUndoException
 	{

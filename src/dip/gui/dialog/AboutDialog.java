@@ -22,35 +22,30 @@
 //
 package dip.gui.dialog;
 
-import dip.misc.Utils;
-import dip.gui.swing.XJScrollPane;
-import dip.gui.swing.SwingWorker;
-import dip.gui.*;
+import java.awt.Dimension;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.Properties;
 
-import dip.misc.Log;
-
-// HIGLayout
-import cz.autel.dmi.HIGConstraints;
-import cz.autel.dmi.HIGLayout;
-
-import javax.swing.DefaultListSelectionModel;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
-import javax.swing.BorderFactory;
+import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
-import javax.swing.event.*;
-import java.awt.Dimension;
-import java.awt.event.*;
-import javax.swing.text.*;
-import javax.swing.text.html.*;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.Properties;
 import javax.swing.table.DefaultTableModel;
+
+import cz.autel.dmi.HIGConstraints;
+import cz.autel.dmi.HIGLayout;
+import dip.gui.ClientFrame;
+import dip.gui.swing.SwingWorker;
+import dip.gui.swing.XJScrollPane;
+import dip.misc.Log;
+import dip.misc.Utils;
 
 
 /**
@@ -105,6 +100,7 @@ public class AboutDialog extends HeaderDialog
 			{
 				loader = new SwingWorker()
 				{
+					@Override
 					public Object construct()
 					{
 						long time = System.currentTimeMillis();
@@ -146,7 +142,7 @@ public class AboutDialog extends HeaderDialog
 		makeSystemPanel();
 		makeLicensePanel();
 		
-		tabPane = new JTabbedPane(JTabbedPane.TOP);
+		tabPane = new JTabbedPane(SwingConstants.TOP);
 		tabPane.add(Utils.getLocalString(TAB_ABOUT), aboutPanel);
 		tabPane.add(Utils.getLocalString(TAB_CREDITS), creditPanel);
 		tabPane.add(Utils.getLocalString(TAB_LICENSE), licensePanel);
@@ -181,7 +177,7 @@ public class AboutDialog extends HeaderDialog
 		textPanel.setBorder(new EtchedBorder());
 		
 		JScrollPane licenseScroller = new XJScrollPane(textPanel);
-		licenseScroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		licenseScroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		
 		textPanel.setText( Utils.getText(Utils.getLocalString(LICENSE_URL)) );
 		textPanel.setCaretPosition(0);
@@ -207,6 +203,7 @@ public class AboutDialog extends HeaderDialog
 		// create table model
 		DefaultTableModel tableModel = new DefaultTableModel(getSystemInfo(), TABLE_HEADERS)
 		{
+			@Override
 			public boolean isCellEditable(int r, int c)
 			{
 				return false;
@@ -216,6 +213,7 @@ public class AboutDialog extends HeaderDialog
 		// create the table
 		JTable sysTable = new JTable(tableModel)
 		{
+			@Override
 			public boolean isFocusable()
 			{
 				return false;
@@ -223,7 +221,7 @@ public class AboutDialog extends HeaderDialog
 		};
 		sysTable.setRowSelectionAllowed(false);
 		sysTable.setColumnSelectionAllowed(false);
-		sysTable.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
+		sysTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		sysTable.setShowGrid(true);
 		
 		// create / layout the panel
@@ -259,7 +257,7 @@ public class AboutDialog extends HeaderDialog
 			// into a 2D array later.
 			sortProps = new SortProp[p.size()];
 			
-			Enumeration enum2 = p.propertyNames();
+			Enumeration<?> enum2 = p.propertyNames();
 			int idx = 0;
 			while(enum2.hasMoreElements())
 			{
@@ -306,6 +304,7 @@ public class AboutDialog extends HeaderDialog
 		public String getName()		{ return name; }
 		public String getValue() 	{ return value; }
 		
+		@Override
 		public int compareTo(Object obj)
 		{
 			return name.compareTo( ((SortProp) obj).name );

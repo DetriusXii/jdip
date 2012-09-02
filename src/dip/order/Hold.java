@@ -21,17 +21,17 @@
 //
 package dip.order;
 
-import dip.world.*;
-
+import dip.misc.Log;
+import dip.misc.Utils;
 import dip.process.Adjudicator;
 import dip.process.OrderState;
 import dip.process.Tristate;
-
-import dip.misc.Log;
-import dip.misc.Utils;
-
-import java.util.List;
-import java.util.Iterator;
+import dip.world.Border;
+import dip.world.Location;
+import dip.world.Power;
+import dip.world.RuleOptions;
+import dip.world.TurnState;
+import dip.world.Unit;
 
 
 /**
@@ -64,11 +64,13 @@ public class Hold extends Order
 	}// Hold()
 	
 	
+	@Override
 	public String getFullName()
 	{
 		return orderNameFull;
 	}// getName()
 	
+	@Override
 	public String getBriefName()
 	{
 		return orderNameBrief;
@@ -76,12 +78,14 @@ public class Hold extends Order
 	
 	
 	// format-strings for orders
+	@Override
 	public String getDefaultFormat()
 	{
 		return orderFormatString;
 	}// getFormatBrief()
 	
 	
+	@Override
 	public String toBriefString()
 	{
 		StringBuffer sb = new StringBuffer(64);
@@ -94,6 +98,7 @@ public class Hold extends Order
 	}// toBriefString()
 	
 	
+	@Override
 	public String toFullString()
 	{
 		StringBuffer sb = new StringBuffer(128);
@@ -107,6 +112,7 @@ public class Hold extends Order
 	
 	
 	
+	@Override
 	public boolean equals(Object obj)
 	{
 		if(obj instanceof Hold && super.equals(obj))
@@ -117,6 +123,7 @@ public class Hold extends Order
 	}// equals()	
 	
 	
+	@Override
 	public void validate(TurnState state, ValidationOptions valOpts, RuleOptions ruleOpts)
 	throws OrderException
 	{
@@ -134,6 +141,7 @@ public class Hold extends Order
 	
 	
 	/** No verification is required for Hold orders. */
+	@Override
 	public void verify(Adjudicator adjudicator)
 	{
 		OrderState thisOS = adjudicator.findOrderStateBySrc(getSource());
@@ -148,12 +156,14 @@ public class Hold extends Order
 	*		<li>Moves to this space
 	*	</ol>
 	*/
+	@Override
 	public void determineDependencies(Adjudicator adjudicator)
 	{
 		addSupportsOfAndMovesToSource(adjudicator);
 	}// determineDependencies()
 	
 	/** Hold order evaluation logic. */
+	@Override
 	public void evaluate(Adjudicator adjudicator)
 	{
 		Log.println("--- evaluate() dip.order.Hold ---");

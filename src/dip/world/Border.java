@@ -22,15 +22,14 @@
 //
 package dip.world;
 
-import dip.order.Order;
-import dip.misc.Utils;
-
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 import java.util.Arrays;
 import java.util.List;
+import java.util.StringTokenizer;
+
+import dip.misc.Utils;
+import dip.order.Order;
 
 /**
  *
@@ -121,7 +120,7 @@ public class Border implements Serializable {
     private final Phase.PhaseType[] phases;		// if null, applies to all phases
     private final Unit.Type[] unitTypes;	// if null, applies to all unit types
     private final String description; // description
-    private final Class[] orderClasses;	// if null, applies to all order types
+    private final Class<?>[] orderClasses;	// if null, applies to all order types
     private int yearMin = 0;
     private int yearMax = 0;
     private int yearModifier = YEAR_NOT_SPECIFIED;	// if not specified, this is the result
@@ -185,15 +184,6 @@ public class Border implements Serializable {
         System.out.println("    bmm: "+baseMoveModifier);
          */
     }// Border()
-
-    // TEMP
-    private static String toList(Object[] obj) {
-        if (obj != null) {
-            return Arrays.asList(obj).toString();
-        }
-
-        return "null";
-    }
 
     /** Parses the prohibited SeasonTypes (uses Phase.SeasonTypes.parse()) */
     private Phase.SeasonType[] parseProhibitedSeasons(String in)
@@ -337,9 +327,9 @@ public class Border implements Serializable {
     }// parseOrders()
 
     /** Internal parser helper method */
-    private Class[] parseClasses2Objs(String in, String superClassName)
+    private Class<?>[] parseClasses2Objs(String in, String superClassName)
             throws InvalidBorderException {
-        Class superClass = null;
+        Class<?> superClass = null;
         try {
             superClass = Class.forName(superClassName);
         } catch (ClassNotFoundException e) {
@@ -406,7 +396,7 @@ public class Border implements Serializable {
      *	<p>
      *	Null arguments are not permitted.
      */
-    public boolean canTransit(Location fromLoc, Unit.Type unit, Phase phase, Class orderClass) {
+    public boolean canTransit(Location fromLoc, Unit.Type unit, Phase phase, Class<? extends Order> orderClass) {
         /*
         System.out.println("border: "+id);
         System.out.println("  "+fromLoc.getProvince()+":"+fromLoc.getCoast()+", "+phase);

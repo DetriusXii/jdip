@@ -23,36 +23,31 @@
 
 package dip.gui.dialog.prefs;
 
-import dip.gui.ClientFrame;
-import dip.gui.swing.GradientJLabel;
-import dip.gui.swing.AssocJComboBox;
-import dip.order.OrderFormat;
-import dip.order.OrderFormatOptions;
-import dip.misc.SharedPrefs;
-import dip.misc.Utils;
-
-import org.apache.batik.transcoder.Transcoder;
-import org.apache.batik.transcoder.image.ImageTranscoder;
-import org.apache.batik.transcoder.image.PNGTranscoder;
-import org.apache.batik.transcoder.image.JPEGTranscoder;
-
-// HIGLayout
-import cz.autel.dmi.HIGConstraints;
-import cz.autel.dmi.HIGLayout;
-
-import java.util.prefs.Preferences;
+import java.awt.FlowLayout;
 import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
+
 import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import javax.swing.JSlider;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
 
-import java.awt.Component;
+import org.apache.batik.transcoder.SVGAbstractTranscoder;
+import org.apache.batik.transcoder.Transcoder;
+import org.apache.batik.transcoder.image.JPEGTranscoder;
+import org.apache.batik.transcoder.image.PNGTranscoder;
 
-import javax.swing.*;
-import java.awt.*;
+import cz.autel.dmi.HIGConstraints;
+import cz.autel.dmi.HIGLayout;
+import dip.gui.ClientFrame;
+import dip.gui.swing.AssocJComboBox;
+import dip.gui.swing.GradientJLabel;
+import dip.misc.SharedPrefs;
+import dip.misc.Utils;
 
 
 /**
@@ -65,6 +60,7 @@ import java.awt.*;
 */
 public class ExportPreferencePanel extends PreferencePanel
 {
+	private static final long serialVersionUID = 1L;
 	// i18n keys
 	private static final String I18N_TAB_NAME 				= "ExPP.tab.name";  
 	private static final String I18N_CAT_SIZE 				= "ExPP.category.size";
@@ -208,7 +204,7 @@ public class ExportPreferencePanel extends PreferencePanel
 		q = (q < 0.0f || q > 1.0f) ? DEFAULT_JPG_QUALITY : q;
 		
 		// jpg quality slider (0-100 int)
-		jpgQuality = new JSlider(JSlider.HORIZONTAL, 0, 100, 100);
+		jpgQuality = new JSlider(SwingConstants.HORIZONTAL, 0, 100, 100);
 		jpgQuality.setMajorTickSpacing(10);
 		jpgQuality.setMinorTickSpacing(5);
 		jpgQuality.setPaintTicks(true);
@@ -282,19 +278,21 @@ public class ExportPreferencePanel extends PreferencePanel
 	
 	
 	
+	@Override
 	public String getName()
 	{
 		return Utils.getLocalString(I18N_TAB_NAME);
 	}// getName()
 	
 	
+	@Override
 	public void apply()
 	{
 		Preferences prefs = SharedPrefs.getUserNode();
 		
 		// set preference nodes
 		prefs.putInt(NODE_PNG_BPP, ((Integer) pngBPP.getSelectedValue()).intValue());
-		prefs.putFloat(NODE_EXPORT_JPG_QUALITY, ((float) jpgQuality.getValue() / 100.0f) );
+		prefs.putFloat(NODE_EXPORT_JPG_QUALITY, (jpgQuality.getValue() / 100.0f) );
 		
 		int w = 0;
 		int h = 0;
@@ -319,12 +317,14 @@ public class ExportPreferencePanel extends PreferencePanel
 	}// apply()
 	
 	
+	@Override
 	public void cancel()
 	{
 		// do nothing
 	}// cancel()
 	
 	
+	@Override
 	public void setDefault()
 	{
 		jrb[JRB_FULLSIZE].setSelected(true);
@@ -359,12 +359,12 @@ public class ExportPreferencePanel extends PreferencePanel
 		// add hints
 		if(w != 0)
 		{
-			transcoder.addTranscodingHint(ImageTranscoder.KEY_WIDTH, new Float(w));
+			transcoder.addTranscodingHint(SVGAbstractTranscoder.KEY_WIDTH, new Float(w));
 		}
 		
 		if(h != 0)
 		{
-			transcoder.addTranscodingHint(ImageTranscoder.KEY_HEIGHT, new Float(h));
+			transcoder.addTranscodingHint(SVGAbstractTranscoder.KEY_HEIGHT, new Float(h));
 		}
 		
 		if(bpp > 0)

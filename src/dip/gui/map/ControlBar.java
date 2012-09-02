@@ -22,15 +22,15 @@
 //
 package dip.gui.map;
 
-import dip.world.Location;
-
 import java.awt.Insets;
 
 import javax.swing.JToolBar;
 import javax.swing.border.EtchedBorder;
 
-import org.w3c.dom.events.MouseEvent;
 import org.apache.batik.dom.events.DOMKeyEvent;
+import org.w3c.dom.events.MouseEvent;
+
+import dip.world.Location;
 
 
 /**
@@ -56,16 +56,22 @@ public abstract class ControlBar extends JToolBar implements DOMUIEventHandler
 	
 	
 	/** Key Pressed event. Does Nothing by default. */
+	@Override
 	public void keyPressed(DOMKeyEvent ke, Location loc)	{}
 	/** Mouse Over event: Mouse over a province. Does Nothing by default. */
+	@Override
 	public void mouseOver(MouseEvent me, Location loc)	{}
 	/** Mouse Out event: Mouse out of a province. Does Nothing by default. */
+	@Override
 	public void mouseOut(MouseEvent me, Location loc)	{}
 	/** Mouse clicked. Does Nothing by default. */
+	@Override
 	public void mouseClicked(MouseEvent me, Location loc)	{}
 	/** Mouse button pressed. Does Nothing by default. */
+	@Override
 	public void mouseDown(MouseEvent me, Location loc)	{}
 	/** Mouse button released. Does Nothing by default. */
+	@Override
 	public void mouseUp(MouseEvent me, Location loc)	{}
 	
 }// class ControlBar	

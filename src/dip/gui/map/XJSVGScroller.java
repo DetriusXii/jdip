@@ -22,10 +22,10 @@
 //
 package dip.gui.map;
 
-import dip.misc.Log;
 
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+
 import javax.swing.JScrollBar;
 
 import org.apache.batik.swing.JSVGCanvas;
@@ -42,6 +42,11 @@ public class XJSVGScroller extends JSVGScrollPane
 {
 	
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	*	Creates a XJSVGScroller. This adds support for Wheel mice, too.
 	*/
 	public XJSVGScroller(JSVGCanvas canvas)
@@ -53,6 +58,7 @@ public class XJSVGScroller extends JSVGScrollPane
 	/** Inner class to catch mouse wheel events */
 	private class WheelListener implements MouseWheelListener
 	{
+		@Override
 		public void mouseWheelMoved(MouseWheelEvent e)
 		{
 			final JScrollBar sb = (vertical.isVisible()) ? 

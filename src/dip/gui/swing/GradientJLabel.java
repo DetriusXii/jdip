@@ -22,8 +22,17 @@
 //
 package dip.gui.swing;
 
-import java.awt.*;
-import javax.swing.*;
+import java.awt.FlowLayout;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Paint;
+
+import javax.swing.Box;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 
 /** 
 *	A gradient-shaded background JLabel. It is 
@@ -46,7 +55,9 @@ public class GradientJLabel extends JPanel
 		super(new FlowLayout(FlowLayout.LEFT, 0, 3));
 		label = new JLabel(text, horizontalAlignment)
 		{
+			@Override
 			public boolean isOpaque()	{ return false; }
+			@Override
 			public boolean isFocusable()	{ return false; }
 		};
 		setOpaque(false);
@@ -65,12 +76,15 @@ public class GradientJLabel extends JPanel
 	
 	
 	/** We are not opaque; we will paint the background. */
+	@Override
 	public boolean isOpaque()	{ return false; }
 	
 	/** We are not focusable. */
+	@Override
 	public boolean isFocusable()	{ return false; }
 	
 	/** Overridden to provide painting functionality. */
+	@Override
 	protected void paintComponent(Graphics g)
 	{
 		final int width = getWidth();

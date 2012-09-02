@@ -22,18 +22,29 @@
 //
 package dip.gui.map;
 
-import dip.gui.order.*;
-import dip.misc.Utils;
-import dip.misc.Log;
-import dip.order.ValidationOptions;
-import dip.process.Adjustment;
-import dip.world.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JToggleButton;
+
 import org.apache.batik.dom.events.DOMKeyEvent;
 import org.w3c.dom.events.MouseEvent;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import dip.gui.order.GUIBuild;
+import dip.gui.order.GUIMove;
+import dip.gui.order.GUIOrder;
+import dip.gui.order.GUIOrderFactory;
+import dip.gui.order.GUIRetreat;
+import dip.misc.Log;
+import dip.misc.Utils;
+import dip.order.ValidationOptions;
+import dip.process.Adjustment;
+import dip.world.Location;
+import dip.world.Phase;
+import dip.world.Power;
+import dip.world.RuleOptions;
+import dip.world.Unit;
 
 
 /*
@@ -171,6 +182,7 @@ public class OrderControlBar extends ViewControlBar
 	 * @param  loc  current Location
 	 * @since  me	mouseEvent (<b>may be null</b>)
 	 */
+	@Override
 	public void mouseOver(MouseEvent me, Location loc)
 	{
 		lastLoc = loc;
@@ -271,6 +283,7 @@ public class OrderControlBar extends ViewControlBar
 	 * @param  loc  current Location
 	 * @since
 	 */
+	@Override
 	public void mouseOut(MouseEvent me, Location loc)
 	{
 		lastLoc = loc;
@@ -294,6 +307,7 @@ public class OrderControlBar extends ViewControlBar
 	 *  Dispatch mouse click events
 	 *
 	 */
+	@Override
 	public void mouseClicked(MouseEvent me, Location loc)
 	{
 		inDrag = false;
@@ -377,6 +391,7 @@ public class OrderControlBar extends ViewControlBar
 	 * @param  me  		mouse event
 	 * @since
 	 */
+	@Override
 	public void mouseDown(MouseEvent me, Location loc)
 	{
 		if( loc != null )
@@ -420,6 +435,7 @@ public class OrderControlBar extends ViewControlBar
 	 * @param  loc  current Location
 	 * @since
 	 */
+	@Override
 	public void mouseUp(MouseEvent me, Location loc)
 	{
 		currentAction = defaultAction;
@@ -443,6 +459,7 @@ public class OrderControlBar extends ViewControlBar
 	 * @param  loc  current mouse Location
 	 * @since
 	 */
+	@Override
 	public void keyPressed(DOMKeyEvent dke, Location loc)
 	{
 		super.keyPressed( dke, loc );
@@ -758,6 +775,7 @@ public class OrderControlBar extends ViewControlBar
 	 */
 	private class ToggleListener implements ActionListener
 	{
+		@Override
 		public void actionPerformed( ActionEvent e )
 		{
 			defaultAction = ( (JToggleButton) e.getSource() ).getActionCommand();

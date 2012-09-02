@@ -22,12 +22,17 @@
 //
 package dip.judge.parser;
 
-import dip.world.Phase;
-import dip.misc.Utils;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
-import java.io.*;
-import java.util.regex.*;
-import java.util.*;
+import dip.misc.Utils;
+import dip.world.Phase;
 
 /**
  *
@@ -158,7 +163,8 @@ public class PositionParser {
         }
 
         /** For debugging only; this may change between versions. */
-        public String toString() {
+        @Override
+		public String toString() {
             StringBuffer sb = new StringBuffer();
             sb.append("PositionInfo[power=");
             sb.append(power);

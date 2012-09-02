@@ -22,20 +22,51 @@
 //
 package dip.misc;
 
-import dip.order.*;
-import dip.order.result.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.LineNumberReader;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.StringTokenizer;
 
-import dip.world.*;
-import dip.world.Phase.*;
-import dip.misc.*;
+import jcmdline.BooleanParam;
+import jcmdline.CmdLineHandler;
+import jcmdline.FileParam;
+import jcmdline.HelpCmdLineHandler;
+import jcmdline.Parameter;
+import jcmdline.VersionCmdLineHandler;
+import dip.order.Build;
+import dip.order.Convoy;
+import dip.order.DefineState;
+import dip.order.Disband;
+import dip.order.Move;
+import dip.order.Order;
+import dip.order.OrderException;
+import dip.order.OrderFactory;
+import dip.order.OrderParser;
+import dip.order.Remove;
+import dip.order.Retreat;
+import dip.order.Support;
+import dip.order.ValidationOptions;
+import dip.world.Location;
+import dip.world.Phase;
+import dip.world.Phase.PhaseType;
+import dip.world.Phase.SeasonType;
+import dip.world.Position;
+import dip.world.Power;
+import dip.world.Province;
+import dip.world.RuleOptions;
+import dip.world.TurnState;
+import dip.world.Unit;
+import dip.world.World;
+import dip.world.WorldFactory;
 import dip.world.variant.VariantManager;
-import dip.world.variant.data.*;
-import dip.process.*;
-
-import java.util.*;
-import java.io.*;
-import java.lang.reflect.*;
-import jcmdline.*;
+import dip.world.variant.data.Variant;
 
 /**
  *	A test harness that allows testing of the Order Parser (OrderParser.java). 
@@ -127,8 +158,8 @@ public class TestParser {
         FileParam argInputFile =
                 new FileParam("input", "the input file of test-case definitions",
                 FileParam.IS_FILE & FileParam.IS_READABLE & FileParam.EXISTS,
-                FileParam.REQUIRED,
-                FileParam.SINGLE_VALUED);
+                Parameter.REQUIRED,
+                Parameter.SINGLE_VALUED);
 
         // are we logging? or not.
         BooleanParam logOpt =
@@ -593,7 +624,7 @@ public class TestParser {
      *	A bunch of DefineState orders used to set unit positions
      *	for subsequent order processing.
      */
-    private void setupPositions(List nonDislodged, List dislodged) {
+    private void setupPositions(List<String> nonDislodged, List<String> dislodged) {
         assert (nonDislodged != null);
         assert (dislodged != null);
         assert (turnState != null);
@@ -601,9 +632,9 @@ public class TestParser {
         Position pos = turnState.getPosition();
 
         int count = 0;
-        Iterator iter = nonDislodged.iterator();
+        Iterator<String> iter = nonDislodged.iterator();
         while (iter.hasNext()) {
-            String line = (String) iter.next();
+            String line = iter.next();
             DefineState ds = parseDSOrder(line.trim());
             Unit unit = new Unit(ds.getPower(), ds.getSourceUnitType());
             unit.setCoast(ds.getSource().getCoast());
@@ -616,7 +647,7 @@ public class TestParser {
         count = 0;
         iter = dislodged.iterator();
         while (iter.hasNext()) {
-            String line = (String) iter.next();
+            String line = iter.next();
             DefineState ds = parseDSOrder(line.trim());
             Unit unit = new Unit(ds.getPower(), ds.getSourceUnitType());
             unit.setCoast(ds.getSource().getCoast());

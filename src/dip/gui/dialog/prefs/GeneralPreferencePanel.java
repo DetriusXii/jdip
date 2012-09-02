@@ -23,47 +23,41 @@
 
 package dip.gui.dialog.prefs;
 
-import dip.gui.ClientFrame;
-import dip.gui.OrderDisplayPanel;
-import dip.misc.SharedPrefs;
-import dip.misc.LRUCache;
-import dip.misc.Utils;
-
-import dip.gui.swing.XJFileChooser;
-import dip.gui.swing.AssocJComboBox;
-import dip.gui.map.MapRenderer2;
-
-// HIGLayout
-import cz.autel.dmi.HIGConstraints;
-import cz.autel.dmi.HIGLayout;
-
-// JDirectoryChooser
-import com.l2fprod.common.swing.JDirectoryChooser;
-
+import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.prefs.Preferences;
-import java.util.prefs.BackingStoreException;
 import java.text.Collator;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
+
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
 import javax.swing.JSeparator;
+import javax.swing.JTextField;
 
+import com.l2fprod.common.swing.JDirectoryChooser;
 
-import java.awt.Component;
-import java.awt.FlowLayout;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.util.Map.Entry;
+import cz.autel.dmi.HIGConstraints;
+import cz.autel.dmi.HIGLayout;
+import dip.gui.ClientFrame;
+import dip.gui.OrderDisplayPanel;
+import dip.gui.map.MapRenderer2;
+import dip.gui.swing.AssocJComboBox;
+import dip.gui.swing.XJFileChooser;
+import dip.misc.LRUCache;
+import dip.misc.SharedPrefs;
+import dip.misc.Utils;
 
 /**
 *	General preferences.
@@ -156,6 +150,7 @@ public class GeneralPreferencePanel extends PreferencePanel
 		browseSaveDir = new JButton( Utils.getLocalString(GPP_SAVE_DIR_BUTTON) );
 		browseSaveDir.addActionListener(new ActionListener()
 		{
+			@Override
 			public void actionPerformed(ActionEvent e)
 			{
 				directoryBrowse();
@@ -166,6 +161,7 @@ public class GeneralPreferencePanel extends PreferencePanel
 		clearMRU = new JButton( Utils.getLocalString(GPP_CLEAR_MRU_BUTTON) );
 		clearMRU.addActionListener(new ActionListener()
 		{
+			@Override
 			public void actionPerformed(ActionEvent e)
 			{
 				clearFileList();
@@ -278,7 +274,7 @@ public class GeneralPreferencePanel extends PreferencePanel
 		chooser.setDialogTitle(Utils.getLocalString(DIALOG_TITLE));
 		int choice = chooser.showDialog(cf, 
 			Utils.getLocalString(XJFileChooser.BTN_DIR_SELECT));
-		if(choice == JDirectoryChooser.APPROVE_OPTION)
+		if(choice == JFileChooser.APPROVE_OPTION)
 		{
 			saveDir.setText( chooser.getSelectedFile().getAbsolutePath() );
 		}
@@ -286,6 +282,7 @@ public class GeneralPreferencePanel extends PreferencePanel
 	
 	
 	
+	@Override
 	public void apply()
 	{
 		Preferences prefs = SharedPrefs.getUserNode();
@@ -306,12 +303,14 @@ public class GeneralPreferencePanel extends PreferencePanel
 	}// apply()
 	
 	
+	@Override
 	public void cancel()
 	{
 		// do nothing
 	}// cancel()
 	
 	
+	@Override
 	public void setDefault()
 	{
 		saveWindowSettings.setSelected(false);
@@ -325,6 +324,7 @@ public class GeneralPreferencePanel extends PreferencePanel
 	
 	
 	
+	@Override
 	public String getName()
 	{
 		return Utils.getLocalString(TAB_NAME);
@@ -576,11 +576,11 @@ public class GeneralPreferencePanel extends PreferencePanel
 			// use an iterator to preerve access-order.
 			// save in reverse-order
 			int idx = NUM_RECENT_FILES - 1;
-			Iterator iter = fileCache.entrySet().iterator();
+			Iterator<Entry<String, File>> iter = fileCache.entrySet().iterator();
 			while(iter.hasNext())
 			{
-				Map.Entry mapEntry = (Map.Entry) iter.next();
-				File 	file = (File) mapEntry.getValue();
+				Map.Entry<String, File> mapEntry = iter.next();
+				File 	file = mapEntry.getValue();
 				
 				prefs.put( (NODE_RECENT_FILE + String.valueOf(idx)), file.getPath() );
 				idx--;

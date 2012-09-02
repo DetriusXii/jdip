@@ -104,6 +104,7 @@ public class Power implements Comparable<Power>, java.io.Serializable
 	
 	
 	/** Implementation of Object.hashCode() */
+	@Override
 	public int hashCode()
 	{
 		if(hashCode == 0)
@@ -121,6 +122,7 @@ public class Power implements Comparable<Power>, java.io.Serializable
 	*/
 	
 	/** Implementation of Object.toString() */
+	@Override
 	public String toString()
 	{
 		return getName();
@@ -128,6 +130,7 @@ public class Power implements Comparable<Power>, java.io.Serializable
 	
 	
 	/** Implementation of Comparable interface */
+	@Override
 	public int compareTo(final Power power)
 	{
 		return getName().compareTo(power.getName());

@@ -23,14 +23,14 @@
 
 package dip.gui.dialog.prefs;
 
-import dip.gui.dialog.HeaderDialog;
-import dip.gui.ClientFrame;
-import dip.misc.Utils;
-
 import java.awt.Dimension;
-import javax.swing.JTabbedPane;
 
-import dip.gui.dialog.prefs.ExportPreferencePanel;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
+
+import dip.gui.ClientFrame;
+import dip.gui.dialog.HeaderDialog;
+import dip.misc.Utils;
 
 
 /**
@@ -75,7 +75,7 @@ public class PreferenceDialog extends HeaderDialog
 		super(parent, Utils.getLocalString(TITLE), true);
 		this.parent = parent;
 		
-		tabPane = new JTabbedPane(JTabbedPane.TOP);
+		tabPane = new JTabbedPane(SwingConstants.TOP);
 		
 		setHeaderText( Utils.getText(Utils.getLocalString(HEADER_LOCATION)) );
 		setContentPane(tabPane);
@@ -100,6 +100,7 @@ public class PreferenceDialog extends HeaderDialog
 	
 	
 	/** Apply or Cancel settings after closing dialog */
+	@Override
 	public void close(String actionCommand)
 	{
 		super.close(actionCommand);

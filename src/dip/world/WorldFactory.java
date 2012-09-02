@@ -22,14 +22,18 @@
 //
 package dip.world;
 
-import dip.order.*;
-import dip.world.variant.data.*;
-
-import java.util.*;
-import java.io.*;
-import java.net.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.StringTokenizer;
 
 import dip.misc.Utils;
+import dip.order.OrderException;
+import dip.world.variant.data.BorderData;
+import dip.world.variant.data.InitialState;
+import dip.world.variant.data.ProvinceData;
+import dip.world.variant.data.SupplyCenter;
+import dip.world.variant.data.Variant;
 
 /**
  *	A WorldFactory creates World objects from XML map data. 
@@ -365,7 +369,7 @@ public class WorldFactory {
         }
 
         // name lookup
-        Province province = (Province) provNameMap.get(provinceName.toLowerCase());
+        Province province = provNameMap.get(provinceName.toLowerCase());
         if (province == null) {
             throw new InvalidWorldException(Utils.getLocalString(WF_ADJ_BAD_PROVINCE,
                     name, provinceName, defaultCoast));

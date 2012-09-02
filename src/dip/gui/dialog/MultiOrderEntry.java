@@ -22,23 +22,24 @@
 //
 package dip.gui.dialog;
 
-import dip.order.OrderException;
-import dip.misc.Utils;
-import dip.misc.Log;
-import dip.gui.ClientFrame;
-import dip.gui.OrderDisplayPanel;
-import dip.world.Map;
-import dip.world.World;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-import javax.swing.JScrollPane;
+import java.util.regex.Pattern;
+
+import javax.swing.ScrollPaneConstants;
+
+import dip.gui.ClientFrame;
+import dip.gui.OrderDisplayPanel;
+import dip.misc.Log;
+import dip.misc.Utils;
+import dip.order.OrderException;
+import dip.world.Map;
+import dip.world.World;
 
 /**
 *
@@ -113,7 +114,7 @@ public class MultiOrderEntry
 		tv.setEditable(true);
 		tv.setHeaderText( Utils.getText(Utils.getLocalString(HEADER_TEXT_LOCATION)) );
 		tv.setTitle(Utils.getLocalString(TITLE));
-		tv.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		tv.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		tv.addTwoButtons( tv.makeCancelButton(), tv.makeAcceptButton(), false, true );
 		tv.setAcceptListener(new Acceptor());
 		tv.setText("");
@@ -125,6 +126,7 @@ public class MultiOrderEntry
 	
 	private class Acceptor implements TextViewer.AcceptListener
 	{
+		@Override
 		public boolean isAcceptable(TextViewer t)
 		{
 			String text = t.getText();
@@ -136,6 +138,7 @@ public class MultiOrderEntry
 			return true;
 		}// isAcceptable()
 		
+		@Override
 		public boolean getCloseDialogAfterUnacceptable()
 		{
 			return true;

@@ -22,32 +22,51 @@
 //
 package dip.process;
 
-import dip.world.Location;
-import dip.world.Province;
-import dip.world.Unit;
-import dip.world.Path;
-import dip.world.Phase;
-import dip.world.Power;
-import dip.world.TurnState;
-import dip.world.World;
-import dip.world.Position;
-import dip.world.VictoryConditions;
-import dip.world.RuleOptions;
-
-import dip.order.*;
-import dip.order.result.Result;
-import dip.order.result.TimeResult;
-import dip.order.result.OrderResult;
-import dip.order.result.DislodgedResult;
-import dip.order.result.BouncedResult;
-import dip.order.result.SubstitutedResult;
-import dip.order.result.OrderResult.ResultType;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import dip.misc.Log;
 import dip.misc.Utils;
-
-import java.util.*;
-import java.text.MessageFormat;
+import dip.order.Build;
+import dip.order.Convoy;
+import dip.order.Disband;
+import dip.order.Hold;
+import dip.order.Move;
+import dip.order.Order;
+import dip.order.OrderException;
+import dip.order.OrderFactory;
+import dip.order.OrderFormatOptions;
+import dip.order.OrderWarning;
+import dip.order.Orderable;
+import dip.order.Remove;
+import dip.order.Retreat;
+import dip.order.Support;
+import dip.order.ValidationOptions;
+import dip.order.result.BouncedResult;
+import dip.order.result.DislodgedResult;
+import dip.order.result.OrderResult;
+import dip.order.result.OrderResult.ResultType;
+import dip.order.result.Result;
+import dip.order.result.SubstitutedResult;
+import dip.order.result.TimeResult;
+import dip.world.Location;
+import dip.world.Path;
+import dip.world.Phase;
+import dip.world.Position;
+import dip.world.Power;
+import dip.world.Province;
+import dip.world.RuleOptions;
+import dip.world.TurnState;
+import dip.world.Unit;
+import dip.world.VictoryConditions;
+import dip.world.World;
 
 /**
  *
@@ -134,7 +153,8 @@ public class StdAdjudicator implements Adjudicator {
     }// StdAdjudicator()
 
     /** Process the orders. */
-    public void process() {
+    @Override
+	public void process() {
         Phase.PhaseType pt = turnState.getPhase().getPhaseType();
 
         if (isPOCEnabled) {
@@ -163,7 +183,8 @@ public class StdAdjudicator implements Adjudicator {
     }// setOrderFormat()
 
     /** Enable or disable reporting of failure statistics. */
-    public void setStatReporting(boolean value) {
+    @Override
+	public void setStatReporting(boolean value) {
         statReporting = value;
     }// setStatReporting()
 
@@ -173,17 +194,20 @@ public class StdAdjudicator implements Adjudicator {
      *	This is important for networked games, to prevent
      *	illicit order injection.
      */
-    public void setPowerOrderChecking(boolean value) {
+    @Override
+	public void setPowerOrderChecking(boolean value) {
         isPOCEnabled = value;
     }// setPowerOrderChecking()
 
     /** Get all OrderStates */
-    public final OrderState[] getOrderStates() {
+    @Override
+	public final OrderState[] getOrderStates() {
         return orderStates;
     }// getOrderStates()
 
     /** Get the TurnState */
-    public final TurnState getTurnState() {
+    @Override
+	public final TurnState getTurnState() {
         return turnState;
     }// getTurnState()
 
@@ -192,16 +216,18 @@ public class StdAdjudicator implements Adjudicator {
      *	no corresponding order was found. <b>Note:</b> Coast is not relevent
      *	here; only the Province in the given Location is used.
      */
-    public final OrderState findOrderStateBySrc(Location location) {
-        return (OrderState) osMap.get(location.getProvince());
+    @Override
+	public final OrderState findOrderStateBySrc(Location location) {
+        return osMap.get(location.getProvince());
     }// findOrderStateBySrc()
 
     /** 
      *	Find the OrderState with the given source Province. Returns null if
      *	no corresponding order was found.
      */
-    public final OrderState findOrderStateBySrc(Province src) {
-        return (OrderState) osMap.get(src);
+    @Override
+	public final OrderState findOrderStateBySrc(Province src) {
+        return osMap.get(src);
     }// findOrderStateBySrc()
 
     /**
@@ -214,7 +240,8 @@ public class StdAdjudicator implements Adjudicator {
      *	</ol>
      *
      */
-    public final boolean isSelfSupportedMove(OrderState os) {
+    @Override
+	public final boolean isSelfSupportedMove(OrderState os) {
         if (os.getOrder() instanceof Support) {
             Support support = (Support) os.getOrder();
             OrderState destOS = findOrderStateBySrc(support.getSupportedDest());
@@ -235,17 +262,20 @@ public class StdAdjudicator implements Adjudicator {
      *	note that this will <b>not</b> contain 'null' substitutions (e.g., 
      *	no order was specified, and a Hold order was automatically generated).
      */
-    public List getSubstitutedOrderStates() {
+    @Override
+	public List<OrderState> getSubstitutedOrderStates() {
         return substOrders;
     }// getSubstitutedOrderStates()
 
     /** Add a Result to the result list */
-    public final void addResult(Result result) {
+    @Override
+	public final void addResult(Result result) {
         resultList.add(result);
     }// addResult()
 
     /** Add a BouncedResult to the result list */
-    public final void addBouncedResult(OrderState os, OrderState bouncer) {
+    @Override
+	public final void addBouncedResult(OrderState os, OrderState bouncer) {
         Log.println("Bounce Result added: ", os.getOrder(), "; by ", bouncer.getSourceProvince());
         BouncedResult br = new BouncedResult(os.getOrder());
         br.setBouncer(bouncer.getSourceProvince());
@@ -253,7 +283,8 @@ public class StdAdjudicator implements Adjudicator {
     }// addBouncedResult()
 
     /** Add a DislodgedResult to the result list */
-    public final void addDislodgedResult(OrderState os) {
+    @Override
+	public final void addDislodgedResult(OrderState os) {
         Log.println("Bounce Result added: ", os.getOrder(), "; from: ", os.getDislodger().getSourceProvince());
         DislodgedResult dr = new DislodgedResult(os.getOrder(), null);
         dr.setDislodger(os.getDislodger().getSourceProvince());
@@ -261,13 +292,15 @@ public class StdAdjudicator implements Adjudicator {
     }// addBouncedResult()
 
     /** Add a Result to the result list */
-    public final void addResult(OrderState os, String message) {
+    @Override
+	public final void addResult(OrderState os, String message) {
         OrderResult ordResult = new OrderResult(os.getOrder(), message);
         resultList.add(ordResult);
     }// addResult()
 
     /** Add a Result to the result list */
-    public final void addResult(OrderState os, ResultType type, String message) {
+    @Override
+	public final void addResult(OrderState os, ResultType type, String message) {
         OrderResult ordResult = new OrderResult(os.getOrder(), type, message);
         resultList.add(ordResult);
     }// addResult()
@@ -285,7 +318,7 @@ public class StdAdjudicator implements Adjudicator {
 
         for (int i = 0; i < powers.length; i++) {
             Power power = powers[i];
-            Iterator iter = turnState.getOrders(power).iterator();
+            Iterator<Orderable> iter = turnState.getOrders(power).iterator();
             while (iter.hasNext()) {
                 Orderable order = (Orderable) iter.next();
                 if (order.getPower() != power) {
@@ -721,7 +754,8 @@ public class StdAdjudicator implements Adjudicator {
      *	during the Adjustment phase. During the movement phase, if victory conditions 
      *	have been met, this will return the next TurnState.
      */
-    public TurnState getNextTurnState() {
+    @Override
+	public TurnState getNextTurnState() {
         return nextTurnState;
     }// getNextTurnState()
 
@@ -813,7 +847,8 @@ public class StdAdjudicator implements Adjudicator {
      *	If an unresolved paradox was detected, this returns true. This is 
      *	mostly intended for debugging.
      */
-    public boolean isUnresolvedParadox() {
+    @Override
+	public boolean isUnresolvedParadox() {
         return isUnRezParadox;
     }// isUnresolvedParadox()
 
@@ -1231,7 +1266,7 @@ public class StdAdjudicator implements Adjudicator {
         final List<OrderState> osList = new ArrayList<OrderState>(32);
 
         for (final Power power: powers) {
-            Adjustment.AdjustmentInfo ai = (Adjustment.AdjustmentInfo) adjustmentMap.get(power);
+            Adjustment.AdjustmentInfo ai = adjustmentMap.get(power);
             int orderCount = 0;
             final int adjAmount = ai.getAdjustmentAmount();
 
@@ -1251,7 +1286,7 @@ public class StdAdjudicator implements Adjudicator {
 
                         // we only add legal orders, that haven't *already* been added
                         if (osMap.get(order.getSource().getProvince()) == null && order instanceof Order) {
-                            OrderState os = new OrderState((Order) order);
+                            OrderState os = new OrderState(order);
                             osMap.put(os.getSourceProvince(), os);
                             osList.add(os);
                             orderCount++;
@@ -1398,7 +1433,7 @@ public class StdAdjudicator implements Adjudicator {
         powers = world.getMap().getPowers();
         for (int i = 0; i < powers.length; i++) {
             // get adjustment information
-            Adjustment.AdjustmentInfo ai = (Adjustment.AdjustmentInfo) adjustmentMap.get(powers[i]);
+            Adjustment.AdjustmentInfo ai = adjustmentMap.get(powers[i]);
 
             // check for player elimination
             if (ai.getSupplyCenterCount() == 0) {

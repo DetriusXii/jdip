@@ -22,11 +22,11 @@
 //
 package dip.world;
 
-import dip.order.OrderException;
-
 import java.io.InvalidObjectException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import dip.order.OrderException;
 /**
 *	Coasts are essential to determining connectivity between Provinces.
 *	<p>
@@ -196,6 +196,7 @@ public final class Coast implements java.io.Serializable
 	/**
 	*	Returns the full name of the coast
 	*/
+	@Override
 	public String toString()
 	{
 		return name;
@@ -443,6 +444,7 @@ public final class Coast implements java.io.Serializable
 
 
 	/** Implementation of Object.hashCode() */
+	@Override
 	public int hashCode()
 	{
 		if(hashCode == 0)

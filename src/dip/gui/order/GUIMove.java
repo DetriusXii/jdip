@@ -22,39 +22,28 @@
 //
 package dip.gui.order;
 
-import dip.gui.map.MapMetadata;
-import dip.gui.map.DefaultMapRenderer2;
-
-import dip.gui.order.GUIOrder.MapInfo;
-
-import dip.order.Orderable;
-import dip.order.Move;
-import dip.order.ValidationOptions;
-
-import dip.misc.Utils;
-
-import dip.world.Position;
-import dip.world.Location;
-import dip.world.Province;
-import dip.world.Coast;
-import dip.world.Path;
-import dip.world.Unit;
-import dip.world.Power;
-import dip.world.RuleOptions;
-
-import dip.process.Adjustment.AdjustmentInfoMap;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.awt.geom.Point2D;
+import java.util.List;
 
-import org.apache.batik.util.SVGConstants;
-import org.apache.batik.util.CSSConstants;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
-import org.apache.batik.dom.util.XLinkSupport;
-import org.w3c.dom.svg.*;
-import org.w3c.dom.*;
+import org.apache.batik.util.SVGConstants;
+import org.w3c.dom.svg.SVGElement;
+import org.w3c.dom.svg.SVGGElement;
+import org.w3c.dom.svg.SVGLineElement;
+import org.w3c.dom.svg.SVGUseElement;
+
+import dip.gui.map.MapMetadata;
+import dip.misc.Utils;
+import dip.order.Move;
+import dip.order.Orderable;
+import dip.order.ValidationOptions;
+import dip.world.Coast;
+import dip.world.Location;
+import dip.world.Path;
+import dip.world.Position;
+import dip.world.Power;
+import dip.world.Province;
+import dip.world.Unit;
 
 /**
 *
@@ -112,6 +101,7 @@ public class GUIMove extends Move implements GUIOrder
 	
 	
 	/** This only accepts Move orders. All others will throw an IllegalArgumentException. */
+	@Override
 	public void deriveFrom(Orderable order)
 	{
 		if( !(order instanceof Move) )
@@ -132,6 +122,7 @@ public class GUIMove extends Move implements GUIOrder
 		currentLocNum = REQ_LOC;
 	}// GUIMove()
 	
+	@Override
 	public boolean testLocation(StateInfo stateInfo, Location location, StringBuffer sb)
 	{
 		sb.setLength(0);
@@ -234,6 +225,7 @@ public class GUIMove extends Move implements GUIOrder
 	}// testLocation()
 	
 	
+	@Override
 	public boolean clearLocations()
 	{
 		if(isComplete())
@@ -254,6 +246,7 @@ public class GUIMove extends Move implements GUIOrder
 	}// clearLocations()
 	
 	
+	@Override
 	public boolean setLocation(StateInfo stateInfo, Location location, StringBuffer sb)
 	{
 		if(testLocation(stateInfo, location, sb))
@@ -282,14 +275,17 @@ public class GUIMove extends Move implements GUIOrder
 		return false;
 	}// setLocation()
 	
+	@Override
 	public boolean isComplete()
 	{
 		assert (currentLocNum <= getNumRequiredLocations());
 		return (currentLocNum == getNumRequiredLocations());
 	}// isComplete()
 	
+	@Override
 	public int getNumRequiredLocations()		{ return REQ_LOC; }
 	
+	@Override
 	public int getCurrentLocationNum()			{ return currentLocNum; }
 	
 	
@@ -297,6 +293,7 @@ public class GUIMove extends Move implements GUIOrder
 	*	Sets optional Move parameters.
 	*
 	*/
+	@Override
 	public void setParam(Parameter param, Object value)
 	{
 		if(param == BY_CONVOY)
@@ -320,6 +317,7 @@ public class GUIMove extends Move implements GUIOrder
 	/**
 	*	Get optional Move parameters.
 	*/
+	@Override
 	public Object getParam(Parameter param)
 	{
 		if(param == BY_CONVOY)
@@ -334,6 +332,7 @@ public class GUIMove extends Move implements GUIOrder
 	
 	
 	
+	@Override
 	public void removeFromDOM(MapInfo mapInfo)
 	{
 		if(group != null)
@@ -347,6 +346,7 @@ public class GUIMove extends Move implements GUIOrder
 	
 	
 	/** Draws a line with an arrow. */
+	@Override
 	public void updateDOM(MapInfo mapInfo)
 	{
 		// if we are not displayable, we exit, after remove the order (if
@@ -626,6 +626,7 @@ public class GUIMove extends Move implements GUIOrder
 	*/
 	
 	/** We are dependent on the presence of Support orders for certain drawing parameters. */
+	@Override
 	public boolean isDependent()	{ return true; }
 	
 	

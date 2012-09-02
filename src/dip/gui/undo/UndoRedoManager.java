@@ -22,16 +22,15 @@
 //
 package dip.gui.undo;
 
-import dip.gui.ClientMenu;
-import dip.gui.OrderDisplayPanel;
-import dip.gui.ClientFrame;
-import dip.misc.Log;
+import java.util.ListIterator;
 
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
 
-import java.io.*;
-import java.util.*;
+import dip.gui.ClientFrame;
+import dip.gui.ClientMenu;
+import dip.gui.OrderDisplayPanel;
+import dip.misc.Log;
 
 /**
 *
@@ -93,6 +92,7 @@ public class UndoRedoManager extends UndoManager
 	
 	
 	/** Add an Edit (UndoableEdit) */
+	@Override
 	public synchronized boolean addEdit(UndoableEdit anEdit)
 	{
 		//System.out.println("URM: addEdit(): edits (before): "+edits.size());
@@ -105,6 +105,7 @@ public class UndoRedoManager extends UndoManager
 	}// addEdit()
 	
 	/** Redo last undo */
+	@Override
 	public synchronized void redo()
 	{
 		//System.out.println("URM: redo(): edits (before): "+edits.size());
@@ -115,6 +116,7 @@ public class UndoRedoManager extends UndoManager
 	}// redo()
 	
 	/** Undo an UndoableEdit */
+	@Override
 	public synchronized void undo()
 	{
 		//System.out.println("URM: undo(): edits (before): "+edits.size());
@@ -125,6 +127,7 @@ public class UndoRedoManager extends UndoManager
 	}// undo()
 	
 	/** Throw away all stored edits */
+	@Override
 	public synchronized void discardAllEdits()
 	{
 		checkState();
@@ -133,6 +136,7 @@ public class UndoRedoManager extends UndoManager
 	}// discardAllEdits()
 	
 	/** Undo or Redo */
+	@Override
 	public synchronized void undoOrRedo()
 	{
 		checkState();
@@ -202,14 +206,14 @@ public class UndoRedoManager extends UndoManager
 	{
 		Log.println("UndoRedoManager::filterF2F()");
 		
-		ListIterator listIter = edits.listIterator(edits.size());
+		ListIterator<UndoableEdit> listIter = edits.listIterator(edits.size());
 		
 		int from = Integer.MAX_VALUE;
 		
 		while(listIter.hasPrevious())
 		{
 			final int idx = listIter.previousIndex();
-			UndoableEdit ue = (UndoableEdit) listIter.previous();
+			UndoableEdit ue = listIter.previous();
 			
 			//Log.println("  checking: ", String.valueOf(idx), ": ", ue.getClass().getName());
 			
@@ -254,7 +258,7 @@ public class UndoRedoManager extends UndoManager
 		// We wait until after we find the first UndoResolve to avoid destroying
 		// any edits (if any) in the current unresolved turnstate.
 		//
-		ListIterator listIter = edits.listIterator(edits.size());
+		ListIterator<UndoableEdit> listIter = edits.listIterator(edits.size());
 		boolean foundResolved = false;
 		
 		int from = Integer.MAX_VALUE;
@@ -263,7 +267,7 @@ public class UndoRedoManager extends UndoManager
 		while(listIter.hasPrevious())
 		{
 			final int idx = listIter.previousIndex();
-			UndoableEdit ue = (UndoableEdit) listIter.previous();
+			UndoableEdit ue = listIter.previous();
 			
 			//Log.println("  checking: ", String.valueOf(idx), ": ", ue.getClass().getName());
 			

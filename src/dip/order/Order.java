@@ -21,16 +21,20 @@
 //
 package dip.order;
 
-import dip.world.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import dip.misc.Utils;
 import dip.process.Adjudicator;
 import dip.process.OrderState;
-import dip.misc.Utils;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import java.io.*;
+import dip.world.Location;
+import dip.world.Phase;
+import dip.world.Position;
+import dip.world.Power;
+import dip.world.Province;
+import dip.world.RuleOptions;
+import dip.world.TurnState;
+import dip.world.Unit;
 
 /**
  *  This is the base class for all Order objects.
@@ -116,18 +120,21 @@ public abstract class Order extends Object implements Orderable, java.io.Seriali
 	}// Order()
 	
 	
+	@Override
 	public final Location getSource()
 	{
 		return src;
 	}// getSource()
 	
 	
+	@Override
 	public final Unit.Type getSourceUnitType()
 	{
 		return srcUnitType;
 	}// getSourceUnitType()
 	
 	
+	@Override
 	public final Power getPower()
 	{
 		return power;
@@ -137,6 +144,7 @@ public abstract class Order extends Object implements Orderable, java.io.Seriali
 	// 
 	// Format methods
 	// 
+	@Override
 	public String toFormattedString(OrderFormatOptions ofo)
 	{
 		return OrderFormat.format(ofo, getDefaultFormat(), this);
@@ -182,6 +190,7 @@ public abstract class Order extends Object implements Orderable, java.io.Seriali
 	 *@param valOpts			 Current validation options
 	 *@exception  OrderException  
 	 */
+	@Override
 	public void validate(TurnState state, ValidationOptions valOpts, RuleOptions ruleOpts)
 	throws OrderException
 	{
@@ -403,6 +412,7 @@ public abstract class Order extends Object implements Orderable, java.io.Seriali
 	//
 	
 	/** For debugging: calls toBriefString(). Note this will fail if order is null. */
+	@Override
 	public String toString()
 	{
 		return toBriefString();
@@ -416,6 +426,7 @@ public abstract class Order extends Object implements Orderable, java.io.Seriali
 	*	subclassed Order object! Subclasses are advised to call
 	*	the super method for assistance.
 	*/
+	@Override
 	public boolean equals(Object obj)
 	{
 		// speedy reference check

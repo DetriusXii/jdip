@@ -23,21 +23,21 @@
 
 package dip.gui.dialog;
 
-import dip.world.Phase;
-import dip.misc.Utils;
-import dip.gui.ClientFrame;
-import dip.gui.swing.XJScrollPane;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 import javax.swing.JList;
 import javax.swing.JPanel;
-import java.awt.BorderLayout;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
-import java.awt.Dimension;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.List;
-import java.util.LinkedList;
+
+import dip.gui.ClientFrame;
+import dip.gui.swing.XJScrollPane;
+import dip.misc.Utils;
+import dip.world.Phase;
 
 /**
 *
@@ -147,6 +147,7 @@ public class SelectPhaseDialog extends HeaderDialog
 			return phase;
 		}// getPhase()
 		
+		@Override
 		public String toString()
 		{
 			StringBuffer sb = new StringBuffer(64);

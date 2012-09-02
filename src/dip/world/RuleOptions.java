@@ -22,16 +22,14 @@
 //
 package dip.world;
 
-import dip.misc.Utils;
-import dip.world.variant.data.Variant;
-
-import java.io.Serializable;
-import java.io.ObjectStreamException;
 import java.io.InvalidObjectException;
+import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Set;
-import java.util.Iterator;
-import java.lang.reflect.*;
+
+import dip.misc.Utils;
+import dip.world.variant.data.Variant;
 
 /**
 *	RuleOptions is an object for storing Options and OptionValues that 
@@ -58,6 +56,11 @@ import java.lang.reflect.*;
 */
 public class RuleOptions implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	// internal constnats
 	private static final String DESCRIPTION = "_description";
 	
@@ -135,6 +138,10 @@ public class RuleOptions implements Serializable
 	*/
 	public static class Option implements Serializable
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		// instance variables
 		protected final String name;
 		protected final OptionValue[] allowed;
@@ -195,12 +202,14 @@ public class RuleOptions implements Serializable
 		}// checkValue() 
 		
 		
+		@Override
 		public boolean equals(Object obj)
 		{
 			return name.equals( ((Option) obj).name );
 		}// equals()
 		
 		
+		@Override
 		public int hashCode()
 		{
 			return name.hashCode();
@@ -223,6 +232,7 @@ public class RuleOptions implements Serializable
 		}// readResolve()
 		
 		/** For debugging only */
+		@Override
 		public String toString()
 		{
 			return name;
@@ -264,11 +274,13 @@ public class RuleOptions implements Serializable
 		/** Gets the internationalized ("display") version of the description. */
 		public String getDescriptionI18N()		{ return Utils.getLocalString(getName()+DESCRIPTION); }
 		
+		@Override
 		public boolean equals(Object obj)
 		{
 			return name.equals( ((OptionValue) obj).name );
 		}// equals()
 		
+		@Override
 		public int hashCode()
 		{
 			return name.hashCode();
@@ -291,6 +303,7 @@ public class RuleOptions implements Serializable
 		}// readResolve()
 		
 		/** For debugging only */
+		@Override
 		public String toString()
 		{
 			return name;
@@ -362,6 +375,7 @@ public class RuleOptions implements Serializable
 	
 	
 	/** For debugging only; print the rule options */
+	@Override
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer(256);

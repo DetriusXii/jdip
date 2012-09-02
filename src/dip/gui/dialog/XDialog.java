@@ -22,15 +22,6 @@
 //
 package dip.gui.dialog;
 
-import dip.gui.*;
-import dip.misc.Utils;
-import dip.misc.Help;
-
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JRootPane;
-import javax.swing.KeyStroke;
-import javax.swing.WindowConstants;
 import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
@@ -39,7 +30,15 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import java.awt.*;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JRootPane;
+import javax.swing.KeyStroke;
+import javax.swing.WindowConstants;
+
+import dip.misc.Help;
+import dip.misc.Utils;
+
 /**
 *	Extended JDialog
 *	<p>
@@ -135,6 +134,7 @@ public class XDialog extends JDialog
 	
 	
 	/** Dialog setup, including adding Window-Close listener */
+	@Override
 	protected void dialogInit()
 	{	
 		super.dialogInit();
@@ -143,6 +143,7 @@ public class XDialog extends JDialog
 		super.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		
 		addWindowListener(new WindowAdapter() {
+			@Override
 			public void windowClosing(WindowEvent e) 
 			{
 				XDialog.this.close();
@@ -152,12 +153,14 @@ public class XDialog extends JDialog
 	
 	
 	/** Adds the ESC key listener */
+	@Override
 	protected JRootPane createRootPane() 
 	{
 		JRootPane rootPane = super.createRootPane();
 		
 		// install ESC key checking.
 		ActionListener actionListener = new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				XDialog.this.close();
 			}
@@ -172,6 +175,7 @@ public class XDialog extends JDialog
 	
 	
 	/** Throws an IllegalArgumentException() */
+	@Override
 	public void setDefaultCloseOperation(int operation)
 	{
 		throw new IllegalArgumentException("override close() instead");

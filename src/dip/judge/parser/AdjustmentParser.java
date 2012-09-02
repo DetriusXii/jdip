@@ -22,13 +22,18 @@
 //
 package dip.judge.parser;
 
-import dip.world.Phase;
-import dip.world.Power;
-import dip.world.Map;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import java.io.*;
-import java.util.regex.*;
-import java.util.*;
+import dip.world.Map;
+import dip.world.Power;
 
 /**
  *	Parses the Adjustment information block. 
@@ -166,7 +171,8 @@ public class AdjustmentParser {
         }
 
         /** String output for debugging; may change between versions. */
-        public String toString() {
+        @Override
+		public String toString() {
             StringBuffer sb = new StringBuffer();
             sb.append("OwnerInfo[power=");
             sb.append(power);
@@ -225,7 +231,8 @@ public class AdjustmentParser {
         }
 
         /** String output for debugging; may change between versions. */
-        public String toString() {
+        @Override
+		public String toString() {
             StringBuffer sb = new StringBuffer();
             sb.append("AdjustInfo[power=");
             sb.append(power);
@@ -329,7 +336,7 @@ public class AdjustmentParser {
         //
         final Power[] allPowers = map.getPowers();
         for (int i = 0; i < allPowers.length; i++) {
-            StringBuffer sb = (StringBuffer) pmap.get(allPowers[i]);
+            StringBuffer sb = pmap.get(allPowers[i]);
             if (sb != null) {
                 final String[] provs = sb.toString().split("[\\,]");
 

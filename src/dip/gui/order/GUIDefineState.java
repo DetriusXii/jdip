@@ -22,23 +22,13 @@
 //
 package dip.gui.order;
 
-import dip.order.DefineState;
-import dip.order.Orderable;
-import dip.order.ValidationOptions;
-import dip.order.OrderException;
-
-import dip.gui.order.GUIOrder.MapInfo;
-
 import dip.misc.Utils;
-
-import dip.world.Position;
+import dip.order.DefineState;
+import dip.order.OrderException;
+import dip.order.Orderable;
 import dip.world.Location;
-import dip.world.Province;
-import dip.world.Unit;
 import dip.world.Power;
-import dip.world.RuleOptions;
-
-import dip.process.Adjustment.AdjustmentInfoMap;
+import dip.world.Unit;
 
 /**
 *
@@ -69,6 +59,7 @@ public class GUIDefineState extends DefineState implements GUIOrder
 	
 	
 	/** This only accepts DefineState orders. All others will throw an IllegalArgumentException. */
+	@Override
 	public void deriveFrom(Orderable order)
 	{
 		if( !(order instanceof DefineState) )
@@ -83,6 +74,7 @@ public class GUIDefineState extends DefineState implements GUIOrder
 	}// deriveFrom()
 	
 	/** Always returns false. */
+	@Override
 	public boolean testLocation(StateInfo stateInfo, Location location, StringBuffer sb)
 	{
 		sb.setLength(0);
@@ -91,12 +83,14 @@ public class GUIDefineState extends DefineState implements GUIOrder
 	}// testLocation()
 	
 	/** Always returns false. */
+	@Override
 	public boolean clearLocations()
 	{
 		return false;
 	}// clearLocations()
 	
 	/** Always returns false. */
+	@Override
 	public boolean setLocation(StateInfo stateInfo, Location location, StringBuffer sb)
 	{
 		sb.setLength(0);
@@ -105,35 +99,43 @@ public class GUIDefineState extends DefineState implements GUIOrder
 	}// setLocation()
 	
 	/** Always returns true. */
+	@Override
 	public boolean isComplete()
 	{
 		return true;
 	}// isComplete()
 	
 	/** Always returns 0. */
+	@Override
 	public int getNumRequiredLocations()		{ return 0; }
 	
 	/** Always returns 0. */
+	@Override
 	public int getCurrentLocationNum()			{ return 0; }
 	
 	
 	/** Always throws an IllegalArgumentException */
+	@Override
 	public void setParam(Parameter param, Object value)	{ throw new IllegalArgumentException(); }
 	
 	/** Always throws an IllegalArgumentException */
+	@Override
 	public Object getParam(Parameter param)	{ throw new IllegalArgumentException(); }
 	
 	
 	
+	@Override
 	public void removeFromDOM(MapInfo mapInfo)
 	{
 	}// removeFromDOM()
 	
 	
+	@Override
 	public void updateDOM(MapInfo mapInfo)
 	{
 	}// updateDOM()	
 	
+	@Override
 	public boolean isDependent()	{ return false; }
 	
 	

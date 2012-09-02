@@ -10,18 +10,25 @@
 //
 package dip.misc;
 
-import dip.order.*;								// orders
-import dip.order.result.*;						// results of orders
-import dip.world.*;								// 'main' things (Units, Provinces, etc.)
-import dip.world.variant.VariantManager;		// Loads variants (maps, etc.)
-import dip.world.variant.data.*;				// variant data
-import dip.process.*;							// adjudication
-
-import java.util.List;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Iterator;
-import java.io.*;
+import java.util.List;
+
+import dip.order.Order;
+import dip.order.OrderFactory;
+import dip.world.Coast;
+import dip.world.Location;
+import dip.world.Map;
+import dip.world.Position;
+import dip.world.Power;
+import dip.world.Province;
+import dip.world.RuleOptions;
+import dip.world.Unit;
+import dip.world.World;
+import dip.world.WorldFactory;
+import dip.world.variant.VariantManager;
+import dip.world.variant.data.Variant;
 
 /**
 *	This class is meant to be an illustrative example of how to use
@@ -389,26 +396,4 @@ public class AIDemo
 	}// makeLocation()
 	
 	
-	/**
-	*	Evaluate orders, stopping when we have reached our goal 
-	*	(occupying Warsaw).
-	*	<p>
-	*	Note that there are many ways to evaluate the success of an order set.
-	*	One method is to use the Position object, and check where units are.
-	*	Another method is to look at the order results via TurnState.getResultList().
-	*	Iterating through the OrderResults, once can determine which orders are
-	*	successful and (if adjudicator statistical reporting is enabled) the 
-	*	attack:defense statistics involved).
-	*/
-	private void evaluateOrders(World world, Position position, List[] orderSets)
-	{
-		/*
-			we will evaluate by finding the BEST order that takes the sc
-			(first check via hasUnit())
-			
-			then the one with the most attack strength
-			
-		*/
-		
-	}// evaluateOrders()
 }// class AIDemo

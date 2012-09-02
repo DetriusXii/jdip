@@ -21,15 +21,19 @@
 //
 package dip.judge.net;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.net.URL;
+
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.parser.ParserDelegator;
+
 import dip.judge.parser.JudgeImport;
+import dip.misc.Utils;
 import dip.order.OrderFactory;
 import dip.world.World;
-import dip.misc.Utils;
-
-import java.io.*;
-import java.net.*;
-import javax.swing.text.html.*;
-import javax.swing.text.html.parser.*;
 /**
  *
  * 	@author Mannkind aka Dustin Brewer, Zach DelProposto
@@ -140,6 +144,7 @@ public class FlocImporter implements Runnable
 	*	Do the work (import text)
 	*	
 	*/
+	@Override
 	public void run()
 	{
 		isInProgress = true;
@@ -224,6 +229,7 @@ public class FlocImporter implements Runnable
 			ParserDelegator parser = new ParserDelegator();
 			parser.parse(reader, new HTMLEditorKit.ParserCallback()
 				{
+					@Override
 					public void handleText(char[] text, int pos)
 					{
 						if(!isInProgress)

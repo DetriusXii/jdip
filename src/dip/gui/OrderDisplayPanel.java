@@ -22,39 +22,61 @@
 //
 package dip.gui;
 
-import dip.order.*;
-import dip.process.Adjudicator;
-import dip.world.*;
-import dip.gui.undo.*;
-import dip.gui.order.GUIOrder;
-import dip.gui.swing.XJScrollPane;
-import dip.gui.dialog.prefs.GeneralPreferencePanel;
-import dip.misc.Utils;
-import dip.process.Adjustment;
-import dip.misc.Log;
-
-import dip.order.result.Result;
-import dip.order.result.OrderResult;
-
-import cz.autel.dmi.*;		// HIGLayout
-
-import dip.world.Unit.Type;
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.border.*;
-import javax.swing.table.*;
-import javax.swing.undo.*;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Component;
-import java.awt.Toolkit;
-import java.awt.GridLayout;
-import java.awt.BorderLayout;
-import java.awt.Insets;
+import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+
+import javax.swing.AbstractListModel;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
+import javax.swing.undo.CompoundEdit;
+
+import cz.autel.dmi.HIGConstraints;
+import cz.autel.dmi.HIGLayout;
+import dip.gui.dialog.prefs.GeneralPreferencePanel;
+import dip.gui.swing.XJScrollPane;
+import dip.gui.undo.UndoAddMultipleOrders;
+import dip.gui.undo.UndoAddOrder;
+import dip.gui.undo.UndoClearAll;
+import dip.gui.undo.UndoDeleteMultipleOrders;
+import dip.gui.undo.UndoDeleteOrder;
+import dip.gui.undo.UndoRedoManager;
+import dip.misc.Utils;
+import dip.order.OrderException;
+import dip.order.OrderFormatOptions;
+import dip.order.OrderParser;
+import dip.order.OrderWarning;
+import dip.order.Orderable;
+import dip.order.ValidationOptions;
+import dip.process.Adjudicator;
+import dip.process.Adjustment;
+import dip.world.Location;
+import dip.world.Phase;
+import dip.world.Power;
+import dip.world.Province;
+import dip.world.RuleOptions;
+import dip.world.TurnState;
+import dip.world.Unit.Type;
+import dip.world.World;
 
 /**
 *	The OrderDisplayPanel: displayer of orders.
@@ -86,6 +108,7 @@ import java.text.MessageFormat;
 */
 public class OrderDisplayPanel extends JPanel
 {
+	private static final long serialVersionUID = 1L;
 	// sorting constants
 	/** Sort Orders by Power */
 	public static final String SORT_POWER = "SORT_POWER";
@@ -133,7 +156,7 @@ public class OrderDisplayPanel extends JPanel
 	private UndoRedoManager undoManager = null;
 	
 	// GUI component instance variables 
-	private JList orderList;
+	private JList<OrderListModel> orderList;
 	protected JScrollPane orderListScrollPane;
 	
 	
@@ -152,7 +175,7 @@ public class OrderDisplayPanel extends JPanel
 		
 		// order list basic setup
 		orderListModel = new OrderListModel();
-		orderList = new JList(orderListModel);
+		orderList = new JList<OrderListModel>(orderListModel);
 		orderList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		orderList.setDragEnabled(false);
 		orderList.setCellRenderer(new OrderListRenderer());
@@ -408,7 +431,7 @@ public class OrderDisplayPanel extends JPanel
 	* 	@param undoable - <b>true</b> if this is an undoable action
 	*	@return A list of OrderExceptions, or null
 	*/
-	public synchronized java.util.Map addOrdersRaw(Orderable[] orders, boolean undoable)
+	public synchronized java.util.Map<Orderable, OrderException> addOrdersRaw(Orderable[] orders, boolean undoable)
 	{
 		// null orders not permitted.
 		if(orders == null) { throw new IllegalArgumentException(); }
@@ -777,6 +800,7 @@ public class OrderDisplayPanel extends JPanel
 	*	Overriden to return the preferred size. This ensures that
 	*	we resize properly in a JSplitPane.
 	*/
+	@Override
 	public Dimension getMinimumSize()
 	{
 		return new Dimension(getPreferredSize());
@@ -910,31 +934,37 @@ public class OrderDisplayPanel extends JPanel
 	protected class ODPPropertyListener extends AbstractCFPListener
 	{
 
+		@Override
 		public void actionOrderCreated(Orderable order)		
 		{
 			orderListModel.addOrder(order);
 		}// actionOrderCreated()
 		
+		@Override
 		public void actionOrderDeleted(Orderable order)		
 		{
 			orderListModel.removeOrder(order);
 		}// actionOrderDeleted()
 		
+		@Override
 		public void actionOrdersCreated(Orderable[] orders)		
 		{
 			orderListModel.addOrders(orders);
 		}// actionOrdersCreated()
 		
+		@Override
 		public void actionOrdersDeleted(Orderable[] orders)		
 		{
 			orderListModel.removeOrders(orders);
 		}// actionOrdersDeleted()
 		
+		@Override
 		public void actionOrderablePowersChanged(Power[] oldPowers, Power[] newPowers)
 		{
 			orderablePowers = newPowers;
 		}// actionOrderablePowersChanged()
 		
+		@Override
 		public void actionDisplayablePowersChanged(Power[] oldPowers, Power[] newPowers)
 		{
 			displayablePowers = newPowers;
@@ -944,6 +974,7 @@ public class OrderDisplayPanel extends JPanel
 			}
 		}// actionDisplayablePowersChanged()
 		
+		@Override
 		public void actionValOptsChanged(ValidationOptions options)
 		{
 			valOpts = options;
@@ -953,6 +984,7 @@ public class OrderDisplayPanel extends JPanel
 			}
 		}// actionValOptsChanged()
 		
+		@Override
 		public synchronized void actionWorldCreated(World w)
 		{
 			world = w;
@@ -960,6 +992,7 @@ public class OrderDisplayPanel extends JPanel
 			valOpts = clientFrame.getValidationOptions();
 		}// actionWorldCreated()
 		
+		@Override
 		public void actionWorldDestroyed(World w)
 		{
 			orderListModel.removeAllOrders();
@@ -972,6 +1005,7 @@ public class OrderDisplayPanel extends JPanel
 			orderablePowers = null;
 		}// actionWorldDestroyed()
 		
+		@Override
 		public void actionTurnstateChanged(TurnState ts)
 		{
 			turnState = ts;
@@ -989,6 +1023,7 @@ public class OrderDisplayPanel extends JPanel
 			orderList.clearSelection();
 		}// actionTurnstateChanged()
 		
+		@Override
 		public synchronized void actionModeChanged(String newMode)
 		{
 			if(newMode == ClientFrame.MODE_ORDER)
@@ -1051,12 +1086,14 @@ public class OrderDisplayPanel extends JPanel
 		}// OrderListModel()
 		
 		/** Return the Size of the list. */
+		@Override
 		public int getSize()
 		{
 			return list.size();
 		}// getSize()
 		
 		/** Returns the object (DisplayOrder) at the given index. */
+		@Override
 		public Orderable getElementAt(int index)
 		{
 			return list.get(index);
@@ -1194,7 +1231,7 @@ public class OrderDisplayPanel extends JPanel
 			{
 				final Iterator<DisplayOrder> iter = list.iterator();
 				while(iter.hasNext()) {
-					final DisplayOrder displayOrder = (DisplayOrder) iter.next();
+					final DisplayOrder displayOrder = iter.next();
 					final Orderable doOrder = displayOrder.getOrder();
 					
 					for(int i=0; i<orders.length; i++) {
@@ -1227,9 +1264,9 @@ public class OrderDisplayPanel extends JPanel
 			synchronized(list) {
 				list.clear();
 				
-				Iterator iter = turnState.getAllOrders().iterator();
+				Iterator<Orderable> iter = turnState.getAllOrders().iterator();
 				while(iter.hasNext()) {
-					Orderable order = (Orderable) iter.next();
+					Orderable order = iter.next();
 					if(isDisplayable(order)) {
 						list.add(createDisplayOrder(order));
 					}
@@ -1245,10 +1282,10 @@ public class OrderDisplayPanel extends JPanel
 		{
 			synchronized(list)
 			{
-				Iterator iter = list.iterator();
+				Iterator<DisplayOrder> iter = list.iterator();
 				while(iter.hasNext())
 				{
-					DisplayOrder displayOrder = (DisplayOrder) iter.next();
+					DisplayOrder displayOrder = iter.next();
 					
 					try
 					{
@@ -1325,6 +1362,7 @@ public class OrderDisplayPanel extends JPanel
 	private class OrderListRenderer extends DefaultListCellRenderer
 	{
 		
+		@Override
 		public Component getListCellRendererComponent(JList list, Object value, int index,
 														boolean isSelected, boolean cellHasFocus)
 		{
@@ -1377,9 +1415,11 @@ public class OrderDisplayPanel extends JPanel
 		}// getListCellRendererComponent()
 		
 		/** Overridden for performance */
+		@Override
 		public void invalidate() {}
 		
 		/** Overriden for performance */
+		@Override
 		public void repaint() {}
 		
 	}// inner class OrderListRenderer
@@ -1431,6 +1471,7 @@ public class OrderDisplayPanel extends JPanel
 		public void setFailed(boolean value)	{ isFailed = value; }
 		
 		/** Return HTML formatted text to display. */
+		@Override
 		public String toString()
 		{
 			StringBuffer sb = new StringBuffer(128);
@@ -1535,6 +1576,7 @@ public class OrderDisplayPanel extends JPanel
 		*	The compare method. This essentially returns the result of
 		*	compareDisplayOrders() unless the sort is reversed.
 		*/
+		@Override
 		public final int compare(final DisplayOrder o1, final DisplayOrder o2)
 		{
 			final int result = compareDisplayOrders(o1, o2);
@@ -1551,21 +1593,21 @@ public class OrderDisplayPanel extends JPanel
 		*	Mark the highlighted items in a collection of orders.
 		*	NOTE: the Iterator must return DisplayOrder objects.
 		*/
-		public void setHighlighting(Iterator iter)
+		public void setHighlighting(Iterator<DisplayOrder> iter)
 		{
 			boolean toHilite = true;
 			Object lastObject = null;
 			
 			if(iter.hasNext())
 			{
-				DisplayOrder first = (DisplayOrder) iter.next();
+				DisplayOrder first = iter.next();
 				first.setHighlighted(toHilite);
 				lastObject = getComparisonObject(first);
 			}
 			
 			while(iter.hasNext())
 			{
-				DisplayOrder next = (DisplayOrder) iter.next();
+				DisplayOrder next = iter.next();
 				Object nextObject = getComparisonObject(next);
 				
 				if( !lastObject.equals(nextObject) )
@@ -1584,6 +1626,7 @@ public class OrderDisplayPanel extends JPanel
 	private class DOSortPower extends DOComparator
 	{
 		/** Determine if we are the same Comparator type */
+		@Override
 		public boolean equals(Object obj)
 		{
 			return (obj instanceof DOSortPower);
@@ -1593,6 +1636,7 @@ public class OrderDisplayPanel extends JPanel
 		*	DOComparator Implementation. Passed parameters are
 		*	assumed to be DisplayOrder objects.
 		*/
+		@Override
 		protected int compareDisplayOrders(DisplayOrder do1, DisplayOrder do2)
 		{
 			Power p1 = do1.getOrder().getPower();
@@ -1601,6 +1645,7 @@ public class OrderDisplayPanel extends JPanel
 			return p1.compareTo(p2);
 		}// compare()
 		
+		@Override
 		protected Object getComparisonObject(DisplayOrder displayedOrder)
 		{
 			return displayedOrder.getOrder().getPower();
@@ -1612,12 +1657,14 @@ public class OrderDisplayPanel extends JPanel
 	private class DOSortProvince extends DOComparator
 	{
 		/** Determine if we are the same Comparator type */
+		@Override
 		public boolean equals(Object obj)
 		{
 			return (obj instanceof DOSortProvince);
 		}// equals()
 
 		/** DOComparator Implementation. */
+		@Override
 		protected int compareDisplayOrders(DisplayOrder do1, DisplayOrder do2)
 		{
 			Province pr1 = do1.getOrder().getSource().getProvince();
@@ -1627,6 +1674,7 @@ public class OrderDisplayPanel extends JPanel
 		}// compare()
 		
 		/** DOComparator Implementation. */
+		@Override
 		protected Object getComparisonObject(DisplayOrder displayedOrder)
 		{
 			return displayedOrder.getOrder().getSource().getProvince();
@@ -1638,12 +1686,14 @@ public class OrderDisplayPanel extends JPanel
 	private class DOSortUnit extends DOComparator
 	{
 		/** Determine if we are the same Comparator type */
+		@Override
 		public boolean equals(Object obj)
 		{
 			return (obj instanceof DOSortUnit);
 		}// equals()
 
 		/** DOComparator Implementation. */
+		@Override
 		protected int compareDisplayOrders(DisplayOrder do1, DisplayOrder do2)
 		{
 			String name1 = do1.getOrder().getSourceUnitType().getFullName();
@@ -1653,6 +1703,7 @@ public class OrderDisplayPanel extends JPanel
 		}// compare()
 		
 		/** DOComparator Implementation. */
+		@Override
 		protected Object getComparisonObject(DisplayOrder displayedOrder)
 		{
 			return displayedOrder.getOrder().getSourceUnitType();
@@ -1664,12 +1715,14 @@ public class OrderDisplayPanel extends JPanel
 	private class DOSortOrder extends DOComparator
 	{
 		/** Determine if we are the same Comparator type */
+		@Override
 		public boolean equals(Object obj)
 		{
 			return (obj instanceof DOSortOrder);
 		}// equals()
 
 		/** DOComparator Implementation. */
+		@Override
 		protected int compareDisplayOrders(DisplayOrder do1, DisplayOrder do2)
 		{
 			String ordName1 = do1.getOrder().getFullName();
@@ -1679,6 +1732,7 @@ public class OrderDisplayPanel extends JPanel
 		}// compare()
 		
 		/** DOComparator Implementation. */
+		@Override
 		protected Object getComparisonObject(DisplayOrder displayedOrder)
 		{
 			return displayedOrder.getOrder().getBriefName();
@@ -1720,7 +1774,7 @@ public class OrderDisplayPanel extends JPanel
 		JLabel label = new JLabel(Utils.getLocalString(LABEL_SORT));
 		
 		// combobox
-		JComboBox sortCombo = new JComboBox();
+		JComboBox<String> sortCombo = new JComboBox<String>();
 		sortCombo.setEditable(false);
 		sortCombo.addItem(Utils.getLocalString(LABEL_SORT_POWER));
 		sortCombo.addItem(Utils.getLocalString(LABEL_SORT_PROVINCE));
@@ -1729,6 +1783,7 @@ public class OrderDisplayPanel extends JPanel
 		sortCombo.setSelectedItem(Utils.getLocalString(LABEL_SORT_PROVINCE));
 		sortCombo.addActionListener(new ActionListener()
 		{
+			@Override
 			public void actionPerformed(ActionEvent e)
 			{
 				String item = (String) ((JComboBox) e.getSource()).getSelectedItem();

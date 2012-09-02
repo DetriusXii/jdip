@@ -22,16 +22,16 @@
 //
 package dip.process;
 
-import dip.order.Order;
+import java.util.Iterator;
+import java.util.List;
+
 import dip.order.Move;
+import dip.order.Order;
 import dip.order.Orderable;
 import dip.order.Support;
-import dip.world.Province;
 import dip.world.Location;
 import dip.world.Power;
-import dip.world.Unit;
-
-import java.util.*;
+import dip.world.Province;
 
 		
 /**
@@ -413,12 +413,12 @@ public final class OrderState
 	
 	
 	/** Verifies that given list ONLY contains Move orderstates */
-	private boolean verifyListMove(List list)
+	private boolean verifyListMove(List<OrderState> list)
 	{
-		Iterator iter = list.iterator();
+		Iterator<OrderState> iter = list.iterator();
 		while(iter.hasNext())
 		{
-			OrderState os = (OrderState) iter.next();
+			OrderState os = iter.next();
 			if( !(os.getOrder() instanceof Move) )
 			{
 				return false;
@@ -430,12 +430,12 @@ public final class OrderState
 	
 	
 	/** Verifies that given list ONLY contains Support orderstates */
-	private boolean verifyListSupport(List list)
+	private boolean verifyListSupport(List<OrderState> list)
 	{
-		Iterator iter = list.iterator();
+		Iterator<OrderState> iter = list.iterator();
 		while(iter.hasNext())
 		{
-			OrderState os = (OrderState) iter.next();
+			OrderState os = iter.next();
 			if( !(os.getOrder() instanceof Support) )
 			{
 				return false;
@@ -447,12 +447,12 @@ public final class OrderState
 	
 	
 	/** Verifies that given list ONLY contains Self Support orderstates */
-	private boolean verifyListSelfSupport(List list)
+	private boolean verifyListSelfSupport(List<OrderState> list)
 	{
-		Iterator iter = list.iterator();
+		Iterator<OrderState> iter = list.iterator();
 		while(iter.hasNext())
 		{
-			OrderState os = (OrderState) iter.next();
+			OrderState os = iter.next();
 			if(os.getOrder() instanceof Support)
 			{
 				Support support = (Support) os.getOrder();

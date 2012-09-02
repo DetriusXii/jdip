@@ -22,12 +22,14 @@
 //
 package dip.world.variant.parser;
 
-import dip.misc.Log;
-
 import java.io.StringReader;
+
 import javax.xml.parsers.DocumentBuilder;
+
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
+
+import dip.misc.Log;
 /**
 *	Resolves Entity definitions to an empty InputSource, unless validation
 *	is enabled, in which case we actually do resolve the entities.
@@ -58,6 +60,7 @@ public class FastEntityResolver implements EntityResolver
 	
 	
 	/** Resolve the Entity */
+	@Override
 	public InputSource resolveEntity(String publicID, String systemID)
 	{
 		if(!isValidating)

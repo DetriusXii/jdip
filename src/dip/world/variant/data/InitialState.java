@@ -22,8 +22,8 @@
 //
 package dip.world.variant.data;
 
-import dip.world.Unit;
 import dip.world.Coast;
+import dip.world.Unit;
 
 /**
 
@@ -66,6 +66,7 @@ public class InitialState
 	
 	
 	/** For debugging only! */
+	@Override
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer(256);

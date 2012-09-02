@@ -23,14 +23,14 @@
 package dip.gui.map;
 
 
-import dip.misc.Utils;
-
 import java.awt.Color;
 
-import org.apache.batik.css.engine.value.svg.ColorManager;
+import org.apache.batik.css.engine.value.FloatValue;
+import org.apache.batik.css.engine.value.RGBColorValue;
 import org.apache.batik.css.engine.value.StringMap;
-import org.apache.batik.css.engine.value.RGBColorValue; 
-import org.apache.batik.css.engine.value.FloatValue; 
+import org.apache.batik.css.engine.value.svg.ColorManager;
+
+import dip.misc.Utils;
 
 /**
 *	Parses SVG colors, and returns a java.awt.Color color.
@@ -106,6 +106,7 @@ public class SVGColorParser
 		}// XColorStringMap()
 		
 		/** Uses String.equals() instead of referential equality */
+		@Override
 		public Object get(String key)
 		{
 			int hash  = key.hashCode() & 0x7FFFFFFF;

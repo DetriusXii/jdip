@@ -22,32 +22,24 @@
 //
 package dip.gui.map;
 
-import dip.gui.map.RenderCommandFactory.RenderCommand;
-
-import dip.gui.ClientFrame;
-import dip.gui.AbstractCFPListener;
-
-import dip.gui.order.GUIOrder;
-import dip.order.Orderable;
-
-import dip.misc.Log;
-
-import dip.world.Province;
-import dip.world.TurnState;
-import dip.world.Location;
-import dip.world.Power;
-import dip.world.Unit;
-
-import java.util.LinkedList;
 import java.util.Iterator;
-
+import java.util.LinkedList;
 import java.util.List;
-import org.w3c.dom.svg.SVGDocument;
 
 import org.apache.batik.swing.JSVGCanvas;
 import org.apache.batik.util.RunnableQueue;
-import org.apache.batik.bridge.UpdateManagerListener;
-import org.apache.batik.bridge.UpdateManagerEvent;
+import org.w3c.dom.svg.SVGDocument;
+
+import dip.gui.AbstractCFPListener;
+import dip.gui.ClientFrame;
+import dip.gui.map.RenderCommandFactory.RenderCommand;
+import dip.gui.order.GUIOrder;
+import dip.misc.Log;
+import dip.order.Orderable;
+import dip.world.Location;
+import dip.world.Power;
+import dip.world.TurnState;
+import dip.world.Unit;
 
 /**
  *	Base class for the new MapRenderer.
@@ -229,7 +221,7 @@ public abstract class MapRenderer2 {
         if (rq != null) {
             synchronized (rq.getIteratorLock()) {
                 // kill our pending render events
-                Iterator iter = rq.iterator();
+                Iterator<?> iter = rq.iterator();
                 while (iter.hasNext()) {
                     Object obj = iter.next();
                     if (obj instanceof RenderCommand) {
@@ -257,15 +249,18 @@ public abstract class MapRenderer2 {
      */
     private class CFPropertyListener extends AbstractCFPListener {
 
-        public void actionOrderCreated(Orderable order) {
+        @Override
+		public void actionOrderCreated(Orderable order) {
             orderCreated((GUIOrder) order);
         }
 
-        public void actionOrderDeleted(Orderable order) {
+        @Override
+		public void actionOrderDeleted(Orderable order) {
             orderDeleted((GUIOrder) order);
         }
 
-        public void actionOrdersCreated(Orderable[] orders) {
+        @Override
+		public void actionOrdersCreated(Orderable[] orders) {
             GUIOrder[] guiOrders = new GUIOrder[orders.length];
             for (int i = 0; i < guiOrders.length; i++) {
                 guiOrders[i] = (GUIOrder) orders[i];
@@ -274,7 +269,8 @@ public abstract class MapRenderer2 {
             multipleOrdersCreated(guiOrders);
         }
 
-        public void actionOrdersDeleted(Orderable[] orders) {
+        @Override
+		public void actionOrdersDeleted(Orderable[] orders) {
             GUIOrder[] guiOrders = new GUIOrder[orders.length];
             for (int i = 0; i < guiOrders.length; i++) {
                 guiOrders[i] = (GUIOrder) orders[i];
@@ -283,11 +279,13 @@ public abstract class MapRenderer2 {
             multipleOrdersDeleted(guiOrders);
         }
 
-        public void actionDisplayablePowersChanged(Power[] oldPowers, Power[] newPowers) {
+        @Override
+		public void actionDisplayablePowersChanged(Power[] oldPowers, Power[] newPowers) {
             displayablePowersChanged(newPowers);
         }
 
-        public void actionTurnstateChanged(TurnState ts) {
+        @Override
+		public void actionTurnstateChanged(TurnState ts) {
             // OPTIMIZATION:
             // any pending queued events may be deleted, because 
             // we are changing the turnstate and doing a complete re-render.

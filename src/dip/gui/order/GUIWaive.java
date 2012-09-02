@@ -22,43 +22,25 @@
 //
 package dip.gui.order;
 
-import dip.order.Waive;
-import dip.order.Orderable;
-import dip.order.ValidationOptions;
-
-import dip.gui.order.GUIOrder.MapInfo;
-
-import dip.misc.Utils;
-
-import dip.world.Position;
-import dip.world.Location;
-import dip.world.Province;
-import dip.world.Unit;
-import dip.world.Power;
-import dip.world.RuleOptions;
-
-import dip.process.Adjustment.AdjustmentInfoMap;
-import dip.process.Adjustment;
-
 import java.awt.geom.Point2D;
 
-import org.apache.batik.util.SVGConstants;
-import org.apache.batik.util.CSSConstants;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
-import org.w3c.dom.svg.*;
+import org.apache.batik.util.SVGConstants;
+import org.w3c.dom.svg.SVGElement;
+import org.w3c.dom.svg.SVGGElement;
 
-import dip.gui.map.MapMetadata;
 import dip.gui.map.DefaultMapRenderer2;
+import dip.gui.map.MapMetadata;
 import dip.gui.map.SVGUtils;
-
-import java.awt.geom.Point2D;
-
-import org.apache.batik.util.SVGConstants;
-import org.apache.batik.util.CSSConstants;
-import org.apache.batik.dom.svg.SVGDOMImplementation;
-import org.apache.batik.dom.util.XLinkSupport;
-import org.w3c.dom.svg.*;
-import org.w3c.dom.*;
+import dip.misc.Utils;
+import dip.order.Orderable;
+import dip.order.Waive;
+import dip.process.Adjustment;
+import dip.world.Location;
+import dip.world.Position;
+import dip.world.Power;
+import dip.world.Province;
+import dip.world.RuleOptions;
 
 /**
 *	GUIOrder implementation of the Waive order.
@@ -68,6 +50,7 @@ import org.w3c.dom.*;
 public class GUIWaive extends Waive implements GUIOrder
 {
 	
+	private static final long serialVersionUID = 1L;
 	// i18n keys
 	private static final String NOWAIVE_MUST_BE_AN_OWNED_SC = "GUIWaive.bad.must_own_sc";
 	private static final String NOWAIVE_NOT_OWNED_HOME_SC	= "GUIWaive.bad.now_owned_home_sc";
@@ -97,6 +80,7 @@ public class GUIWaive extends Waive implements GUIOrder
 	
 	
 	/** This only accepts Waive orders. All others will throw an IllegalArgumentException. */
+	@Override
 	public void deriveFrom(Orderable order)
 	{
 		if( !(order instanceof Waive) )
@@ -114,6 +98,7 @@ public class GUIWaive extends Waive implements GUIOrder
 	}// deriveFrom()
 	
 	
+	@Override
 	public boolean testLocation(StateInfo stateInfo, Location location, StringBuffer sb)
 	{
 		sb.setLength(0);
@@ -210,6 +195,7 @@ public class GUIWaive extends Waive implements GUIOrder
 	}// testLocation()
 	
 	
+	@Override
 	public boolean clearLocations()
 	{
 		if(isComplete())
@@ -227,6 +213,7 @@ public class GUIWaive extends Waive implements GUIOrder
 	
 	
 	
+	@Override
 	public boolean setLocation(StateInfo stateInfo, Location location, StringBuffer sb)
 	{
 		if(testLocation(stateInfo, location, sb))
@@ -248,22 +235,28 @@ public class GUIWaive extends Waive implements GUIOrder
 	}// setLocation()
 	
 	
+	@Override
 	public boolean isComplete()
 	{
 		assert (currentLocNum <= getNumRequiredLocations());
 		return (currentLocNum == getNumRequiredLocations());
 	}// isComplete()
 	
+	@Override
 	public int getNumRequiredLocations()		{ return REQ_LOC; }
 	
+	@Override
 	public int getCurrentLocationNum()			{ return currentLocNum; }
 	
 	/** Always throws an IllegalArgumentException */
+	@Override
 	public void setParam(Parameter param, Object value)	{ throw new IllegalArgumentException(); }
 	
 	/** Always throws an IllegalArgumentException */
+	@Override
 	public Object getParam(Parameter param)	{ throw new IllegalArgumentException(); }
 	
+	@Override
 	public void removeFromDOM(MapInfo mapInfo)
 	{
 		if(group != null)
@@ -276,6 +269,7 @@ public class GUIWaive extends Waive implements GUIOrder
 	
 	
 	/** Places a unit in the desired area. */
+	@Override
 	public void updateDOM(MapInfo mapInfo)
 	{
 		// if we are not displayable, we exit, after remove the order (if
@@ -362,6 +356,7 @@ public class GUIWaive extends Waive implements GUIOrder
 	}// drawOrder()	
 	
 	
+	@Override
 	public boolean isDependent()	{ return false; }
 	
 }// class GUIWaive

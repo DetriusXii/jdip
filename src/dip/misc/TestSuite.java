@@ -22,30 +22,44 @@
 //
 package dip.misc;
 
-import dip.order.*;
-import dip.order.result.*;
-
-import dip.world.Unit;
-import dip.world.Province;
-import dip.world.Power;
-import dip.world.Phase;
-import dip.world.Location;
-import dip.world.RuleOptions;
-import dip.world.World;
-import dip.world.WorldFactory;
-import dip.world.variant.VariantManager;
-import dip.world.variant.data.*;
-
-import dip.world.TurnState;
-import dip.world.Position;
-
-import dip.process.*;
-
-import java.util.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import dip.order.DefineState;
+import dip.order.Move;
+import dip.order.Order;
+import dip.order.OrderException;
+import dip.order.OrderFactory;
+import dip.order.OrderParser;
+import dip.order.Orderable;
+import dip.order.result.ConvoyPathResult;
+import dip.order.result.OrderResult;
+import dip.order.result.Result;
+import dip.process.StdAdjudicator;
+import dip.world.Location;
+import dip.world.Phase;
+import dip.world.Position;
+import dip.world.Power;
+import dip.world.Province;
+import dip.world.RuleOptions;
+import dip.world.TurnState;
+import dip.world.Unit;
+import dip.world.World;
+import dip.world.WorldFactory;
+import dip.world.variant.VariantManager;
+import dip.world.variant.data.Variant;
 
 /**
  *	A very hastily-programmed Test harness..
@@ -790,7 +804,8 @@ public final class TestSuite {
         }// UnitPos()
 
         /** Print */
-        public String toString() {
+        @Override
+		public String toString() {
             StringBuffer sb = new StringBuffer(32);
             sb.append(unit.getPower().getName());
             sb.append(' ');
@@ -806,7 +821,8 @@ public final class TestSuite {
         }// toString()
 
         /** Compare */
-        public boolean equals(Object obj) {
+        @Override
+		public boolean equals(Object obj) {
             if (obj instanceof UnitPos) {
                 UnitPos up = (UnitPos) obj;
                 if (isDislodged == up.isDislodged
@@ -820,7 +836,8 @@ public final class TestSuite {
         }// equals()
 
         /** Force all hashes to be the same, so equals() is used */
-        public int hashCode() {
+        @Override
+		public int hashCode() {
             return 0;	// very very bad! just an easy shortcut
         }
     }// inner class UnitPos
@@ -1350,15 +1367,6 @@ public final class TestSuite {
         }
     }
 
-    private static final void println(String s1, int i1) {
-        if (isLogging) {
-            StringBuffer sb = new StringBuffer(256);
-            sb.append(s1);
-            sb.append(i1);
-            System.out.println(sb.toString());
-        }
-    }
-
     private static final void println(String s1, int i1, String s2) {
         if (isLogging) {
             StringBuffer sb = new StringBuffer(256);
@@ -1384,17 +1392,6 @@ public final class TestSuite {
             sb.append(s1);
             sb.append(o2);
             sb.append(o3);
-            System.out.println(sb.toString());
-        }
-    }
-
-    private static final void println(String s1, Object o2, Object o3, Object o4) {
-        if (isLogging) {
-            StringBuffer sb = new StringBuffer(256);
-            sb.append(s1);
-            sb.append(o2);
-            sb.append(o3);
-            sb.append(o4);
             System.out.println(sb.toString());
         }
     }

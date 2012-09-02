@@ -22,12 +22,10 @@
 //
 package dip.gui.undo;
 
-import dip.order.Order;
-import dip.gui.OrderDisplayPanel;
-import dip.misc.Utils;
-
-import javax.swing.undo.*;
 import javax.swing.UIManager;
+import javax.swing.undo.CompoundEdit;
+
+import dip.misc.Utils;
 
 /**
 *	UndoClearSelected
@@ -48,6 +46,7 @@ public class UndoClearSelected extends CompoundEdit implements java.io.Serializa
 		super();
 	}// UndoClearSelected
 	
+	@Override
 	public String getPresentationName()
 	{
 		if(edits.size() == 1)
@@ -60,6 +59,7 @@ public class UndoClearSelected extends CompoundEdit implements java.io.Serializa
 		}
 	}// getPresentationName()
 	
+	@Override
 	public String getRedoPresentationName() 
 	{
 		if(edits.size() == 1)
@@ -72,6 +72,7 @@ public class UndoClearSelected extends CompoundEdit implements java.io.Serializa
 		}
 	}// getRedoPresentationName()
 	
+	@Override
 	public String getUndoPresentationName() 
 	{
 		if(edits.size() == 1)

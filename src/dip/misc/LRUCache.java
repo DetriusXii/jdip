@@ -49,6 +49,7 @@ public class LRUCache<T> extends LinkedHashMap<String, T>
 	}// LRUCache()
 	
 	
+	@Override
 	public T put(final String key, final T value)
 	{
 		return super.put(key, value);
@@ -58,6 +59,7 @@ public class LRUCache<T> extends LinkedHashMap<String, T>
 	/**
 	*	Override to enable elimination of oldest entries
 	*/
+	@Override
 	protected boolean removeEldestEntry(final Map.Entry<String, T> eldest)
 	{
 		return (size() > maxsize); 

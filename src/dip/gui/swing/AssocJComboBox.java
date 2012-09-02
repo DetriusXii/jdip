@@ -22,13 +22,14 @@
 //
 package dip.gui.swing;
 
-import dip.misc.Utils;
-
+import java.text.Collator;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.text.Collator;
-import javax.swing.JComboBox;
+
 import javax.swing.ComboBoxModel;
+import javax.swing.JComboBox;
+
+import dip.misc.Utils;
 
 /**
 *	This is an Associated JCombobox, which associates a set of objects with
@@ -72,6 +73,7 @@ public class AssocJComboBox extends JComboBox
 	/**
 	*	Remove an item, by comparing its AssociatedObj <b>value</b>.
 	*/
+	@Override
 	public void removeItem(final Object obj) 
 	{
 		super.removeItem( getAOForValue(obj) );
@@ -87,6 +89,7 @@ public class AssocJComboBox extends JComboBox
 	*	Add an AssociatedObj. Other objects are not allowed to be
 	*	added, and will throw an exception.
 	*/
+	@Override
 	public void addItem(final Object obj)
 	{
 		if(obj instanceof AssociatedObj)
@@ -116,9 +119,10 @@ public class AssocJComboBox extends JComboBox
 	
 	
 	/** Get the selected AssociatedObj; null if none selected. */
+	@Override
 	public Object getSelectedItem()
 	{
-		return (AssociatedObj) super.getSelectedItem();
+		return super.getSelectedItem();
 	}// getSelectedItem
 	
 	
@@ -146,6 +150,7 @@ public class AssocJComboBox extends JComboBox
 	/** 
 	*	Sets the selected item by its AssociatedObj <b>Value</b>; 
 	*/
+	@Override
 	public void setSelectedItem(Object obj)
 	{
 		super.setSelectedItem( getAOForValue(obj) );
@@ -269,6 +274,7 @@ public class AssocJComboBox extends JComboBox
 				this.c = c;
 			}// AssocObjComparator()
 			
+			@Override
 			public int compare(final AssociatedObj o1, final AssociatedObj o2)
 			{
 				String display1 = o1.getDisplay();
@@ -276,6 +282,7 @@ public class AssocJComboBox extends JComboBox
 				return c.compare(display1, display2);
 			}// compare()
 			
+			@Override
 			public boolean equals(Object obj)
 			{
 				return c.equals(obj);
@@ -283,6 +290,7 @@ public class AssocJComboBox extends JComboBox
 		}// inner class AssocObjComparator
 		
 		/** Returns getDisplay(), so no JComboBox renderer chane is required. */
+		@Override
 		public String toString()
 		{
 			return getDisplay();

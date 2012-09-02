@@ -22,12 +22,10 @@
 //
 package dip.gui.undo;
 
-import dip.order.Order;
-import dip.gui.OrderDisplayPanel;
-import dip.misc.Utils;
-
-import javax.swing.undo.*;
 import javax.swing.UIManager;
+import javax.swing.undo.CompoundEdit;
+
+import dip.misc.Utils;
 
 /**
 *	UndoClearAll
@@ -36,6 +34,7 @@ import javax.swing.UIManager;
 */
 public class UndoClearAll extends CompoundEdit implements java.io.Serializable
 {
+	private static final long serialVersionUID = 1L;
 	private final static String PRESENTATION_NAME = "Undo.order.clearall";
 	
 	public UndoClearAll()
@@ -43,16 +42,19 @@ public class UndoClearAll extends CompoundEdit implements java.io.Serializable
 		super();
 	}// UndoClearAll()
 	
+	@Override
 	public String getPresentationName()
 	{
 		return Utils.getLocalString(PRESENTATION_NAME);
 	}// getPresentationName()
 	
+	@Override
 	public String getRedoPresentationName() 
 	{
 		return UIManager.getString("AbstractUndoableEdit.redoText") + " " + Utils.getLocalString(PRESENTATION_NAME);
 	}// getRedoPresentationName()
 	
+	@Override
 	public String getUndoPresentationName() 
 	{
 		return UIManager.getString("AbstractUndoableEdit.undoText") + " " + Utils.getLocalString(PRESENTATION_NAME);

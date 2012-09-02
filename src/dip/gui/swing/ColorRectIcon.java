@@ -50,12 +50,15 @@ public class ColorRectIcon implements Icon
 	}// ColorRectIcon()
 	
 	/** Icon height */
+	@Override
 	public int getIconHeight()	{ return h; }
 	
 	/** Icon width */
+	@Override
 	public int getIconWidth()	{ return w; }
 	
 	/** Draw the Icon */
+	@Override
 	public void paintIcon(Component c, Graphics g, int x, int y)
 	{
 		g.setColor(color);

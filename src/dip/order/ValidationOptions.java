@@ -21,10 +21,11 @@
 //
 package dip.order;
 
-import dip.misc.Utils;
-
-import java.util.*;
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
+import dip.misc.Utils;
 
 /**
 *
@@ -87,6 +88,7 @@ public class ValidationOptions implements Serializable, Cloneable
 		
 		only data in the hashtable changes between objects for a given validationOptions
 	*/
+	@Override
 	public Object clone()
 	throws CloneNotSupportedException
 	{

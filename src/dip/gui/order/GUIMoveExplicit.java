@@ -22,41 +22,29 @@
 //
 package dip.gui.order;
 
-import dip.gui.map.MapMetadata;
-import dip.gui.map.DefaultMapRenderer2;
-
-import dip.gui.order.GUIOrder.MapInfo;
-
-import dip.order.Orderable;
-import dip.order.Move;
-import dip.order.ValidationOptions;
-import dip.order.OrderFormat;
-
-import dip.misc.Utils;
-
-import dip.world.Position;
-import dip.world.Location;
-import dip.world.Province;
-import dip.world.Coast;
-import dip.world.Path;
-import dip.world.Unit;
-import dip.world.Power;
-import dip.world.RuleOptions;
-
-import dip.process.Adjustment.AdjustmentInfoMap;
-
-import java.util.List;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Iterator;
-import java.awt.geom.Point2D;
+import java.util.List;
 
-import org.apache.batik.util.SVGConstants;
-import org.apache.batik.util.CSSConstants;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
-import org.apache.batik.dom.util.XLinkSupport;
-import org.w3c.dom.svg.*;
-import org.w3c.dom.*;
+import org.apache.batik.util.SVGConstants;
+import org.w3c.dom.svg.SVGElement;
+import org.w3c.dom.svg.SVGGElement;
+import org.w3c.dom.svg.SVGLineElement;
+import org.w3c.dom.svg.SVGUseElement;
+
+import dip.gui.map.MapMetadata;
+import dip.misc.Utils;
+import dip.order.Move;
+import dip.order.Orderable;
+import dip.order.ValidationOptions;
+import dip.world.Coast;
+import dip.world.Location;
+import dip.world.Position;
+import dip.world.Power;
+import dip.world.Province;
+import dip.world.Unit;
 
 /**
 *
@@ -72,10 +60,13 @@ import org.w3c.dom.*;
 public class GUIMoveExplicit extends Move implements GUIOrder
 {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// i18n keys
 	private final static String CLICK_TO_SET_DEST  		= "GUIMove.set.dest";
 	private final static String CANNOT_MOVE_TO_ORIGIN 	= "GUIMove.cannot_to_origin";
-	private final static String NO_CONVOY_ROUTE  		= "GUIMove.no_convoy_route";
 	private final static String CANNOT_MOVE_HERE  		= "GUIMove.cannot_move_here";
 	
 	// i18n keys for convoys
@@ -130,6 +121,7 @@ public class GUIMoveExplicit extends Move implements GUIOrder
 	
 	
 	/** This only accepts Move orders. All others will throw an IllegalArgumentException. */
+	@Override
 	public void deriveFrom(Orderable order)
 	{
 		if( !(order instanceof Move) )
@@ -151,6 +143,7 @@ public class GUIMoveExplicit extends Move implements GUIOrder
 	}// GUIMove()
 	
 	
+	@Override
 	public boolean testLocation(StateInfo stateInfo, Location location, StringBuffer sb)
 	{
 		final LocationTestResult result = testLocationLTR(stateInfo, location, sb);
@@ -245,7 +238,7 @@ public class GUIMoveExplicit extends Move implements GUIOrder
 			// 'correct' adjacency; e.g., Coast.SEA or Coast.(direction) for
 			// first check
 			//
-			final Province lastProv = (Province) tmpConvoyPath.getLast();
+			final Province lastProv = tmpConvoyPath.getLast();
 			Coast coast = Coast.SEA;
 			
 			if(lastProv.equals(getSource()) && lastProv.isMultiCoastal())
@@ -357,6 +350,7 @@ public class GUIMoveExplicit extends Move implements GUIOrder
 		return false;
 	}// testNonConvoyDest()
 	
+	@Override
 	public boolean clearLocations()
 	{
 		if(isComplete())
@@ -389,6 +383,7 @@ public class GUIMoveExplicit extends Move implements GUIOrder
 	
 	
 	
+	@Override
 	public boolean setLocation(StateInfo stateInfo, Location location, StringBuffer sb)
 	{
 		// WE need to manage isComplete here, as well as 
@@ -484,24 +479,30 @@ public class GUIMoveExplicit extends Move implements GUIOrder
 		}
 	}// updateConvoyPath()
 	
+	@Override
 	public boolean isComplete()
 	{
 		return isComplete;
 	}// isComplete()
 	
+	@Override
 	public int getNumRequiredLocations()		{ return REQ_LOC; }
 	
+	@Override
 	public int getCurrentLocationNum()			{ return currentLocNum; }
 	
 	
 	/** Always throws an IllegalArgumentException */
+	@Override
 	public void setParam(Parameter param, Object value)	{ throw new IllegalArgumentException(); }
 	
 	/** Always throws an IllegalArgumentException */
+	@Override
 	public Object getParam(Parameter param)	{ throw new IllegalArgumentException(); }
 	
 	
 	
+	@Override
 	public void removeFromDOM(MapInfo mapInfo)
 	{
 		if(group != null)
@@ -515,6 +516,7 @@ public class GUIMoveExplicit extends Move implements GUIOrder
 	
 	
 	/** Draws a line with an arrow. */
+	@Override
 	public void updateDOM(MapInfo mapInfo)
 	{
 		// if we are not displayable, we exit, after remove the order (if
@@ -773,6 +775,7 @@ public class GUIMoveExplicit extends Move implements GUIOrder
 	*/
 	
 	/** We are dependent on the presence of Support orders for certain drawing parameters. */
+	@Override
 	public boolean isDependent()	{ return true; }
 	
 	

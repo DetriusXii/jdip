@@ -22,15 +22,26 @@
 //
 package dip.gui.report;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.swing.ScrollPaneConstants;
+
 import dip.gui.ClientFrame;
 import dip.gui.dialog.TextViewer;
-import dip.world.*;
-import dip.gui.map.*;
+import dip.gui.map.MapMetadata;
+import dip.gui.map.SVGColorParser;
 import dip.misc.Utils;
-
-import java.awt.Color;
-import java.util.*;
-import javax.swing.JScrollPane;
+import dip.world.Phase;
+import dip.world.Position;
+import dip.world.Power;
+import dip.world.Province;
+import dip.world.TurnState;
+import dip.world.World;
 
 
 /**
@@ -84,10 +95,11 @@ public class SCHistoryWriter
 		tv.addSingleButton( tv.makeOKButton() );
 		tv.setTitle(Utils.getLocalString(DIALOG_TITLE));
 		tv.setHeaderVisible(false);
-		tv.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		tv.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
 		tv.lazyLoadDisplayDialog(new TextViewer.TVRunnable()
 		{
+			@Override
 			public void run()
 			{
 				setText(SCHistoryToHTML(clientFrame, w, true));
@@ -123,17 +135,19 @@ public class SCHistoryWriter
 		// sort list by alphabetical order of the short name (abbreviation)
 		Collections.sort(scList, new Comparator<Province>()
 		{
+			@Override
 			public int compare(final Province p1, final Province p2) {
 				return p1.getShortName().compareTo(p2.getShortName());
 			}
 			
+			@Override
 			public boolean equals(Object obj)
 			{
 				return false;
 			}
 		});
 		
-		this.scProvs = (Province[]) scList.toArray(new Province[scList.size()]);
+		this.scProvs = scList.toArray(new Province[scList.size()]);
 	}// SCHistoryWriter()
 	
 	
@@ -280,14 +294,14 @@ public class SCHistoryWriter
 		array[0][1] = Utils.getLocalString(LABEL_INITIAL);
 		for(int i=2; i<cols; i++)
 		{
-			array[0][i] = ((TurnState) turnList.get(i-1)).getPhase().getYearType();
+			array[0][i] = turnList.get(i-1).getPhase().getYearType();
 		}
 		
 		// 'the rest': fill in with power or null (un-owned)
 		// we will fill by columns.
 		for(int i=1; i<cols; i++)
 		{
-			final TurnState ts = (TurnState) turnList.get(i-1);
+			final TurnState ts = turnList.get(i-1);
 			final Position pos = ts.getPosition();
 			
 			for(int scIdx=0; scIdx<scProvs.length; scIdx++)
@@ -335,14 +349,14 @@ public class SCHistoryWriter
 		sb.append(makeSCCountTableRow(world.getInitialTurnState()));
 		
 		// make all other rows.
-		Iterator iter = world.getAllTurnStates().iterator();
+		Iterator<TurnState> iter = world.getAllTurnStates().iterator();
 		while(iter.hasNext())
 		{
 			// we want the RETREAT or MOVE phase for a fall season, 
 			// but not both.
 			// (a unit could retreat into a SC; thus we need to check)
 			//
-			TurnState ts = (TurnState) iter.next();
+			TurnState ts = iter.next();
 			Phase phase = ts.getPhase();
 			if(phase.getSeasonType() == Phase.SeasonType.FALL)
 			{
@@ -350,7 +364,7 @@ public class SCHistoryWriter
 				{
 					if(iter.hasNext())
 					{
-						TurnState nextTS = (TurnState) iter.next();
+						TurnState nextTS = iter.next();
 						if(nextTS.getPhase().getPhaseType() == Phase.PhaseType.RETREAT)
 						{
 							ts = nextTS;

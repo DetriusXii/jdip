@@ -22,10 +22,11 @@
 //
 package dip.world;
 
-import dip.order.OrderException;
-import dip.misc.Utils;
 import java.util.ArrayList;
 import java.util.List;
+
+import dip.misc.Utils;
+import dip.order.OrderException;
 
 
 /**
@@ -158,6 +159,7 @@ public class Location implements Cloneable
 	*	implementation, in that a constructor is invoked
 	*	for performance reasons, rather than using super.clone().
 	*/
+	@Override
 	public Object clone()
 	{
 		return new Location(province, coast);
@@ -166,6 +168,7 @@ public class Location implements Cloneable
 	/**
 	*	Determines if two Locations are equal.
 	*/
+	@Override
 	public boolean equals(final Object obj)
 	{
 		if(obj == this)
@@ -186,6 +189,7 @@ public class Location implements Cloneable
 	/**
 	*	Hashcode for Location.
 	*/
+	@Override
 	public int hashCode()
 	{
 		return (37 * province.hashCode() + coast.hashCode()); 
@@ -207,6 +211,7 @@ public class Location implements Cloneable
 	
 	
 	/** Returns the short Location name (as per appendBrief()) as a String */
+	@Override
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer(8);

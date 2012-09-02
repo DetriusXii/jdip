@@ -22,12 +22,11 @@
 //
 package dip.gui.dialog.newgame;
 
-import dip.misc.Utils;
-import dip.world.Phase.YearType;
-
 import javax.swing.AbstractSpinnerModel;
 import javax.swing.JFormattedTextField;
 import javax.swing.JSpinner;
+
+import dip.world.Phase.YearType;
 /**
 *	Creates a Year spinner that (if enabled) correctly handles 
 *	BC years ('negative' years), and uses YearType objects to
@@ -39,6 +38,9 @@ import javax.swing.JSpinner;
 */
 public class BCSpinner extends JSpinner
 {
+	private static final long serialVersionUID = 1L;
+
+
 
 	/** Create a BCSpinner */
 	public BCSpinner(int initialYear, int minimum, int maximum)
@@ -151,6 +153,7 @@ public class BCSpinner extends JSpinner
 		
 		
 		/** Returns the next number in the sequence. Bounds-checks.*/
+		@Override
 		public Object getNextValue()
 		{
 			YearType incremented = value.getNext();
@@ -164,6 +167,7 @@ public class BCSpinner extends JSpinner
 		
 		
 		/** Returns the previous number in the sequence. Bounds-checks.*/
+		@Override
 		public Object getPreviousValue()
 		{
 			YearType decremented = value.getPrevious();
@@ -176,6 +180,7 @@ public class BCSpinner extends JSpinner
 		}// getNextValue()
 		
 		/** Returns the current value. */
+		@Override
 		public Object getValue()
 		{
 			return value;
@@ -187,6 +192,7 @@ public class BCSpinner extends JSpinner
 		*	is converted to a String and parsing is attempted. 
 		*	If the value is not valid, the current value is used.
 		*/
+		@Override
 		public void setValue(Object newValue)
 		{
 			// separate by type

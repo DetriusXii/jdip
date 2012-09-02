@@ -22,22 +22,14 @@
 //
 package dip.misc;
 
-import dip.gui.dialog.ErrorDialog;
-import dip.gui.swing.SwingWorker;
-
-import java.awt.Frame;
-import java.awt.Component;
 import java.net.URL;
-
-import javax.swing.JRootPane;
-import javax.swing.JDialog;
-import javax.swing.AbstractButton;
 
 import javax.help.HelpBroker;
 import javax.help.HelpSet;
-import javax.help.CSH;
-import javax.help.DefaultHelpBroker;
-import javax.help.WindowPresentation;
+import javax.swing.AbstractButton;
+import javax.swing.JDialog;
+
+import dip.gui.swing.SwingWorker;
 
 /**
 *	
@@ -69,6 +61,7 @@ public class Help
 	{
 		loaderThread = new SwingWorker()
 		{
+			@Override
 			public Object construct()
 			{
 				long time = System.currentTimeMillis();
@@ -179,6 +172,7 @@ public class Help
 			this.id = value;
 		}// HelpID()
 		
+		@Override
 		public String toString()
 		{
 			return id;

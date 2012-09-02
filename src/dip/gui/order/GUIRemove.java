@@ -22,35 +22,25 @@
 //
 package dip.gui.order;
 
-import dip.order.Remove;
-import dip.order.Orderable;
-import dip.order.ValidationOptions;
-
-import dip.gui.order.GUIOrder.MapInfo;
-
-import dip.misc.Utils;
-
-import dip.world.Position;
-import dip.world.Location;
-import dip.world.Province;
-import dip.world.Unit;
-import dip.world.Power;
-import dip.world.RuleOptions;
-
-import dip.process.Adjustment.AdjustmentInfoMap;
-import dip.process.Adjustment;
-
-import dip.gui.map.MapMetadata;
-import dip.gui.map.SVGUtils;
-import dip.gui.map.DefaultMapRenderer2;
-
 import java.awt.geom.Point2D;
 
-import org.apache.batik.util.SVGConstants;
-import org.apache.batik.util.CSSConstants;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
-import org.w3c.dom.svg.*;
-import org.w3c.dom.*;
+import org.apache.batik.util.SVGConstants;
+import org.w3c.dom.svg.SVGElement;
+import org.w3c.dom.svg.SVGGElement;
+
+import dip.gui.map.DefaultMapRenderer2;
+import dip.gui.map.MapMetadata;
+import dip.gui.map.SVGUtils;
+import dip.misc.Utils;
+import dip.order.Orderable;
+import dip.order.Remove;
+import dip.process.Adjustment;
+import dip.world.Location;
+import dip.world.Position;
+import dip.world.Power;
+import dip.world.Province;
+import dip.world.Unit;
 
 /**
 *	GUIOrder implementation of Remove order.
@@ -83,6 +73,7 @@ public class GUIRemove extends Remove implements GUIOrder
 	
 	
 	/** This only accepts Remove orders. All others will throw an IllegalArgumentException. */
+	@Override
 	public void deriveFrom(Orderable order)
 	{
 		if( !(order instanceof Remove) )
@@ -101,6 +92,7 @@ public class GUIRemove extends Remove implements GUIOrder
 	
 	
 	
+	@Override
 	public boolean testLocation(StateInfo stateInfo, Location location, StringBuffer sb)
 	{
 		sb.setLength(0);
@@ -142,6 +134,7 @@ public class GUIRemove extends Remove implements GUIOrder
 	}// testLocation()
 	
 	
+	@Override
 	public boolean clearLocations()
 	{
 		if(isComplete())
@@ -159,6 +152,7 @@ public class GUIRemove extends Remove implements GUIOrder
 	
 	
 	
+	@Override
 	public boolean setLocation(StateInfo stateInfo, Location location, StringBuffer sb)
 	{
 		if(testLocation(stateInfo, location, sb))
@@ -179,25 +173,31 @@ public class GUIRemove extends Remove implements GUIOrder
 	}// setLocation()
 	
 	
+	@Override
 	public boolean isComplete()
 	{
 		assert (currentLocNum <= getNumRequiredLocations());
 		return (currentLocNum == getNumRequiredLocations());
 	}// isComplete()
 	
+	@Override
 	public int getNumRequiredLocations()		{ return REQ_LOC; }
 	
+	@Override
 	public int getCurrentLocationNum()			{ return currentLocNum; }
 	
 	
 	/** Always throws an IllegalArgumentException */
+	@Override
 	public void setParam(Parameter param, Object value)	{ throw new IllegalArgumentException(); }
 	
 	/** Always throws an IllegalArgumentException */
+	@Override
 	public Object getParam(Parameter param)	{ throw new IllegalArgumentException(); }
 	
 	
 	
+	@Override
 	public void removeFromDOM(MapInfo mapInfo)
 	{
 		if(group != null)
@@ -210,6 +210,7 @@ public class GUIRemove extends Remove implements GUIOrder
 	
 	
 	/** Draws a circle with an X in it */
+	@Override
 	public void updateDOM(MapInfo mapInfo)
 	{
 		// if we are not displayable, we exit, after remove the order (if
@@ -292,6 +293,7 @@ public class GUIRemove extends Remove implements GUIOrder
 		return useElement;
 	}// drawOrder()
 	
+	@Override
 	public boolean isDependent()	{ return false; }
 	
 	

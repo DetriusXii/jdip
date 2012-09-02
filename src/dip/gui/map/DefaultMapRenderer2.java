@@ -22,63 +22,39 @@
 //
 package dip.gui.map;
 
-import dip.gui.ClientFrame;
-import dip.gui.ClientMenu;
-
-import dip.gui.order.GUIOrder;
-import dip.gui.order.GUIOrder.MapInfo;
-
-import dip.gui.map.RenderCommandFactory.RenderCommand;
-
-import dip.world.Province;
-import dip.world.Position;
-import dip.world.Power;
-import dip.world.Unit;
-import dip.world.Coast;
-import dip.world.Location;
-import dip.world.TurnState;
-import dip.world.Phase;
-import dip.order.Order;
-import dip.order.Orderable;
-import dip.order.result.OrderResult;
-import dip.world.variant.data.SymbolPack;
-
-import dip.misc.Log;
-
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Collections;
-import java.util.List;
-
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
-import org.w3c.dom.svg.SVGDocument;
-import org.w3c.dom.svg.SVGElement;
-
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
-import org.w3c.dom.svg.*;
-
-import org.w3c.dom.events.EventTarget;
-import org.apache.batik.swing.JSVGCanvas;
+import org.apache.batik.dom.svg.SVGDOMImplementation;
+import org.apache.batik.util.CSSConstants;
 import org.apache.batik.util.RunnableQueue;
 import org.apache.batik.util.SVGConstants;
-import org.apache.batik.dom.svg.SVGOMGElement;
-import org.apache.batik.util.CSSConstants;
+import org.w3c.dom.Node;
+import org.w3c.dom.events.EventTarget;
+import org.w3c.dom.svg.SVGDocument;
+import org.w3c.dom.svg.SVGElement;
+import org.w3c.dom.svg.SVGGElement;
 
-import org.w3c.dom.css.*;
-import org.apache.batik.dom.svg.*;
-import org.apache.batik.css.engine.*;
-import org.apache.batik.bridge.CSSUtilities;
-
-import org.apache.batik.bridge.BridgeContext;
-import org.apache.batik.gvt.*;
+import dip.gui.ClientMenu;
+import dip.gui.map.RenderCommandFactory.RenderCommand;
+import dip.gui.order.GUIOrder;
+import dip.gui.order.GUIOrder.MapInfo;
+import dip.misc.Log;
+import dip.order.Orderable;
+import dip.world.Coast;
+import dip.world.Location;
+import dip.world.Phase;
+import dip.world.Position;
+import dip.world.Power;
+import dip.world.Province;
+import dip.world.TurnState;
+import dip.world.Unit;
+import dip.world.variant.data.SymbolPack;
 
 /**
  *
@@ -266,7 +242,8 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
         if (rq != null) {
             rq.invokeLater(new Runnable() {
 
-                public void run() {
+                @Override
+				public void run() {
                     synchronized (trackerMap) {
                         for (int i = 0; i < provinces.length; i++) {
                             if (provinces[i].hasSupplyCenter()) {
@@ -274,7 +251,7 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
                                 SVGElement element = makeSCUse(provinces[i], null);
 
                                 // add element to tracker
-                                Tracker tracker = (Tracker) trackerMap.get(provinces[i]);
+                                Tracker tracker = trackerMap.get(provinces[i]);
                                 tracker.setSCElement(element);
 
                                 // add to DOM
@@ -291,7 +268,8 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
     }// DefaultMapRenderer()
 
     /** Returns a DMR2RenderCommandFactory */
-    public RenderCommandFactory getRenderCommandFactory() {
+    @Override
+	public RenderCommandFactory getRenderCommandFactory() {
         return rcf;
     }// getRenderCommandFactory()
 
@@ -301,7 +279,8 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
      *	WARNING: render events must not be processed after or
      *	during a call to this method.
      */
-    public void close() {
+    @Override
+	public void close() {
         // super cleanup
         super.close();
 
@@ -309,7 +288,7 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
         doc.getRootElement().removeEventListener(SVGConstants.SVG_KEYPRESS_EVENT_TYPE, domEventListener, false);
 
         // Remove other mouse/key listeners
-        SVGElement[] mouseElements = SVGUtils.idFinderSVG((SVGElement) layerMap.get(LAYER_MOUSE));
+        SVGElement[] mouseElements = SVGUtils.idFinderSVG(layerMap.get(LAYER_MOUSE));
         for (int i = 0; i < mouseElements.length; i++) {
             if (mouseElements[i] instanceof EventTarget) {
                 // add mouse listeners
@@ -334,7 +313,8 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
     }// close()
 
     /** Gets the MapMetadata object */
-    public MapMetadata getMapMetadata() {
+    @Override
+	public MapMetadata getMapMetadata() {
         return mapMeta;
     }// getMapMetadata()
 
@@ -344,10 +324,12 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
     }// getLayer()
 
     /** Called when an order has been added to the order list */
-    protected void orderCreated(final GUIOrder order) {
+    @Override
+	protected void orderCreated(final GUIOrder order) {
         execRenderCommand(new RenderCommand(this) {
 
-            public void execute() {
+            @Override
+			public void execute() {
                 Log.println("DMR2: orderCreated(): ", order);
 
                 MapInfo mapInfo = new DMRMapInfo(turnState);
@@ -360,10 +342,12 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
     }// orderAdded()
 
     /** Called when an order has been deleted from the order list */
-    protected void orderDeleted(final GUIOrder order) {
+    @Override
+	protected void orderDeleted(final GUIOrder order) {
         execRenderCommand(new RenderCommand(this) {
 
-            public void execute() {
+            @Override
+			public void execute() {
                 Log.println("DMR2: orderDeleted(): ", order);
 
                 MapInfo mapInfo = new DMRMapInfo(turnState);
@@ -376,10 +360,12 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
     }// orderDeleted()
 
     /** Called when multiple orders have been added from the order list */
-    protected void multipleOrdersCreated(final GUIOrder[] orders) {
+    @Override
+	protected void multipleOrdersCreated(final GUIOrder[] orders) {
         execRenderCommand(new RenderCommand(this) {
 
-            public void execute() {
+            @Override
+			public void execute() {
                 Log.println("DMR2: multipleOrdersCreated(): ", orders);
                 MapInfo mapInfo = new DMRMapInfo(turnState);
 
@@ -396,10 +382,12 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
     }// multipleOrdersCreated()
 
     /** Called when multiple orders have been deleted from the order list */
-    protected void multipleOrdersDeleted(final GUIOrder[] orders) {
+    @Override
+	protected void multipleOrdersDeleted(final GUIOrder[] orders) {
         execRenderCommand(new RenderCommand(this) {
 
-            public void execute() {
+            @Override
+			public void execute() {
                 Log.println("DMR2: multipleOrdersDeleted(): ", orders);
                 MapInfo mapInfo = new DMRMapInfo(turnState);
 
@@ -416,10 +404,12 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
     }// multipleOrdersDeleted()
 
     /** Called when the displayable powers have changed */
-    protected void displayablePowersChanged(final Power[] diplayPowers) {
+    @Override
+	protected void displayablePowersChanged(final Power[] diplayPowers) {
         execRenderCommand(new RenderCommand(this) {
 
-            public void execute() {
+            @Override
+			public void execute() {
                 Log.println("DMR2: displayablePowersChanged()");
 
                 // update all orders
@@ -452,7 +442,8 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
     }// setTurnState()
 
     /** Get a map rendering setting */
-    public Boolean getRenderSetting(final String key) {
+    @Override
+	public Boolean getRenderSetting(final String key) {
         synchronized (renderSettings) {
             return renderSettings.get(key);
         }
@@ -465,7 +456,8 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
         }
     }// setRenderSetting()
 
-    public List<Power> getRenderPowerSetting(final String key) {
+    @Override
+	public List<Power> getRenderPowerSetting(final String key) {
         synchronized(renderPowerSetting) {
             return renderPowerSetting.get(key);
         }
@@ -477,7 +469,8 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
         }
     }
     
-    public String getRenderValueLabelSetting(final String key) {
+    @Override
+	public String getRenderValueLabelSetting(final String key) {
         synchronized(renderValueLabelSetting) {
             return renderValueLabelSetting.get(key);
         }
@@ -490,7 +483,8 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
     }
     
     /** Get the Symbol Name for the given unit type */
-    public String getSymbolName(Unit.Type unitType) {
+    @Override
+	public String getSymbolName(Unit.Type unitType) {
         if (unitType == Unit.Type.ARMY) {
             return DefaultMapRenderer2.SYMBOL_ARMY;
         } else if (unitType == Unit.Type.FLEET) {
@@ -503,13 +497,14 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
     }// getSymbolName()
 
     /** Gets the location that corresponds to a given string id<br>Assumes ID is lowercase! */
-    public Location getLocation(String id) {
+    @Override
+	public Location getLocation(String id) {
         Province province = worldMap.getProvince(id);
         if (province != null) {
             return new Location(province, Coast.UNDEFINED);
         }
 
-        return (Location) locMap.get(id);
+        return locMap.get(id);
     }// getLocation()
 
     /**
@@ -523,7 +518,8 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
         if (rq != null) {
             rq.invokeLater(new Runnable() {
 
-                public void run() {
+                @Override
+				public void run() {
                     SVGGElement orderLayer = (SVGGElement) layerMap.get(LAYER_ORDERS);
 
                     for (int z = (powerOrderMap.size() - 1); z >= 0; z--) {
@@ -580,7 +576,7 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
     protected void unsyncDestroyAllOrders() {
         Log.println("DMR2::unsyncDestroyAllOrders()");
         MapInfo mapInfo = new DMRMapInfo(turnState);
-        Iterator iter = turnState.getAllOrders().iterator();
+        Iterator<Orderable> iter = turnState.getAllOrders().iterator();
         while (iter.hasNext()) {
             GUIOrder order = (GUIOrder) iter.next();
             order.removeFromDOM(mapInfo);
@@ -785,14 +781,14 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
             // 		LAYER_SC
             // 	
             setElementVisibility((SVGElement) layerMap.get(LAYER_UNITS),
-                    ((Boolean) getRenderSetting(KEY_SHOW_UNITS)).booleanValue());
+                    getRenderSetting(KEY_SHOW_UNITS).booleanValue());
             setElementVisibility((SVGElement) layerMap.get(LAYER_DISLODGED_UNITS),
-                    ((Boolean) getRenderSetting(KEY_SHOW_DISLODGED_UNITS)).booleanValue());
+                    getRenderSetting(KEY_SHOW_DISLODGED_UNITS).booleanValue());
             setElementVisibility((SVGElement) layerMap.get(LAYER_SC),
-                    ((Boolean) getRenderSetting(KEY_SHOW_SUPPLY_CENTERS)).booleanValue());
+                    getRenderSetting(KEY_SHOW_SUPPLY_CENTERS).booleanValue());
             unsyncSetVisiblePowers();	// takes care of KEY_SHOW_ORDERS_FOR_POWERS
             setElementVisibility((SVGElement) layerMap.get(LAYER_MAP),
-                    ((Boolean) getRenderSetting(KEY_SHOW_MAP)).booleanValue());
+                    getRenderSetting(KEY_SHOW_MAP).booleanValue());
 
             // destroy old render settings
 
@@ -818,7 +814,7 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
 
         // get ALL orders
         MapInfo mapInfo = new DMRMapInfo(turnState);
-        Iterator iter = turnState.getAllOrders().iterator();
+        Iterator<Orderable> iter = turnState.getAllOrders().iterator();
         while (iter.hasNext()) {
             GUIOrder order = (GUIOrder) iter.next();
 
@@ -844,7 +840,7 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
     protected void unsyncRecreateAllOrders() {
         // get ALL orders
         MapInfo mapInfo = new DMRMapInfo(turnState);
-        Iterator iter = turnState.getAllOrders().iterator();
+        Iterator<Orderable> iter = turnState.getAllOrders().iterator();
         while (iter.hasNext()) {
             GUIOrder order = (GUIOrder) iter.next();
             order.updateDOM(mapInfo);
@@ -855,7 +851,7 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
     private void unsyncUpdateAllOrders() {
         // get ALL orders
         MapInfo mapInfo = new DMRMapInfo(turnState);
-        Iterator iter = turnState.getAllOrders().iterator();
+        Iterator<Orderable> iter = turnState.getAllOrders().iterator();
         while (iter.hasNext()) {
             GUIOrder order = (GUIOrder) iter.next();
             order.updateDOM(mapInfo);
@@ -1157,7 +1153,7 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
      */
     private void validateAndSetupMouseRegions()
             throws MapException {
-        SVGElement[] mouseElements = SVGUtils.idFinderSVG((SVGElement) layerMap.get(LAYER_MOUSE));
+        SVGElement[] mouseElements = SVGUtils.idFinderSVG(layerMap.get(LAYER_MOUSE));
 
         for (int i = 0; i < mouseElements.length; i++) {
             // get id, which must be a province with or without a coast
@@ -1264,10 +1260,10 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
     private boolean isOrdered(Province province) {
         Unit unit = getPhaseApropriateUnit(province);
         if (unit != null) {
-            List list = turnState.getOrders(unit.getPower());
-            Iterator iter = list.iterator();
+            List<Orderable> list = turnState.getOrders(unit.getPower());
+            Iterator<Orderable> iter = list.iterator();
             while (iter.hasNext()) {
-                Orderable order = (Orderable) iter.next();
+                Orderable order = iter.next();
                 if (order.getSource().isProvinceEqual(province)) {
                     return true;
                 }
@@ -1379,7 +1375,8 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
         }// setDislodgedUnit()
 
         /** For debugging only */
-        public String toString() {
+        @Override
+		public String toString() {
             StringBuffer sb = new StringBuffer(128);
             sb.append("elUnit=");
             sb.append(elUnit);
@@ -1397,27 +1394,33 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
             super(ts);
         }// DMRMapInfo()
 
-        public MapMetadata getMapMetadata() {
+        @Override
+		public MapMetadata getMapMetadata() {
             return mapMeta;
         }
 
-        public String getPowerCSS(Power power) {
+        @Override
+		public String getPowerCSS(Power power) {
             return DefaultMapRenderer2.this.getPowerName(power);
         }
 
-        public String getUnitCSS(Power power) {
+        @Override
+		public String getUnitCSS(Power power) {
             return DefaultMapRenderer2.this.getUnitCSSClass(power);
         }
 
-        public String getSymbolName(Unit.Type unitType) {
+        @Override
+		public String getSymbolName(Unit.Type unitType) {
             return DefaultMapRenderer2.this.getSymbolName(unitType);
         }
 
-        public SVGDocument getDocument() {
+        @Override
+		public SVGDocument getDocument() {
             return doc;
         }
 
-        public Power[] getDisplayablePowers() {
+        @Override
+		public Power[] getDisplayablePowers() {
             Power[] powers = super.getDisplayablePowers();
             if (powers == null) {
                 return mapPanel.getClientFrame().getDisplayablePowers();
@@ -1426,7 +1429,8 @@ public class DefaultMapRenderer2 extends MapRenderer2 {
             return powers;
         }// getDisplayablePowers()
 
-        public SVGGElement getPowerSVGGElement(Power p, int z) {
+        @Override
+		public SVGGElement getPowerSVGGElement(Power p, int z) {
             return DefaultMapRenderer2.this.getPowerSVGGElement(p, z);
         }
     }// nested class DMRMapInfo

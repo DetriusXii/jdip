@@ -22,47 +22,37 @@
 //
 package dip.gui.dialog;
 
-import dip.gui.swing.*;
-import dip.misc.Utils;
-import dip.gui.*;
-
-// HIGLayout
-import cz.autel.dmi.HIGConstraints;
-import cz.autel.dmi.HIGLayout;
-
-import java.awt.Container;
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Insets;
+import java.awt.Paint;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.Graphics;
-import java.awt.Paint;
-import java.awt.GradientPaint;
-import java.awt.Graphics2D;
-import java.awt.Color;
 import java.awt.geom.Line2D;
-import java.awt.Insets;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Component;
-import java.util.Iterator;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Iterator;
+
+import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.AbstractButton;
-import javax.swing.JSeparator;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JComponent;
-import javax.swing.border.EtchedBorder;
-import javax.swing.event.*;
-import javax.swing.text.Document;
-import javax.swing.text.html.HTMLDocument;
+import javax.swing.JSeparator;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
-import javax.swing.BorderFactory;
+import javax.swing.text.Document;
+import javax.swing.text.html.HTMLDocument;
+
+import dip.gui.swing.XJEditorPane;
+import dip.misc.Utils;
 
 
 /**
@@ -85,6 +75,10 @@ import javax.swing.BorderFactory;
 */
 public class HeaderDialog extends XDialog
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/** Default margin between button bar edge and components */
 	public final static int BTN_BAR_EDGE = 5;
 	/** Default spacint between buttun bar buttons */
@@ -135,6 +129,7 @@ public class HeaderDialog extends XDialog
 	*	Set the dialog content; this may be 
 	*	called at any time.
 	*/
+	@Override
 	public void setContentPane(Container container)
 	{
 		if(container == null) { throw new IllegalArgumentException(); }
@@ -151,6 +146,7 @@ public class HeaderDialog extends XDialog
 	
 	
 	/** Get the content panel */
+	@Override
 	public Container getContentPane()
 	{
 		return content;
@@ -192,7 +188,7 @@ public class HeaderDialog extends XDialog
 	*/
 	public JButton getButton(int i)
 	{
-		return (JButton) btnList.get(i);
+		return btnList.get(i);
 	}// getButton()
 	
 	/** 
@@ -221,6 +217,7 @@ public class HeaderDialog extends XDialog
 	/**
 	*	Do not override this method!
 	*/
+	@Override
 	protected final void close()
 	{
 		close(defaultCloseButtonAction);
@@ -296,6 +293,7 @@ public class HeaderDialog extends XDialog
 		{
 			btn.addActionListener(new ActionListener()
 			{
+				@Override
 				public void actionPerformed(ActionEvent e)
 				{
 					close(btn.getActionCommand());
@@ -319,10 +317,10 @@ public class HeaderDialog extends XDialog
 			throw new IllegalArgumentException();
 		}
 		
-		Iterator iter = btnList.iterator();
+		Iterator<JButton> iter = btnList.iterator();
 		while(iter.hasNext())
 		{
-			JButton b = (JButton) iter.next();
+			JButton b = iter.next();
 			if( actionCommand.equals(b.getActionCommand()) )
 			{
 				b.setEnabled(enabled);
@@ -497,10 +495,10 @@ public class HeaderDialog extends XDialog
 	{
 		Dimension maxPref = sizerButton.getPreferredSize();
 		
-		Iterator iter = btnList.iterator();
+		Iterator<JButton> iter = btnList.iterator();
 		while(iter.hasNext())
 		{
-			JButton btn = (JButton) iter.next();
+			JButton btn = iter.next();
 			Dimension size = btn.getPreferredSize();
 			maxPref.width = (size.width > maxPref.width) ? size.width : maxPref.width;
 			maxPref.height = (size.height > maxPref.height) ? size.height : maxPref.height;
@@ -509,7 +507,7 @@ public class HeaderDialog extends XDialog
 		iter = btnList.iterator();
 		while(iter.hasNext())
 		{
-			JButton btn = (JButton) iter.next();
+			JButton btn = iter.next();
 			btn.setPreferredSize(maxPref);
 		}
 	}// equalizeButtons()
@@ -535,13 +533,16 @@ public class HeaderDialog extends XDialog
 		
 		
 		/** We are not opaque; we will paint the background. */
+		@Override
 		public boolean isOpaque()	{ return false; }
 		
 		/** We are not focusable. */
+		@Override
 		public boolean isFocusable()	{ return false; }
 		
 		
 		/** Overridden to provide painting functionality. */
+		@Override
 		protected void paintComponent(Graphics g)
 		{
 			final int width = getWidth();

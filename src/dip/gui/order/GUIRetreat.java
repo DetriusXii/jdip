@@ -22,35 +22,25 @@
 //
 package dip.gui.order;
 
+import java.awt.geom.Point2D;
+
+import org.apache.batik.dom.svg.SVGDOMImplementation;
+import org.apache.batik.util.SVGConstants;
+import org.w3c.dom.svg.SVGElement;
+import org.w3c.dom.svg.SVGGElement;
+import org.w3c.dom.svg.SVGLineElement;
+
+import dip.gui.map.MapMetadata;
+import dip.misc.Utils;
 import dip.order.Orderable;
 import dip.order.Retreat;
 import dip.order.ValidationOptions;
-
-import dip.gui.order.GUIOrder.MapInfo;
-
-import dip.misc.Utils;
-
-import dip.world.Position;
-import dip.world.Location;
-import dip.world.Province;
-import dip.world.Coast;
-import dip.world.Path;
-import dip.world.Unit;
-import dip.world.Power;
-import dip.world.RuleOptions;
-
-import dip.process.Adjustment.AdjustmentInfoMap;
 import dip.process.RetreatChecker;
-
-import dip.gui.map.MapMetadata;
-
-import java.awt.geom.Point2D;
-
-import org.apache.batik.util.SVGConstants;
-import org.apache.batik.util.CSSConstants;
-import org.apache.batik.dom.svg.SVGDOMImplementation;
-import org.w3c.dom.svg.*;
-import org.w3c.dom.*;
+import dip.world.Location;
+import dip.world.Position;
+import dip.world.Power;
+import dip.world.Province;
+import dip.world.Unit;
 
 /**
 *
@@ -59,6 +49,10 @@ import org.w3c.dom.*;
 */
 public class GUIRetreat extends Retreat implements GUIOrder
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// i18n keys
 	private final static String UNIT_MUST_DISBAND = "GUIRetreat.must_disband";
 	private final static String CLICK_TO_SET_DEST = "GUIRetreat.set_dest";
@@ -85,6 +79,7 @@ public class GUIRetreat extends Retreat implements GUIOrder
 	}// GUIRetreat()
 	
 	/** This only accepts Retreat orders. All others will throw an IllegalArgumentException. */
+	@Override
 	public void deriveFrom(Orderable order)
 	{
 		if( !(order instanceof Retreat) )
@@ -102,6 +97,7 @@ public class GUIRetreat extends Retreat implements GUIOrder
 		currentLocNum = REQ_LOC;
 	}// deriveFrom()
 	
+	@Override
 	public boolean testLocation(StateInfo stateInfo, Location location, StringBuffer sb)
 	{
 		sb.setLength(0);
@@ -206,6 +202,7 @@ public class GUIRetreat extends Retreat implements GUIOrder
 	}// testLocation()
 	
 	
+	@Override
 	public boolean clearLocations()
 	{
 		if(isComplete())
@@ -223,6 +220,7 @@ public class GUIRetreat extends Retreat implements GUIOrder
 	}// clearLocations()
 	
 	
+	@Override
 	public boolean setLocation(StateInfo stateInfo, Location location, StringBuffer sb)
 	{
 		if(isComplete())
@@ -255,25 +253,31 @@ public class GUIRetreat extends Retreat implements GUIOrder
 		return false;
 	}// setLocation()
 	
+	@Override
 	public boolean isComplete()
 	{
 		assert (currentLocNum <= getNumRequiredLocations());
 		return (currentLocNum == getNumRequiredLocations());
 	}// isComplete()
 	
+	@Override
 	public int getNumRequiredLocations()		{ return REQ_LOC; }
 	
+	@Override
 	public int getCurrentLocationNum()			{ return currentLocNum; }
 	
 	
 	/** Always throws an IllegalArgumentException */
+	@Override
 	public void setParam(Parameter param, Object value)	{ throw new IllegalArgumentException(); }
 	
 	/** Always throws an IllegalArgumentException */
+	@Override
 	public Object getParam(Parameter param)	{ throw new IllegalArgumentException(); }
 	
 	
 	
+	@Override
 	public void removeFromDOM(MapInfo mapInfo)
 	{
 		if(group != null)
@@ -286,6 +290,7 @@ public class GUIRetreat extends Retreat implements GUIOrder
 	
 	
 	/** Draws a line with an arrow. Unlife a Move, we are not dependent. */
+	@Override
 	public void updateDOM(MapInfo mapInfo)
 	{
 		// if we are not displayable, we exit, after remove the order (if
@@ -400,6 +405,7 @@ public class GUIRetreat extends Retreat implements GUIOrder
 	
 	
 	
+	@Override
 	public boolean isDependent()	{ return false; }
 	
 	

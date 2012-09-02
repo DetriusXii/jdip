@@ -22,11 +22,11 @@
 //
 package dip.gui.undo;
 
-import dip.order.Orderable;
-import dip.gui.OrderDisplayPanel;
-import dip.misc.Utils;
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
 
-import javax.swing.undo.*;
+import dip.misc.Utils;
+import dip.order.Orderable;
 
 
 
@@ -52,11 +52,13 @@ public class UndoDeleteOrder extends XAbstractUndoableEdit
 		this.order = order;
 	}// UndoDeleteOrder()
 	
+	@Override
 	public String getPresentationName()
 	{
 		return Utils.getLocalString(PRESENTATION_NAME_PREFIX)+" "+order.getFullName();
 	}// getPresentationName()
 	
+	@Override
 	public void redo()
 	throws CannotRedoException
 	{
@@ -64,6 +66,7 @@ public class UndoDeleteOrder extends XAbstractUndoableEdit
 		undoRedoManager.getOrderDisplayPanel().removeOrder(order, false);
 	}// redo()
 	
+	@Override
 	public void undo()
 	throws CannotUndoException
 	{

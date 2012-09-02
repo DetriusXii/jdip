@@ -21,14 +21,13 @@
 //
 package dip.order.result;
 
-import dip.order.Orderable;
+import java.util.List;
+
+import dip.misc.Utils;
 import dip.order.OrderFormat;
 import dip.order.OrderFormatOptions;
-import dip.world.Location;
+import dip.order.Orderable;
 import dip.world.Province;
-import dip.misc.Utils;
-
-import java.util.List;
 /**
 *	
 *	An OrderResult that contains the path taken by a successfully 
@@ -37,6 +36,10 @@ import java.util.List;
 */
 public class ConvoyPathResult extends OrderResult
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// i18n
 	private static final String KEY_MESSAGE = "ConvoyPathResult.message";
 	private static final String KEY_ARROW = "ConvoyPathResult.arrow";
@@ -79,6 +82,7 @@ public class ConvoyPathResult extends OrderResult
 	*	Creates an appropriate internationalized text message given the 
 	*	convoy path.
 	*/
+	@Override
 	public String getMessage(OrderFormatOptions ofo)
 	{
 		/*
@@ -105,6 +109,7 @@ public class ConvoyPathResult extends OrderResult
 	/**
 	*	Primarily for debugging.
 	*/
+	@Override
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer(256);

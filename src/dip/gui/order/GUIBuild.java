@@ -22,43 +22,27 @@
 //
 package dip.gui.order;
 
+import java.awt.geom.Point2D;
+
+import org.apache.batik.dom.svg.SVGDOMImplementation;
+import org.apache.batik.util.SVGConstants;
+import org.w3c.dom.svg.SVGElement;
+import org.w3c.dom.svg.SVGGElement;
+
+import dip.gui.map.DefaultMapRenderer2;
+import dip.gui.map.MapMetadata;
+import dip.gui.map.SVGUtils;
+import dip.misc.Utils;
 import dip.order.Build;
 import dip.order.Orderable;
-import dip.order.ValidationOptions;
-
-import dip.gui.order.GUIOrder.MapInfo;
-
-import dip.misc.Utils;
-
-import dip.world.Position;
-import dip.world.Location;
-import dip.world.Province;
-import dip.world.Unit;
-import dip.world.Power;
-import dip.world.RuleOptions;
-
-import dip.process.Adjustment.AdjustmentInfoMap;
 import dip.process.Adjustment;
+import dip.world.Location;
+import dip.world.Position;
+import dip.world.Power;
+import dip.world.Province;
+import dip.world.RuleOptions;
+import dip.world.Unit;
 
-import java.awt.geom.Point2D;
-
-import org.apache.batik.util.SVGConstants;
-import org.apache.batik.util.CSSConstants;
-import org.apache.batik.dom.svg.SVGDOMImplementation;
-import org.w3c.dom.svg.*;
-
-import dip.gui.map.MapMetadata;
-import dip.gui.map.DefaultMapRenderer2;
-import dip.gui.map.SVGUtils;
-
-import java.awt.geom.Point2D;
-
-import org.apache.batik.util.SVGConstants;
-import org.apache.batik.util.CSSConstants;
-import org.apache.batik.dom.svg.SVGDOMImplementation;
-import org.apache.batik.dom.util.XLinkSupport;
-import org.w3c.dom.svg.*;
-import org.w3c.dom.*;
 
 /**
 *	GUIOrder implementation of Build order.
@@ -67,6 +51,8 @@ import org.w3c.dom.*;
 */
 public class GUIBuild extends Build implements GUIOrder
 {
+	private static final long serialVersionUID = 1L;
+
 	// BuildParameter constants
 	/** Required. Used to set build Unit.Type. Associated value must be a Unit.Type */ 
 	public transient static final BuildParameter BUILD_UNIT = new BuildParameter("BUILD_UNIT");
@@ -106,6 +92,7 @@ public class GUIBuild extends Build implements GUIOrder
 	
 	
 	/** This only accepts Build orders. All others will throw an IllegalArgumentException. */
+	@Override
 	public void deriveFrom(Orderable order)
 	{
 		if( !(order instanceof Build) )
@@ -123,6 +110,7 @@ public class GUIBuild extends Build implements GUIOrder
 	}// deriveFrom()
 	
 	
+	@Override
 	public boolean testLocation(StateInfo stateInfo, Location location, StringBuffer sb)
 	{
 		sb.setLength(0);
@@ -218,6 +206,7 @@ public class GUIBuild extends Build implements GUIOrder
 	}// testLocation()
 	
 	
+	@Override
 	public boolean clearLocations()
 	{
 		if(isComplete())
@@ -235,6 +224,7 @@ public class GUIBuild extends Build implements GUIOrder
 	
 	
 	
+	@Override
 	public boolean setLocation(StateInfo stateInfo, Location location, StringBuffer sb)
 	{
 		if(testLocation(stateInfo, location, sb))
@@ -256,17 +246,21 @@ public class GUIBuild extends Build implements GUIOrder
 	}// setLocation()
 	
 	
+	@Override
 	public boolean isComplete()
 	{
 		assert (currentLocNum <= getNumRequiredLocations());
 		return (currentLocNum == getNumRequiredLocations());
 	}// isComplete()
 	
+	@Override
 	public int getNumRequiredLocations()		{ return REQ_LOC; }
 	
+	@Override
 	public int getCurrentLocationNum()			{ return currentLocNum; }
 	
 	/** Used to set what type of Unit we are building. Value must be a Unit.Type */
+	@Override
 	public void setParam(Parameter param, Object value)
 	{
 		if(param != BUILD_UNIT || !(value instanceof Unit.Type))
@@ -279,6 +273,7 @@ public class GUIBuild extends Build implements GUIOrder
 	
 	
 	/** Used to set what type of Unit we are building. */
+	@Override
 	public Object getParam(Parameter param)
 	{
 		if(param != BUILD_UNIT)
@@ -291,6 +286,7 @@ public class GUIBuild extends Build implements GUIOrder
 	
 	
 	
+	@Override
 	public void removeFromDOM(MapInfo mapInfo)
 	{
 		if(group != null)
@@ -303,6 +299,7 @@ public class GUIBuild extends Build implements GUIOrder
 	
 	
 	/** Places a unit in the desired area. */
+	@Override
 	public void updateDOM(MapInfo mapInfo)
 	{
 		// if we are not displayable, we exit, after remove the order (if
@@ -409,6 +406,7 @@ public class GUIBuild extends Build implements GUIOrder
 	}// drawOrder()	
 	
 	
+	@Override
 	public boolean isDependent()	{ return false; }
 	
 	

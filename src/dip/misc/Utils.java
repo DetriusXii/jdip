@@ -22,22 +22,7 @@
 //
 package dip.misc;
 
-import dip.gui.swing.XJEditorPane;
-import dip.gui.dialog.ErrorDialog;
-
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JEditorPane;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.UIManager;
-import javax.swing.JFormattedTextField;
-import javax.swing.JTextField;
-import javax.swing.text.*;
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -54,18 +39,35 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ResourceBundle;
-import java.util.MissingResourceException;
-import java.util.Locale;
-import java.util.StringTokenizer;
-import java.util.ArrayList;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 import java.net.URL;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JEditorPane;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import javax.swing.text.DocumentFilter;
 import javax.swing.text.html.HTMLDocument;
+
+import dip.gui.dialog.ErrorDialog;
+import dip.gui.swing.XJEditorPane;
 
 /**
  *	Various static utilities used by GUI and non-GUI classes.
@@ -109,6 +111,11 @@ public class Utils {
     private static ResourceBundle commonBundle = null;
     private static Toolkit toolkit = null;
     private final static Component component = new Component() {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
     };
     private final static MediaTracker tracker = new MediaTracker(component);
     private static Locale chosenLocale = null;
@@ -736,7 +743,7 @@ public class Utils {
                     for (int i = 0; i < sRGB.length; i++) {
                         if (sRGB[i].endsWith("%") && sRGB[i].length() > 1) {
                             final int percent = Integer.parseInt(sRGB[i].substring(0, sRGB[i].length() - 1));
-                            rgb[i] = (int) (255.0f * ((float) percent / 100.0f));
+                            rgb[i] = (int) (255.0f * (percent / 100.0f));
                         } else {
                             rgb[i] = Integer.parseInt(sRGB[i]);
                         }
@@ -843,9 +850,14 @@ public class Utils {
         if (blend) {
             jep = new JEditorPane() {
 
-                final boolean mayFocus = isFocusable;
+                /**
+				 * 
+				 */
+				private static final long serialVersionUID = 1L;
+				final boolean mayFocus = isFocusable;
 
-                public boolean isFocusable() {
+                @Override
+				public boolean isFocusable() {
                     return mayFocus;
                 }
             };
@@ -854,7 +866,8 @@ public class Utils {
 
                 final boolean mayFocus = isFocusable;
 
-                public boolean isFocusable() {
+                @Override
+				public boolean isFocusable() {
                     return mayFocus;
                 }
             };
@@ -1023,12 +1036,14 @@ public class Utils {
         AbstractDocument doc = (AbstractDocument) jtf.getDocument();
         doc.setDocumentFilter(new DocumentFilter() {
 
-            public void insertString(DocumentFilter.FilterBypass fb, int offset, String text, AttributeSet attr)
+            @Override
+			public void insertString(DocumentFilter.FilterBypass fb, int offset, String text, AttributeSet attr)
                     throws BadLocationException {
                 this.replace(fb, offset, 0, text, attr);
             }// insertString()
 
-            public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attr)
+            @Override
+			public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attr)
                     throws BadLocationException {
                 fb.replace(offset, length, getValidEmailString(text), attr);
             }// replace()
@@ -1084,12 +1099,14 @@ public class Utils {
         AbstractDocument doc = (AbstractDocument) jtf.getDocument();
         doc.setDocumentFilter(new DocumentFilter() {
 
-            public void insertString(DocumentFilter.FilterBypass fb, int offset, String text, AttributeSet attr)
+            @Override
+			public void insertString(DocumentFilter.FilterBypass fb, int offset, String text, AttributeSet attr)
                     throws BadLocationException {
                 replace(fb, offset, 0, text, attr);
             }// insertString()
 
-            public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attr)
+            @Override
+			public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attr)
                     throws BadLocationException {
                 fb.replace(offset, length, getValidURLString(text), attr);
             }// replace()

@@ -22,14 +22,18 @@
 //
 package dip.world;
 
-import dip.order.Orderable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import dip.order.Convoy;
 import dip.order.Move;
+import dip.order.Orderable;
 import dip.process.Adjudicator;
 import dip.process.OrderState;
 import dip.process.Tristate;
-
-import java.util.*;
 
 /**
  *	Determines Convoy paths between points on a Map, and also minimum distances
@@ -548,9 +552,9 @@ public class Path {
         // Step 5: We have one or more possible routes to check.
         // If we find that a route is invalid, we will remove it
         // from adjacency list.
-        Iterator iter = adjLocs.iterator();
+        Iterator<Location> iter = adjLocs.iterator();
         while (iter.hasNext()) {
-            Location location = (Location) iter.next();
+            Location location = iter.next();
 
             if (path.contains(location)) {
                 // if adjacent province already in the path, we are going
@@ -591,7 +595,8 @@ public class Path {
         private boolean foundConvoy = false;
 
         // must have a fleet in the desired area
-        public boolean evaluate(Location location) {
+        @Override
+		public boolean evaluate(Location location) {
             Province province = location.getProvince();
             Unit unit = position.getUnit(province);
 
@@ -610,7 +615,8 @@ public class Path {
         }// evaluate()
 
         // must be adjacent by PROVINCE (not coastal) to destination.
-        public boolean isAdjacentToDest(Location current, Location dest) {
+        @Override
+		public boolean isAdjacentToDest(Location current, Location dest) {
             Province province = current.getProvince();
             if (province.isTouching(dest.getProvince()) && foundConvoy) {
                 return true;
@@ -642,7 +648,8 @@ public class Path {
         }// LegalConvoyPathEvaluator()
 
         // override: check fleet orders
-        protected boolean evalFleet(Province province, Unit unit) {
+        @Override
+		protected boolean evalFleet(Province province, Unit unit) {
             OrderState os = adjudicator.findOrderStateBySrc(province);
             Orderable order = os.getOrder();
 
@@ -693,7 +700,8 @@ public class Path {
         }// isFailure()
 
         // override: check fleet orders
-        protected boolean evalFleet(Province province, Unit unit) {
+        @Override
+		protected boolean evalFleet(Province province, Unit unit) {
             OrderState os = adjudicator.findOrderStateBySrc(province);
             Orderable order = os.getOrder();
 
@@ -922,7 +930,8 @@ public class Path {
         }// FleetFAPEvaluator()
 
         /** Evaluate if a Province should be added. */
-        public boolean evaluate(Province province) {
+        @Override
+		public boolean evaluate(Province province) {
             return fapPos.hasUnit(province, Unit.Type.FLEET);
         }// evaluate()
     }// inner class FleetFAPEvaluator
@@ -951,7 +960,8 @@ public class Path {
         }// ConvoyFAPEvaluator()
 
         /** Evaluate if a Province should be added. */
-        public boolean evaluate(Province province) {
+        @Override
+		public boolean evaluate(Province province) {
             final Position pos = adj.getTurnState().getPosition();
             if (pos.hasUnit(province, Unit.Type.FLEET)) {
                 OrderState os = adj.findOrderStateBySrc(province);
@@ -1017,13 +1027,6 @@ public class Path {
             return kids.isEmpty();
         }
 
-        /** Add a child */
-        public void addChild(TreeNode child) {
-            if (child == null) {
-                throw new IllegalArgumentException();
-            }
-            kids.add(child);
-        }// addChild()
 
         /** 
          *	Add a child, but only if it Location is unique, as compared
@@ -1104,13 +1107,13 @@ public class Path {
         }// getAllBranchesTo()
 
         /** Creates a Province array from a List of endpoints. */
-        private Province[][] createProvinceArray(List list) {
+        private Province[][] createProvinceArray(List<TreeNode> list) {
             Province[][] pathArray = new Province[list.size()][];
             int idx = 0;
-            Iterator iter = list.iterator();
+            Iterator<TreeNode> iter = list.iterator();
             while (iter.hasNext()) {
 
-                TreeNode n = (TreeNode) iter.next();
+                TreeNode n = iter.next();
                 Province[] path = new Province[n.getDepth() + 1];	// root is depth 0
                 for (int i = (path.length - 1); i >= 0; i--) {
                     path[i] = n.getProvince();

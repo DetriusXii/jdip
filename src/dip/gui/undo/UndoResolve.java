@@ -22,15 +22,16 @@
 //
 package dip.gui.undo;
 
-import dip.world.World;
-import dip.world.TurnState;
-import dip.gui.ClientFrame;
-import dip.misc.Utils;
-
-import dip.order.result.Result;
-import java.util.List;
 import java.util.LinkedList;
-import javax.swing.undo.*;
+import java.util.List;
+
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
+
+import dip.misc.Utils;
+import dip.order.result.Result;
+import dip.world.TurnState;
+import dip.world.World;
 
 
 /**
@@ -66,12 +67,14 @@ public class UndoResolve extends XAbstractUndoableEdit
 	}// UndoResolve
 	
 	
+	@Override
 	public String getPresentationName()
 	{
 		return Utils.getLocalString(PRESENTATION_NAME_PREFIX);
 	}// getPresentationName()
 	
 	
+	@Override
 	public void redo()
 	throws CannotRedoException
 	{
@@ -106,6 +109,7 @@ public class UndoResolve extends XAbstractUndoableEdit
 	}// redo()
 	
 	
+	@Override
 	public void undo()
 	throws CannotUndoException
 	{

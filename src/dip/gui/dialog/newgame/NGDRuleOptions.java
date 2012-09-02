@@ -22,17 +22,11 @@
 //
 package dip.gui.dialog.newgame;
 
-import dip.world.RuleOptions.Option;
-import dip.world.RuleOptions.OptionValue;
-import dip.world.*;
-import dip.world.variant.data.Variant;
-import dip.gui.dialog.ErrorDialog;
-import dip.misc.Utils;
-import dip.gui.swing.*;
-
-// HIGLayout
-import cz.autel.dmi.HIGConstraints;
-import cz.autel.dmi.HIGLayout;
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Iterator;
+import java.util.Set;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
@@ -41,18 +35,22 @@ import javax.swing.JEditorPane;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.ListSelectionModel;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.border.EmptyBorder;
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.text.DecimalFormat;
-import java.util.Iterator;
-import java.util.Set;
+
+import cz.autel.dmi.HIGConstraints;
+import cz.autel.dmi.HIGLayout;
+import dip.gui.dialog.ErrorDialog;
+import dip.gui.swing.XJScrollPane;
+import dip.misc.Utils;
+import dip.world.InvalidWorldException;
+import dip.world.RuleOptions;
+import dip.world.RuleOptions.Option;
+import dip.world.RuleOptions.OptionValue;
+import dip.world.variant.data.Variant;
 
 /**
 *
@@ -73,13 +71,13 @@ public class NGDRuleOptions extends JPanel implements NewGameDialog.NGDTabPane
 	// instance variables
 	private RuleOptions ruleOpts;
 	private Variant 	variant;
-	private DefaultListModel 	optionListModel;
+	private DefaultListModel<OptListItem> 	optionListModel;
 	private ButtonGroup		buttonGroup;
 	private RBListener		rbListener;
 	private InvalidWorldException heldException = null;
 	
 	// GUI controls
-	private JList 			optionList;
+	private JList<OptListItem> 			optionList;
 	private JEditorPane		description;
 	private JRadioButton[]	radioButtons;
 	private JButton			reset;
@@ -88,12 +86,13 @@ public class NGDRuleOptions extends JPanel implements NewGameDialog.NGDTabPane
 	public NGDRuleOptions()
 	{
 		// option list
-		optionListModel = new DefaultListModel();
-		optionList = new JList(optionListModel);
+		optionListModel = new DefaultListModel<OptListItem>();
+		optionList = new JList<OptListItem>(optionListModel);
 		optionList.setFixedCellWidth(100);
 		optionList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		optionList.addListSelectionListener(new ListSelectionListener()
 		{
+			@Override
 			public void valueChanged(ListSelectionEvent e)
 			{
 				updateChoices();
@@ -104,6 +103,7 @@ public class NGDRuleOptions extends JPanel implements NewGameDialog.NGDTabPane
 		reset = new JButton( Utils.getLocalString(BUTTON_RESET) );
 		reset.addActionListener(new ActionListener()
 		{
+			@Override
 			public void actionPerformed(ActionEvent e)
 			{
 				resetData();
@@ -146,6 +146,7 @@ public class NGDRuleOptions extends JPanel implements NewGameDialog.NGDTabPane
 	
 	
 	/** Enables & Disables controls on this panel */
+	@Override
 	public void setEnabled(boolean value)
 	{
 		optionList.setEnabled(value);
@@ -186,11 +187,11 @@ public class NGDRuleOptions extends JPanel implements NewGameDialog.NGDTabPane
 		optionList.clearSelection();
 		
 		// create a list of OptListItems, and refresh list data
-		Set options = ruleOpts.getAllOptions();
-		Iterator iter = options.iterator();
+		Set<Option> options = ruleOpts.getAllOptions();
+		Iterator<Option> iter = options.iterator();
 		while(iter.hasNext())
 		{
-			optionListModel.addElement( new OptListItem((Option) iter.next()) );
+			optionListModel.addElement( new OptListItem(iter.next()) );
 		}
 	}// refreshList()
 	
@@ -198,7 +199,7 @@ public class NGDRuleOptions extends JPanel implements NewGameDialog.NGDTabPane
 	/** Updates the OptionValue choices (upto 6) associated with the selected Option */
 	private void updateChoices()
 	{
-		OptListItem optListItem = (OptListItem) optionList.getSelectedValue();
+		OptListItem optListItem = optionList.getSelectedValue();
 		if(optListItem == null)
 		{
 			for(int i=0; i<radioButtons.length; i++)
@@ -303,12 +304,14 @@ public class NGDRuleOptions extends JPanel implements NewGameDialog.NGDTabPane
 	
 	
 	/** Get the tab name. */
+	@Override
 	public String getTabName()
 	{
 		return Utils.getLocalString(TAB_NAME);
 	}// getTabName()
 
 	/** The Variant has Changed. */
+	@Override
 	public void variantChanged(Variant variant)
 	{
 		this.variant = variant;
@@ -317,6 +320,7 @@ public class NGDRuleOptions extends JPanel implements NewGameDialog.NGDTabPane
 	}// variantChanged()
 	
 	/** The Enabled status has Changed. */
+	@Override
 	public void enablingChanged(boolean enabled)
 	{
 		setEnabled(enabled);
@@ -333,6 +337,7 @@ public class NGDRuleOptions extends JPanel implements NewGameDialog.NGDTabPane
 			this.option = option;
 		}
 		
+		@Override
 		public String toString()	{ return option.getNameI18N(); }
 		public Option getOption() 	{ return option; }
 	}// inner class OptListItem
@@ -341,6 +346,7 @@ public class NGDRuleOptions extends JPanel implements NewGameDialog.NGDTabPane
 	/** RB listener */
 	private class RBListener implements ActionListener
 	{
+		@Override
 		public void actionPerformed(ActionEvent e) 
 		{
 			// set options according to what we found from the button group.
@@ -349,7 +355,7 @@ public class NGDRuleOptions extends JPanel implements NewGameDialog.NGDTabPane
 			// arrays in ValidationOptions correspond.
 			if(radioButtons != null)
 			{
-				OptListItem oli = (OptListItem) optionList.getSelectedValue();
+				OptListItem oli = optionList.getSelectedValue();
 				if(oli != null)
 				{
 					int idx = Integer.parseInt(e.getActionCommand());

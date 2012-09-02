@@ -22,28 +22,34 @@
 //
 package dip.gui.map;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.CDATASection;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
 import dip.gui.ClientFrame;
-
 import dip.misc.XMLUtils;
-
 import dip.world.variant.VariantManager;
-import dip.world.variant.parser.XMLErrorHandler;
-import dip.world.variant.parser.FastEntityResolver;
-import dip.world.variant.data.Variant;
+import dip.world.variant.data.MapGraphic;
 import dip.world.variant.data.Symbol;
 import dip.world.variant.data.SymbolPack;
-import dip.world.variant.data.MapGraphic;
-
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.ParserConfigurationException;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.w3c.dom.*;
+import dip.world.variant.data.Variant;
+import dip.world.variant.parser.FastEntityResolver;
+import dip.world.variant.parser.XMLErrorHandler;
 
 
 /**
@@ -163,7 +169,7 @@ public class SymbolInjector
 		// find all <g> or <symbol> under defs with same tag names.
 		// if found, replace with our own symbols. If not found, add them.
 		//
-		HashMap defsElementMap = elementMapper(defs, ID_ATTRIBUTE);
+		HashMap<String, Element> defsElementMap = elementMapper(defs, ID_ATTRIBUTE);
 		
 		final List<Symbol> symbols = sp.getSymbols();
 		assert(symbols != null);
@@ -171,7 +177,7 @@ public class SymbolInjector
 		
 		for(final Symbol symbol : symbols)
 		{
-			Element element = (Element) defsElementMap.get(symbol.getName());
+			Element element = defsElementMap.get(symbol.getName());
 			if(element == null)
 			{
 				// does not exist! add
@@ -214,7 +220,7 @@ public class SymbolInjector
 	*	an org.w3c.Element. An Exception is thrown if an element with a
 	*	duplicate attribute value (case-sensitive) is found.
 	*/
-	private HashMap elementMapper(Element start, String attrName)
+	private HashMap<String, Element> elementMapper(Element start, String attrName)
 	throws IOException
 	{
 		final HashMap<String, Element> map = new HashMap<String, Element>(31);

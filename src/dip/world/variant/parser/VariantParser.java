@@ -22,8 +22,9 @@
 //
 package dip.world.variant.parser;
 
-import dip.world.variant.data.Variant;
 import java.util.List;
+
+import dip.world.variant.data.Variant;
 
 /**
 *	Parses a Variant description.

@@ -22,75 +22,58 @@
 //
 package dip.gui.map;
 
-import dip.gui.map.RenderCommandFactory.RenderCommand;
-
-import dip.world.Position;
-import dip.world.Province;
-import dip.world.TurnState;
-import dip.world.World;
-import dip.world.RuleOptions;
-import dip.world.variant.data.Variant;
-import dip.world.variant.data.SymbolPack;
-
-import dip.gui.ClientFrame;
-import dip.gui.OrderDisplayPanel;
-import dip.gui.ClientMenu;
-import dip.gui.StatusBar;
-import dip.gui.AbstractCFPListener;
-import dip.gui.dialog.ErrorDialog;
-import dip.gui.dialog.prefs.GeneralPreferencePanel;
-
-import dip.world.variant.VariantManager;
-import dip.world.variant.data.MapGraphic;
-
-import dip.order.ValidationOptions;
-
-import dip.misc.Utils;
-import dip.misc.Log;
-import java.util.Date;
-
-import java.awt.Cursor;
-import java.awt.geom.AffineTransform;
-import java.net.URL;
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import java.awt.Cursor;
 import java.awt.Dimension;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.net.URL;
 
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
-import javax.swing.*;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
-import org.w3c.dom.svg.SVGDocument;
-import org.w3c.dom.Document;
-
+import org.apache.batik.bridge.UpdateManagerListener;
+import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
+import org.apache.batik.dom.svg.SVGOMDocument;
 import org.apache.batik.swing.JSVGCanvas;
 import org.apache.batik.swing.gvt.GVTTreeRendererAdapter;
 import org.apache.batik.swing.gvt.GVTTreeRendererEvent;
 import org.apache.batik.swing.svg.GVTTreeBuilderAdapter;
 import org.apache.batik.swing.svg.GVTTreeBuilderEvent;
+import org.apache.batik.swing.svg.JSVGComponent;
 import org.apache.batik.swing.svg.SVGDocumentLoaderAdapter;
 import org.apache.batik.swing.svg.SVGDocumentLoaderEvent;
-import org.apache.batik.bridge.UpdateManagerListener;
-import org.apache.batik.bridge.UpdateManagerEvent;
-import org.apache.batik.util.ParsedURL;
-import org.apache.batik.dom.svg.SVGOMDocument;
+import org.apache.batik.util.XMLResourceDescriptor;
+import org.w3c.dom.Document;
+import org.w3c.dom.svg.SVGDocument;
 
-import org.apache.batik.bridge.BridgeContext;
-import org.apache.batik.gvt.*;
-
-import java.io.*;
-
-import javax.xml.parsers.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-
-import org.apache.batik.dom.svg.*;
-import org.apache.batik.dom.util.*;
-import org.apache.batik.util.*;
-import org.w3c.dom.*;
+import dip.gui.AbstractCFPListener;
+import dip.gui.ClientFrame;
+import dip.gui.ClientMenu;
+import dip.gui.OrderDisplayPanel;
+import dip.gui.StatusBar;
+import dip.gui.dialog.ErrorDialog;
+import dip.gui.dialog.prefs.GeneralPreferencePanel;
+import dip.gui.map.RenderCommandFactory.RenderCommand;
+import dip.misc.Log;
+import dip.misc.Utils;
+import dip.order.ValidationOptions;
+import dip.world.Position;
+import dip.world.Province;
+import dip.world.RuleOptions;
+import dip.world.TurnState;
+import dip.world.World;
+import dip.world.variant.VariantManager;
+import dip.world.variant.data.MapGraphic;
+import dip.world.variant.data.SymbolPack;
+import dip.world.variant.data.Variant;
 
 /**
 *	The Main Map display component.
@@ -316,7 +299,7 @@ public class MapPanel extends JPanel
 		// setup JSVGCanvas
 		svgCanvas = new XJSVGCanvas(this, statusBar, null, true, false);
 		svgCanvas.setValidating(clientFrame.getValidating());
-		svgCanvas.setDocumentState(JSVGCanvas.ALWAYS_DYNAMIC);
+		svgCanvas.setDocumentState(JSVGComponent.ALWAYS_DYNAMIC);
 		svgCanvas.setRecenterOnResize(false);	// batik 1.5.1
 		svgCanvas.setDoubleBufferedRendering(true);
 		svgCanvas.setProgressivePaint(true);	// faster??
@@ -365,7 +348,7 @@ public class MapPanel extends JPanel
 		// load map. Note that this bypasses the DocumentLoader
 		// listener, as it createas an SVG document synchronously 
 		// from the XML document we submit.
-		svgCanvas.setDocumentState(JSVGCanvas.ALWAYS_DYNAMIC);
+		svgCanvas.setDocumentState(JSVGComponent.ALWAYS_DYNAMIC);
 		
 		// we MUST transform the document, prior to setDocument()!
 		// subtle bugs emerge if we do not.
@@ -725,8 +708,8 @@ public class MapPanel extends JPanel
 			maxZoom = tmp;
 		}
 		
-		svgCanvas.setMinimumScale( ((double)minZoom / 100.0) );
-		svgCanvas.setMaximumScale( ((double)maxZoom / 100.0) );
+		svgCanvas.setMinimumScale( (minZoom / 100.0) );
+		svgCanvas.setMaximumScale( (maxZoom / 100.0) );
 	}// setScalingParameters()
 	
 	
@@ -738,6 +721,7 @@ public class MapPanel extends JPanel
 	{
 		private boolean loaded = false;
 		
+		@Override
 		public void gvtRenderingStarted(GVTTreeRendererEvent e)
 		{
 			Log.printTimed(startTime, "MapPanel() GVTRender start.");
@@ -748,6 +732,7 @@ public class MapPanel extends JPanel
 			}
 		}// gvtRenderingStarted()
 		
+		@Override
 		public void gvtRenderingCompleted(GVTTreeRendererEvent e)
 		{
 			Log.printTimed(startTime, "MapPanel() GVTRender completing...");
@@ -852,6 +837,7 @@ public class MapPanel extends JPanel
 	*/
 	private class MP_DocumentListener extends SVGDocumentLoaderAdapter
 	{
+		@Override
 		public void documentLoadingStarted(SVGDocumentLoaderEvent e)
 		{
 			Log.printTimed(startTime, "MapPanel() DocumentLoad started.");
@@ -860,12 +846,14 @@ public class MapPanel extends JPanel
 			//statusBar.setText(Utils.getLocalString(DOC_LOAD_STARTED));
 		}// documentLoadingStarted()
  		
+		@Override
 		public void documentLoadingFailed(SVGDocumentLoaderEvent e)
 		{
 			statusBar.setText(Utils.getLocalString(DOC_LOAD_FAILED));
 			statusBar.hidePB();
 		}// documentLoadingFailed()
 		
+		@Override
 		public void documentLoadingCompleted(SVGDocumentLoaderEvent e)
 		{
 			Log.printTimed(startTime, "MapPanel() DocumentLoad completed.");
@@ -882,6 +870,7 @@ public class MapPanel extends JPanel
 	*/
 	private class MP_GVTTreeBuilderListener extends GVTTreeBuilderAdapter
 	{
+		@Override
 		public void gvtBuildStarted(GVTTreeBuilderEvent e)
 		{
 			Log.printTimed(startTime, "MapPanel() GVTTreeBuild completed.");
@@ -889,12 +878,14 @@ public class MapPanel extends JPanel
 			statusBar.setText(Utils.getLocalString(GVT_BUILD_STARTED));
 		}// documentLoadingStarted()
  		
+		@Override
 		public void gvtBuildFailed(GVTTreeBuilderEvent e)
 		{
 			statusBar.setText(Utils.getLocalString(GVT_BUILD_FAILED));
 			statusBar.hidePB();
 		}// documentLoadingFailed()
 		
+		@Override
 		public void gvtBuildCompleted(GVTTreeBuilderEvent e)
 		{
 			Log.printTimed(startTime, "MapPanel() GVTTreeBuild completed.");
@@ -909,6 +900,7 @@ public class MapPanel extends JPanel
 	private class MP_PropertyListener extends AbstractCFPListener
 	{
 		
+		@Override
 		public void actionWorldCreated(World w)			
 		{
 			if(mapRenderer != null)
@@ -921,6 +913,7 @@ public class MapPanel extends JPanel
 			}
 		}// actionWorldCreated()
 		
+		@Override
 		public void actionWorldDestroyed(World w)		
 		{
 			if(mapRenderer != null)
@@ -929,6 +922,7 @@ public class MapPanel extends JPanel
 			}
 		}// actionWorldDestroyed()
 		
+		@Override
 		public void actionValOptsChanged(ValidationOptions options)		
 		{
 			if(mapRenderer != null)
@@ -942,6 +936,7 @@ public class MapPanel extends JPanel
 			}
 		}// actionValOptsChanged()
 		
+		@Override
 		public void actionModeChanged(String mode)	
 		{
 			if(mapRenderer != null)
@@ -951,6 +946,7 @@ public class MapPanel extends JPanel
 			}
 		}// actionModeChanged()
 		
+		@Override
 		public synchronized void actionTurnstateChanged(TurnState ts)	
 		{
 			if(mapRenderer != null)
@@ -1052,32 +1048,39 @@ public class MapPanel extends JPanel
 	{
 		private String lastModeText = null;
 		
+		@Override
 		public void managerResumed(org.apache.batik.bridge.UpdateManagerEvent e)
 		{
 		}
 		
+		@Override
 		public void managerStarted(org.apache.batik.bridge.UpdateManagerEvent e)
 		{
 		}
 		
+		@Override
 		public void managerStopped(org.apache.batik.bridge.UpdateManagerEvent e)
 		{
 		}
 		
+		@Override
 		public void managerSuspended(org.apache.batik.bridge.UpdateManagerEvent e)
 		{
 		}
 		
+		@Override
 		public void updateCompleted(org.apache.batik.bridge.UpdateManagerEvent e)
 		{
 			resetText();
 		}// updateCompleted()
 		
+		@Override
 		public void updateFailed(org.apache.batik.bridge.UpdateManagerEvent e)
 		{
 			resetText();
 		}// updateFailed()
 		
+		@Override
 		public void updateStarted(org.apache.batik.bridge.UpdateManagerEvent e) 		
 		{
 			lastModeText = statusBar.getModeText();

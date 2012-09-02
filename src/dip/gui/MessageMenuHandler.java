@@ -22,13 +22,13 @@
 //
 package dip.gui;
 
-import dip.gui.ClientMenu.Item;
-import dip.net.message.PressChannel;
+import javax.swing.JMenu;
+import javax.swing.JSeparator;
 
+import dip.gui.ClientMenu.Item;
 import dip.gui.dialog.PressConfigDialog;
 import dip.gui.dialog.PressDialog;
-
-import javax.swing.*;
+import dip.net.message.PressChannel;
 
 /**
 *	The ClientMenu class requires a MessageMenuHandler to support 

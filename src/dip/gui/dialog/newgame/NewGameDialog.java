@@ -22,21 +22,22 @@
 //
 package dip.gui.dialog.newgame;
 
+import java.awt.Component;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+import javax.swing.JButton;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
+
 import dip.gui.ClientFrame;
 import dip.gui.dialog.HeaderDialog;
+import dip.gui.swing.SwingWorker;
 import dip.misc.Help;
-import dip.world.*;
-import dip.world.variant.data.Variant;
-import dip.gui.swing.*;
-
-import dip.misc.Utils;
 import dip.misc.Log;
-
-import javax.swing.JTabbedPane;
-import javax.swing.JButton;
-import java.awt.Component;
-import java.awt.*;
-import java.awt.event.*;
+import dip.misc.Utils;
+import dip.world.World;
+import dip.world.variant.data.Variant;
 
 /**
 *	The New game dialog, for starting new games.
@@ -46,6 +47,10 @@ import java.awt.event.*;
 */
 public class NewGameDialog extends HeaderDialog
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// i18n constants
 	public static final String TITLE_F2F		= "NGD.title.f2f";
 	private static final String TITLE			= "NGD.title";
@@ -124,6 +129,7 @@ public class NewGameDialog extends HeaderDialog
 			{
 				loader = new SwingWorker()
 				{
+					@Override
 					public Object construct()
 					{
 						long time = System.currentTimeMillis();
@@ -154,7 +160,7 @@ public class NewGameDialog extends HeaderDialog
 		this.clientFrame = parent;
 		
 		// create tab pane
-		tabPane = new JTabbedPane(JTabbedPane.TOP);
+		tabPane = new JTabbedPane(SwingConstants.TOP);
 		
 		// create tabbed panels
 		tabMapAndUnits = new NGDMapAndUnits();
@@ -184,6 +190,7 @@ public class NewGameDialog extends HeaderDialog
 		// ensure list selection is visible
 		addWindowListener(new WindowAdapter()
 		{
+			@Override
 			public void windowOpened(WindowEvent e)
 			{
 				tabVariant.ensureSelectionIsVisible();
@@ -193,6 +200,7 @@ public class NewGameDialog extends HeaderDialog
 	
 	
 	/** Handle dialog closing */
+	@Override
 	public void close(String actionCommand)
 	{
 		if(isOKorAccept(actionCommand))

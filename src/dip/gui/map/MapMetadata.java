@@ -22,40 +22,21 @@
 //
 package dip.gui.map;
 
-import dip.world.Power;
-import dip.world.Province;
-import dip.world.Coast;
-
-import dip.world.variant.data.Symbol;
-import dip.world.variant.data.SymbolPack;
-
-import dip.misc.Log;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.StringTokenizer;
-import java.util.NoSuchElementException;
-import java.util.Properties;
-
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.StringReader;
-import java.io.IOException;
-
 import java.awt.geom.Point2D;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
 
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.svg.SVGDocument;
-import org.w3c.dom.svg.SVGElement;
 
-import org.apache.batik.util.SVGConstants;
+import dip.misc.Log;
+import dip.world.Coast;
+import dip.world.Power;
+import dip.world.Province;
+import dip.world.variant.data.Symbol;
+import dip.world.variant.data.SymbolPack;
 
 
 /**
@@ -325,7 +306,7 @@ public class MapMetadata
 				return makePt(unit);
 			}
 			
-			Point2D.Float pt = (Point2D.Float) unitCoasts.get(coast);
+			Point2D.Float pt = unitCoasts.get(coast);
 			return (pt == null) ? makePt(unit) : makePt(pt);
 		}// getUnitPt()
 		
@@ -337,7 +318,7 @@ public class MapMetadata
 				return makePt(dislodgedUnit);
 			}
 			
-			Point2D.Float pt = (Point2D.Float) dislodgedUnitCoasts.get(coast);
+			Point2D.Float pt = dislodgedUnitCoasts.get(coast);
 			return (pt == null) ? makePt(dislodgedUnit) : makePt(pt);
 		}// getDislodgedUnitPt()
 		
@@ -627,7 +608,7 @@ public class MapMetadata
 				}
 				else
 				{
-					InfoEntry ie = (InfoEntry) infoMap.get(province);
+					InfoEntry ie = infoMap.get(province);
 					if(ie == null)
 					{
 						throw new MapException("Error in PROVINCE: "+provinceName+"; province metadata with coast must succeed those without; e.g., stp-sc must come AFTER stp");

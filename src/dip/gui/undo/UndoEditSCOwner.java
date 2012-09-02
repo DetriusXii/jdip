@@ -22,12 +22,13 @@
 //
 package dip.gui.undo;
 
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
+
+import dip.misc.Utils;
+import dip.world.Position;
 import dip.world.Power;
 import dip.world.Province;
-import dip.world.Position;
-import dip.misc.Utils;
-
-import javax.swing.undo.*;
 
 
 /**
@@ -55,12 +56,14 @@ public class UndoEditSCOwner extends XAbstractUndoableEdit
 		this.newPower = newPower;
 	}// UndoEditSCOwner
 	
+	@Override
 	public String getPresentationName()
 	{
 		return Utils.getLocalString(PRESENTATION_NAME);
 	}// getPresentationName()
 	
 	
+	@Override
 	public void redo()
 	throws CannotRedoException
 	{
@@ -68,6 +71,7 @@ public class UndoEditSCOwner extends XAbstractUndoableEdit
 		UndoEditSCOwner.changeSCOwner(undoRedoManager, position, province, newPower);
 	}// redo()
 	
+	@Override
 	public void undo()
 	throws CannotUndoException
 	{

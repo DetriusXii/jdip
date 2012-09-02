@@ -21,11 +21,14 @@
 //
 package dip.order;
 
-import dip.world.*;
-import dip.misc.Log;
+import java.util.StringTokenizer;
 
-import java.util.*;
-import java.lang.reflect.*;
+import dip.misc.Log;
+import dip.world.Coast;
+import dip.world.Location;
+import dip.world.Power;
+import dip.world.Province;
+import dip.world.Unit;
 
 /**
  *	OrderFormat formats orders according to the specified format string. 
@@ -553,7 +556,7 @@ public class OrderFormat {
                 // only show possessive power if it is not the same as the
                 // source power AND we are set to show posessive powers.
                 if (ofo.getShowPossessivePower()
-                        && !order.getPower().equals((Power) input)) {
+                        && !order.getPower().equals(input)) {
                     return input;
                 } else {
                     return EMPTY;

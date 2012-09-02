@@ -22,20 +22,33 @@
 //
 package dip.judge.parser;
 
-import dip.world.*;
-import dip.world.metadata.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.Iterator;
+import java.util.regex.PatternSyntaxException;
+
+import dip.misc.Log;
+import dip.misc.Utils;
 import dip.order.OrderException;
 import dip.order.OrderFactory;
+import dip.world.InvalidWorldException;
+import dip.world.Location;
+import dip.world.Phase;
+import dip.world.Position;
+import dip.world.Power;
+import dip.world.Province;
+import dip.world.RuleOptions;
+import dip.world.TurnState;
+import dip.world.Unit;
+import dip.world.World;
+import dip.world.WorldFactory;
+import dip.world.metadata.GameMetadata;
+import dip.world.metadata.PlayerMetadata;
 import dip.world.variant.VariantManager;
 import dip.world.variant.data.Variant;
-import dip.world.variant.data.MapGraphic;
-import dip.misc.Utils;
-import dip.misc.Log;
-
-import java.io.*;
-import java.net.*;
-import java.util.regex.PatternSyntaxException;
-import java.util.*;
 
 /**
 *
@@ -150,10 +163,10 @@ public class JudgeImport
 		// eliminate all existing TurnStates; we will create our own from parsed values
 		// we need the Position, though, since it has home-supply-center information
 		Position position = null;
-		Iterator iter = world.getPhaseSet().iterator();
+		Iterator<Phase> iter = world.getPhaseSet().iterator();
 		while(iter.hasNext())
 		{
-			TurnState ts = world.getTurnState( (Phase) iter.next());
+			TurnState ts = world.getTurnState(iter.next());
 			if(position == null)
 			{
 				position = ts.getPosition();

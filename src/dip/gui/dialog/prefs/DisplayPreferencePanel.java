@@ -23,36 +23,32 @@
 
 package dip.gui.dialog.prefs;
 
-import dip.gui.ClientFrame;
-import dip.gui.OrderDisplayPanel;
-import dip.gui.swing.GradientJLabel;
-import dip.order.OrderFormat;
-import dip.order.OrderFormatOptions;
-import dip.misc.SharedPrefs;
-import dip.misc.Utils;
-
-
-
-// HIGLayout
-import cz.autel.dmi.HIGConstraints;
-import cz.autel.dmi.HIGLayout;
-
-import java.util.prefs.Preferences;
+import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
+
+import javax.swing.Box;
 import javax.swing.ButtonGroup;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JComboBox;
 import javax.swing.JRadioButton;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import javax.swing.*;
-import java.awt.*;
-import javax.swing.event.*;
-import java.awt.event.*;
-
-import java.awt.Component;
+import cz.autel.dmi.HIGConstraints;
+import cz.autel.dmi.HIGLayout;
+import dip.gui.ClientFrame;
+import dip.gui.OrderDisplayPanel;
+import dip.gui.swing.GradientJLabel;
+import dip.misc.SharedPrefs;
+import dip.misc.Utils;
+import dip.order.OrderFormat;
+import dip.order.OrderFormatOptions;
 
 /**
 *	Display preferences
@@ -193,12 +189,14 @@ public class DisplayPreferencePanel extends PreferencePanel
 	
 	
 	
+	@Override
 	public String getName()
 	{
 		return Utils.getLocalString(I18N_TAB_NAME);
 	}// getName()
 	
 	
+	@Override
 	public void apply()
 	{
 		Preferences prefs = SharedPrefs.getUserNode();
@@ -220,12 +218,14 @@ public class DisplayPreferencePanel extends PreferencePanel
 	}// apply()
 	
 	
+	@Override
 	public void setDefault()
 	{
 		orderFormat = OrderFormatOptions.createDefault();
 	}// setDefault()
 	
 	
+	@Override
 	public void cancel()
 	{
 		// do nothing
@@ -387,7 +387,7 @@ public class DisplayPreferencePanel extends PreferencePanel
 			label = new JLabel(labelText);
 			
 			// combobox 
-			styleBox = new JComboBox((String[]) Utils.parseCSV(
+			styleBox = new JComboBox(Utils.parseCSV(
 				Utils.getLocalString(I18N_STYLE_NAMES)));
 			styleBox.setPrototypeDisplayValue("MMMMMMMMMM");
 			styleBox.setEditable(false);
@@ -512,6 +512,7 @@ public class DisplayPreferencePanel extends PreferencePanel
 	/** Listens for radiobutton changes, and updates the Example text. */
 	private class ExampleChangeListener implements ChangeListener, ActionListener
 	{
+		@Override
 		public void stateChanged(ChangeEvent e)
 		{
 			if(example != null)
@@ -520,6 +521,7 @@ public class DisplayPreferencePanel extends PreferencePanel
 			}
 		}// stateChanged()
 		
+		@Override
 		public void actionPerformed(ActionEvent e)
 		{
 			if(example != null)

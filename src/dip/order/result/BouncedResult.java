@@ -21,12 +21,11 @@
 //
 package dip.order.result;
 
-import dip.order.Orderable;
+import dip.misc.Utils;
 import dip.order.OrderFormat;
 import dip.order.OrderFormatOptions;
-import dip.world.Location;
+import dip.order.Orderable;
 import dip.world.Province;
-import dip.misc.Utils;
 
 
 /**
@@ -40,6 +39,10 @@ import dip.misc.Utils;
 */
 public class BouncedResult extends OrderResult
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// instance fields
 	private Province bouncer = null;
 	private int atkStrength = -1;
@@ -126,6 +129,7 @@ public class BouncedResult extends OrderResult
 	*	Creates an appropriate internationalized text 
 	*	message given the set and unset parameters.
 	*/
+	@Override
 	public String getMessage(OrderFormatOptions ofo)
 	{
 		/*
@@ -162,6 +166,7 @@ public class BouncedResult extends OrderResult
 	/**
 	*	Primarily for debugging.
 	*/
+	@Override
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer(256);

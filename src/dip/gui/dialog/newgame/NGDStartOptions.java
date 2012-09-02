@@ -22,27 +22,26 @@
 //
 package dip.gui.dialog.newgame;
 
-import dip.world.*;
-import dip.world.variant.data.Variant;
-import dip.gui.swing.*;
-
-import dip.misc.Utils;
-
-import cz.autel.dmi.HIGConstraints;
-import cz.autel.dmi.HIGLayout;
+import java.awt.FlowLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.JSeparator;
-import java.awt.FlowLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
+import cz.autel.dmi.HIGConstraints;
+import cz.autel.dmi.HIGLayout;
+import dip.gui.swing.GradientJLabel;
+import dip.misc.Utils;
+import dip.world.Phase;
+import dip.world.variant.data.Variant;
 
 /**
  *
@@ -91,7 +90,8 @@ public class NGDStartOptions extends JPanel implements NewGameDialog.NGDTabPane 
         reset = new JButton(Utils.getLocalString(BUTTON_RESET));
         reset.addActionListener(new ActionListener() {
 
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 if (original != null) {
                     resetData();
                 }
@@ -124,7 +124,8 @@ public class NGDStartOptions extends JPanel implements NewGameDialog.NGDTabPane 
     }// getVariant()
 
     /** Enables & Disables controls on this panel */
-    public void setEnabled(boolean value) {
+    @Override
+	public void setEnabled(boolean value) {
         phaseBox.setEnabled(value);
         year.setEnabled(value);
         vcSC.setEnabled(value);
@@ -248,12 +249,14 @@ public class NGDStartOptions extends JPanel implements NewGameDialog.NGDTabPane 
     }// getSpinnerValue()
 
     /** Get the tab name. */
-    public String getTabName() {
+    @Override
+	public String getTabName() {
         return Utils.getLocalString(TAB_NAME);
     }// getTabName()
 
     /** The Variant has Changed. */
-    public void variantChanged(Variant variant) {
+    @Override
+	public void variantChanged(Variant variant) {
         // store passed reference, but modify the cloned version
         original = variant;
         try {
@@ -267,7 +270,8 @@ public class NGDStartOptions extends JPanel implements NewGameDialog.NGDTabPane 
     }// variantChanged()
 
     /** The Enabled status has Changed. */
-    public void enablingChanged(boolean enabled) {
+    @Override
+	public void enablingChanged(boolean enabled) {
         setEnabled(enabled);
     }// enablingChanged()
 }// class NGDStartOptions

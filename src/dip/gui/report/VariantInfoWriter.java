@@ -23,21 +23,18 @@
 //
 package dip.gui.report;
 
+import java.util.Iterator;
+import java.util.Set;
+
+import javax.swing.ScrollPaneConstants;
+
 import dip.gui.ClientFrame;
 import dip.gui.dialog.TextViewer;
-
-import dip.world.World;
+import dip.misc.Utils;
 import dip.world.RuleOptions;
+import dip.world.World;
 import dip.world.variant.VariantManager;
 import dip.world.variant.data.Variant;
-
-import dip.misc.Utils;
-import dip.misc.Help;
-
-import java.util.Set;
-import java.util.Iterator;
-
-import javax.swing.JScrollPane;
 
 
 /**
@@ -79,10 +76,11 @@ public class VariantInfoWriter
 		tv.addSingleButton( tv.makeOKButton() );
 		tv.setTitle(Utils.getLocalString(DIALOG_TITLE));
 		tv.setHeaderVisible(false);
-		tv.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		tv.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
 		tv.lazyLoadDisplayDialog(new TextViewer.TVRunnable()
 		{
+			@Override
 			public void run()
 			{
 				setText(variantInfoToHTML(w));
@@ -123,11 +121,11 @@ public class VariantInfoWriter
 		StringBuffer sb = new StringBuffer(256);
 		
 		RuleOptions ro = world.getRuleOptions();
-		Set allOpts = ro.getAllOptions();
-		Iterator iter = allOpts.iterator();
+		Set<RuleOptions.Option> allOpts = ro.getAllOptions();
+		Iterator<RuleOptions.Option> iter = allOpts.iterator();
 		while(iter.hasNext())
 		{
-			RuleOptions.Option opt = (RuleOptions.Option) iter.next();
+			RuleOptions.Option opt = iter.next();
 			RuleOptions.OptionValue optVal = ro.getOptionValue(opt);
 			
 			sb.append("<p><b>");

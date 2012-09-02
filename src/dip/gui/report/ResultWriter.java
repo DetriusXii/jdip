@@ -22,32 +22,27 @@
 //
 package dip.gui.report;
 
-import dip.gui.ClientFrame;
-import dip.gui.dialog.TextViewer;
-
-import dip.misc.Utils;
-import dip.misc.Help;
-
-import dip.world.World;
-import dip.world.Power;
-import dip.world.Phase;
-import dip.world.TurnState;
-import dip.world.Position;
-
-import dip.order.Orderable;
-import dip.order.result.Result;
-import dip.order.result.OrderResult;
-import dip.order.result.OrderResult.ResultType;
-import dip.order.OrderFormatOptions;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
+
+import dip.gui.ClientFrame;
+import dip.gui.dialog.TextViewer;
+import dip.misc.Help;
+import dip.misc.Utils;
+import dip.order.OrderFormatOptions;
+import dip.order.Orderable;
+import dip.order.result.OrderResult;
+import dip.order.result.OrderResult.ResultType;
+import dip.order.result.Result;
+import dip.world.Position;
+import dip.world.Power;
+import dip.world.TurnState;
+import dip.world.World;
 
 /**
 *	Writes a summary of adjudication results in HTML format.
@@ -107,10 +102,11 @@ public class ResultWriter
 		tv.setTitle(title.toString());
 		tv.setHelpID(Help.HelpID.Dialog_ResultReport);
 		tv.setHeaderVisible(false);
-		tv.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		tv.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
 		tv.lazyLoadDisplayDialog(new TextViewer.TVRunnable()
 		{
+			@Override
 			public void run()
 			{
 				setText(resultsToHTML(ts, orderFormatOptions));
@@ -243,15 +239,15 @@ public class ResultWriter
 	
 	
 	/** Print non order results for a power. */
-	private void printNonOrderResultsForPower(StringBuffer sb, Power power, List results)
+	private void printNonOrderResultsForPower(StringBuffer sb, Power power, List<Result> results)
 	{
 		StringBuffer text = new StringBuffer(1024);
 		
 		boolean foundAnOtherResult = false;
-		Iterator iter = results.iterator();
+		Iterator<Result> iter = results.iterator();
 		while(iter.hasNext())
 		{
-			Result result = (Result) iter.next();
+			Result result = iter.next();
 			if(power.equals(result.getPower()))
 			{
 				text.append( result.getMessage(ofo) );

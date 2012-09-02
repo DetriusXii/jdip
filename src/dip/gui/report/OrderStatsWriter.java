@@ -22,35 +22,29 @@
 //
 package dip.gui.report;
 
-import dip.gui.ClientFrame;
-import dip.gui.dialog.TextViewer;
-
-import dip.misc.Utils;
-import dip.misc.Help;
-
-import dip.world.World;
-import dip.world.Power;
-import dip.world.Phase;
-import dip.world.Unit;
-import dip.world.TurnState;
-import dip.world.Position;
-
-import dip.gui.dialog.TextViewer;
-
-import dip.order.*;
-import dip.order.result.OrderResult;
-import dip.order.OrderFormatOptions;
-
-import dip.order.result.Result;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.HashMap;
 import java.util.List;
 
-import java.text.DecimalFormat;
+import javax.swing.ScrollPaneConstants;
 
-import javax.swing.JScrollPane;
+import dip.gui.ClientFrame;
+import dip.gui.dialog.TextViewer;
+import dip.misc.Utils;
+import dip.order.Convoy;
+import dip.order.Hold;
+import dip.order.Move;
+import dip.order.OrderFormatOptions;
+import dip.order.Orderable;
+import dip.order.Support;
+import dip.order.result.OrderResult;
+import dip.order.result.Result;
+import dip.world.Phase;
+import dip.world.Power;
+import dip.world.TurnState;
+import dip.world.Unit;
+import dip.world.World;
 
 /**
 *	Order Statistics
@@ -95,10 +89,11 @@ public class OrderStatsWriter
 		tv.addSingleButton( tv.makeOKButton() );
 		tv.setTitle(Utils.getLocalString(DIALOG_TITLE));
 		tv.setHeaderVisible(false);
-		tv.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		tv.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
 		tv.lazyLoadDisplayDialog(new TextViewer.TVRunnable()
 		{
+			@Override
 			public void run()
 			{
 				setText(getOrderStatsAsHTML(w, orderFormat));
@@ -229,7 +224,7 @@ public class OrderStatsWriter
 			}
 			
 			sb.append("<td>");
-			sb.append( pctFmt.format(sum / (float) nPowers) );
+			sb.append( pctFmt.format(sum / nPowers) );
 			sb.append("</td>");
 			
 			sb.append("</tr>");
@@ -239,29 +234,6 @@ public class OrderStatsWriter
 		
 		return sb.toString();
 	}// makeOrderSuccessRateTable()
-	
-	private String makeSupportRateTable(final MovePhaseTurnData[] mptds)
-	{
-		StringBuffer sb = new StringBuffer(4096);
-		return sb.toString();
-	}// makeSupportRateTable()
-	
-	private String makeNonSelfSupportRateTable(final MovePhaseTurnData[] mptds)
-	{
-		StringBuffer sb = new StringBuffer(4096);
-		return sb.toString();
-	}// makeNonSelfSupportRateTable()
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	/**
 	*	Makes an array of tabular data, for easy calculation.

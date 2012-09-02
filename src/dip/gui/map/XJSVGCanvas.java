@@ -22,45 +22,28 @@
 //
 package dip.gui.map;
 
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
+
+import javax.swing.ActionMap;
+import javax.swing.JFrame;
+
+import org.apache.batik.bridge.UserAgent;
+import org.apache.batik.bridge.ViewBox;
+import org.apache.batik.gvt.CanvasGraphicsNode;
+import org.apache.batik.swing.JSVGCanvas;
+import org.apache.batik.swing.gvt.GVTTreeRendererEvent;
+import org.apache.batik.swing.gvt.GVTTreeRendererListener;
+import org.apache.batik.swing.svg.SVGUserAgent;
+import org.w3c.dom.svg.SVGSVGElement;
+
 import dip.gui.StatusBar;
 import dip.gui.dialog.ErrorDialog;
 import dip.misc.Utils;
-
-
-import java.awt.Rectangle;
-import java.awt.Dimension;
-import java.awt.event.MouseEvent;
-import java.awt.Component;
-import java.awt.Toolkit;
-import java.awt.Container;
-import java.awt.Window;
-import java.awt.Cursor;
-
-import java.awt.geom.AffineTransform;
-
-import javax.swing.JFrame;
-import javax.swing.ActionMap;
-
-import org.apache.batik.swing.JSVGCanvas;
-import org.apache.batik.swing.svg.SVGUserAgent;
-import org.apache.batik.bridge.UserAgent;
-import org.apache.batik.bridge.BridgeContext;
-
-
-
-import java.awt.geom.AffineTransform;
-import java.awt.event.ActionEvent;
-import java.awt.Dimension;
-import org.apache.batik.*;
-import org.apache.batik.dom.*;
-import org.apache.batik.util.*;
-import org.w3c.dom.svg.*;
-import org.w3c.dom.svg.SVGSVGElement;
-
-import org.apache.batik.swing.gvt.GVTTreeRendererListener;
-import org.apache.batik.swing.gvt.GVTTreeRendererEvent;
-import org.apache.batik.bridge.ViewBox;
-import org.apache.batik.gvt.CanvasGraphicsNode;
 
 
 /**
@@ -111,6 +94,7 @@ public class XJSVGCanvas extends JSVGCanvas
 		// fix for incorrect setting of initial SVG size by JSVGScrollPane
 		addGVTTreeRendererListener(new GVTTreeRendererListener()
 		{
+			@Override
 			public void gvtRenderingCompleted(GVTTreeRendererEvent e) 
 			{
 				AffineTransform iat = getInitialTransform();
@@ -133,9 +117,13 @@ public class XJSVGCanvas extends JSVGCanvas
 				}
 			}// gvtRenderingCompleted()
 			
+			@Override
 			public void gvtRenderingCancelled(GVTTreeRendererEvent e) {}
+			@Override
 			public void gvtRenderingFailed(GVTTreeRendererEvent e) {}
+			@Override
 			public void gvtRenderingPrepare(GVTTreeRendererEvent e) {}
+			@Override
 			public void gvtRenderingStarted(GVTTreeRendererEvent e)  {}		
 		});
 		
@@ -155,6 +143,7 @@ public class XJSVGCanvas extends JSVGCanvas
 	*	several new features we need.
 	*
 	*/
+	@Override
 	protected Listener createListener()
 	{
 		return new XJSVGCanvasListener();
@@ -166,6 +155,7 @@ public class XJSVGCanvas extends JSVGCanvas
 	*	allows selectable validation control of the parser.
 	*
 	*/
+	@Override
 	protected UserAgent createUserAgent()
 	{
 		return new XJSVGUserAgent();
@@ -204,6 +194,7 @@ public class XJSVGCanvas extends JSVGCanvas
 			}// XJSVGCanvasListener()
 			
 			
+			@Override
 			public void mouseDragged(MouseEvent e)
 			{
 				inDrag = true;
@@ -211,6 +202,7 @@ public class XJSVGCanvas extends JSVGCanvas
 			}// mouseDragged()
 			
 			
+			@Override
 			public void mousePressed(java.awt.event.MouseEvent e)
 			{
 				// set drag start coordinates
@@ -220,6 +212,7 @@ public class XJSVGCanvas extends JSVGCanvas
 			}// mousePressed()
 			
 			
+			@Override
 			public void mouseReleased(java.awt.event.MouseEvent e)
 			{
 				if(inDrag)
@@ -256,6 +249,7 @@ public class XJSVGCanvas extends JSVGCanvas
 			}// mouseReleased()
 			
 			
+			@Override
 			public void keyPressed(java.awt.event.KeyEvent e)
 			{
 				if(parent != null)
@@ -267,6 +261,7 @@ public class XJSVGCanvas extends JSVGCanvas
 			}// keyPressed()
 			
 			
+			@Override
 			public void keyReleased(java.awt.event.KeyEvent e)
 			{
 				if(parent != null)
@@ -278,6 +273,7 @@ public class XJSVGCanvas extends JSVGCanvas
 			}// keyReleased()
 			
 			
+			@Override
 			public void keyTyped(java.awt.event.KeyEvent e)
 			{
 				if(parent != null)
@@ -309,7 +305,8 @@ public class XJSVGCanvas extends JSVGCanvas
 			super();
 		}// XJSVGUserAgent()
 		
- 		public boolean isXMLParserValidating()
+ 		@Override
+		public boolean isXMLParserValidating()
 		{
 			return XJSVGCanvas.this.isValidating;
 		}// isXMLParserValidating()
@@ -318,6 +315,7 @@ public class XJSVGCanvas extends JSVGCanvas
 		*	Do nothing. We don't want the Batik 
 		*	CursorManager updating our cursor.
 		*/
+		@Override
 		public void setSVGCursor(Cursor c)
 		{
 			// do nothing.
@@ -325,6 +323,7 @@ public class XJSVGCanvas extends JSVGCanvas
 		
 		
 		/** Displays an SVG error Exception using an ErrorDialog */
+		@Override
 		public void displayError(Exception ex)
 		{
 			ErrorDialog.displaySerious(findParent(), ex);
@@ -332,6 +331,7 @@ public class XJSVGCanvas extends JSVGCanvas
 		
 		
 		/** Displays an SVG error String using an ErrorDialog */
+		@Override
 		public void displayError(String message)
 		{
 			ErrorDialog.displaySerious(findParent(), new Exception(message));
@@ -365,6 +365,7 @@ public class XJSVGCanvas extends JSVGCanvas
     *
 	*	@param at an AffineTransform.
 	*/
+	@Override
 	public void setRenderingTransform(AffineTransform at) 
 	{
 		// check to see that we are not zooming too little

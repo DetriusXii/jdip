@@ -22,37 +22,28 @@
 //
 package dip.gui.order;
 
-import dip.gui.map.DefaultMapRenderer2;
+import java.awt.geom.Point2D;
+
+import org.apache.batik.dom.svg.SVGDOMImplementation;
+import org.apache.batik.util.SVGConstants;
+import org.w3c.dom.svg.SVGElement;
+import org.w3c.dom.svg.SVGGElement;
+import org.w3c.dom.svg.SVGLineElement;
+import org.w3c.dom.svg.SVGPathElement;
+import org.w3c.dom.svg.SVGPolygonElement;
+
 import dip.gui.map.MapMetadata;
-import dip.gui.order.GUIOrder.MapInfo;
 import dip.misc.Utils;
-import dip.order.Move;
 import dip.order.Orderable;
 import dip.order.Support;
 import dip.order.ValidationOptions;
-import dip.process.Adjustment.AdjustmentInfoMap;
-import dip.process.RetreatChecker;
 import dip.world.Coast;
 import dip.world.Location;
 import dip.world.Path;
 import dip.world.Position;
 import dip.world.Power;
 import dip.world.Province;
-import dip.world.RuleOptions;
-import dip.world.TurnState;
 import dip.world.Unit;
-import java.awt.geom.Point2D;
-import org.apache.batik.dom.svg.SVGDOMImplementation;
-import org.apache.batik.dom.util.XLinkSupport;
-import org.apache.batik.util.CSSConstants;
-import org.apache.batik.util.SVGConstants;
-import org.w3c.dom.svg.SVGCircleElement;
-import org.w3c.dom.svg.SVGElement;
-import org.w3c.dom.svg.SVGLineElement;
-import org.w3c.dom.svg.SVGPathElement;
-import org.w3c.dom.svg.SVGPolygonElement;
-import org.w3c.dom.svg.*;
-import org.w3c.dom.*;
 
 /**
 *
@@ -63,6 +54,7 @@ import org.w3c.dom.*;
 */
 public class GUISupport extends Support implements GUIOrder
 {
+	private static final long serialVersionUID = 1L;
 	// i18n keys
 	private final static String CLICK_TO_SUPPORT_UNIT 	= "GUISupport.click_to_sup";
 	private final static String NO_UNIT_TO_SUPPORT 		= "GUISupport.no_unit_to_sup";
@@ -114,6 +106,7 @@ public class GUISupport extends Support implements GUIOrder
 	*	This only accepts Support orders. 
 	*	All others will throw an IllegalArgumentException. 
 	*/
+	@Override
 	public void deriveFrom(Orderable order)
 	{
 		if( !(order instanceof Support) )
@@ -138,6 +131,7 @@ public class GUISupport extends Support implements GUIOrder
 	
 	
 	
+	@Override
 	public boolean testLocation(StateInfo stateInfo, Location location, StringBuffer sb)
 	{
 		sb.setLength(0);
@@ -283,6 +277,7 @@ public class GUISupport extends Support implements GUIOrder
 	}// testLocation()
 	
 	
+	@Override
 	public boolean clearLocations()
 	{
 		if(isComplete())
@@ -303,6 +298,7 @@ public class GUISupport extends Support implements GUIOrder
 	}// clearLocations()
 	
 	
+	@Override
 	public boolean setLocation(StateInfo stateInfo, Location location, StringBuffer sb)
 	{
 		if(isComplete())
@@ -354,24 +350,30 @@ public class GUISupport extends Support implements GUIOrder
 		return false;
 	}// setLocation()
 	
+	@Override
 	public boolean isComplete()
 	{
 		assert (currentLocNum <= getNumRequiredLocations());
 		return (currentLocNum == getNumRequiredLocations());
 	}// isComplete()
 	
+	@Override
 	public int getNumRequiredLocations()		{ return REQ_LOC; }
 	
+	@Override
 	public int getCurrentLocationNum()			{ return currentLocNum; }
 	
 	
 	/** Always throws an IllegalArgumentException */
+	@Override
 	public void setParam(Parameter param, Object value)	{ throw new IllegalArgumentException(); }
 	
 	/** Always throws an IllegalArgumentException */
+	@Override
 	public Object getParam(Parameter param)	{ throw new IllegalArgumentException(); }
 	
 	
+	@Override
 	public void removeFromDOM(MapInfo mapInfo)
 	{
 		if(group != null)
@@ -391,6 +393,7 @@ public class GUISupport extends Support implements GUIOrder
 	*	draws a dashed line with arrow representing the move.
 	*
 	*/
+	@Override
 	public void updateDOM(MapInfo mapInfo)
 	{
 		// if we are not displayable, we exit, after remove the order (if
@@ -684,6 +687,7 @@ public class GUISupport extends Support implements GUIOrder
 	}// drawSupportedHold()
 	
 	/** We are dependent upon other orders to determine how we render this order. */
+	@Override
 	public boolean isDependent()	{ return true; }
 	
 	

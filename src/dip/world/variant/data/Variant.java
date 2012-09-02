@@ -22,11 +22,10 @@
 //
 package dip.world.variant.data;
 
-import dip.world.Power;
-import dip.world.Phase;
-import dip.misc.Utils;
-
 import java.util.List;
+
+import dip.world.Phase;
+import dip.world.Power;
 
 /**
 
@@ -280,7 +279,8 @@ public class Variant implements Cloneable, Comparable<Variant> {
     /** 
     Compares based on Name
      */
-    public int compareTo(final Variant v) {
+    @Override
+	public int compareTo(final Variant v) {
         return this.getName().compareTo(v.getName());
     }// compareTo()
 
@@ -369,7 +369,8 @@ public class Variant implements Cloneable, Comparable<Variant> {
     }// getHTMLSummaryArguments()
 
     /** Creates a deep clone of all data EXCEPT InitialState / SupplyCenter data / Name / Description */
-    public Object clone()
+    @Override
+	public Object clone()
             throws CloneNotSupportedException {
         // shallow clone
         Variant variant = (Variant) super.clone();
@@ -397,7 +398,8 @@ public class Variant implements Cloneable, Comparable<Variant> {
     }// clone()
 
     /** For debugging only! */
-    public String toString() {
+    @Override
+	public String toString() {
         StringBuffer sb = new StringBuffer(256);
         sb.append(this.getClass().getName());
         sb.append('[');

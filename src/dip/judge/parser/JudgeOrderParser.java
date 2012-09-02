@@ -22,20 +22,21 @@
 //
 package dip.judge.parser;
 
-import dip.world.Phase.PhaseType;
-import dip.world.Map;
-import dip.world.Power;
-import dip.order.result.*;
-import dip.order.OrderFactory;
-import dip.order.OrderException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+
+import dip.misc.Log;
 import dip.order.NJudgeOrderParser;
 import dip.order.NJudgeOrderParser.NJudgeOrder;
-import dip.misc.Utils;
-import dip.misc.Log;
-
-import java.io.*;
-import java.util.regex.*;
-import java.util.*;
+import dip.order.OrderException;
+import dip.order.OrderFactory;
+import dip.world.Phase.PhaseType;
 
 /**
  *
@@ -48,9 +49,6 @@ import java.util.*;
 public class JudgeOrderParser {
     // i18n
 
-    private static final String WAIVED_BUILDS = "JOP.adjust.waived";
-    private static final String UNUSABLE_WAIVED = "JOP.adjust.unusable.waived";
-    private static final String UNUSABLE_PENDING = "JOP.adjust.unusable.pending";
     // regular expressions
     /** Parse Season and Year for these orders */
     public static final String SEASON_YEAR_REGEX = "(([0-9]+))"; // "(\\S+)\\s+of\\s+(([0-9]+))";

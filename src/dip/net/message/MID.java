@@ -114,6 +114,7 @@ public class MID
 	}// getNickAndName()
 	
 	/** Equivalent to getNickAndName() */
+	@Override
 	public String toString()
 	{
 		return getNickAndName();
@@ -121,6 +122,7 @@ public class MID
 	
 	
 	/** Compare two MIDs for equality (of all fields) */
+	@Override
 	public boolean equals(Object obj)
 	{
 		if(obj == this)
@@ -149,6 +151,7 @@ public class MID
 	}// equals()
 	
 	/** Hashcode implementation */
+	@Override
 	public int hashCode()
 	{
 		if(name != null)

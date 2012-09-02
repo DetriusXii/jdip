@@ -22,11 +22,11 @@
 //
 package dip.net.message;
 
-import dip.world.Phase;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.ArrayList;
+
+import dip.world.Phase;
 
 /**
  *	A PressStore object is returned by the World object, and
@@ -48,7 +48,8 @@ public class DefaultPressStore implements PressStore {
     }// DefaultPressStore()
 
     /** Get all Messages. */
-    public synchronized PressMessage[] getAllMessages() {
+    @Override
+	public synchronized PressMessage[] getAllMessages() {
         return messages.toArray(new PressMessage[messages.size()]);
     }// getAllMessages()
 
@@ -64,7 +65,8 @@ public class DefaultPressStore implements PressStore {
      *	Note that PressMessages are not
      *	serialized until the World object is serialized.
      */
-    public synchronized void storeMessage(PressMessage pm) {
+    @Override
+	public synchronized void storeMessage(PressMessage pm) {
         if (pm == null) {
             throw new IllegalArgumentException();
         }

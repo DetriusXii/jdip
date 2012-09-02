@@ -22,19 +22,29 @@
 //
 package dip.gui.report;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.swing.ScrollPaneConstants;
+
 import dip.gui.ClientFrame;
 import dip.gui.dialog.TextViewer;
-
-import dip.world.*;
-import dip.order.*;
-import dip.order.OrderFormatOptions;
-import dip.misc.Utils;
 import dip.misc.Help;
+import dip.misc.Utils;
+import dip.order.Order;
+import dip.order.OrderFormatOptions;
+import dip.order.Orderable;
 import dip.process.Adjustment;
-
-import javax.swing.JScrollPane;
-
-import java.util.*;
+import dip.world.Phase;
+import dip.world.Position;
+import dip.world.Power;
+import dip.world.Province;
+import dip.world.TurnState;
+import dip.world.Unit;
 
 
 
@@ -79,7 +89,7 @@ public class StateWriter
 	private final Power[] 		displayablePowers;
 	private final TurnState		turnState;
 	private final Power[] 		allPowers;
-	private final java.util.Map powerMap;
+	private final java.util.Map<Power, List<String>> powerMap;
 	private final Adjustment.AdjustmentInfoMap adjMap;
 	private final OrderFormatOptions ofo;
 	
@@ -115,10 +125,11 @@ public class StateWriter
 		tv.setTitle(title.toString());
 		tv.setHelpID(Help.HelpID.Dialog_StatusReport);
 		tv.setHeaderVisible(false);
-		tv.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		tv.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
 		tv.lazyLoadDisplayDialog(new TextViewer.TVRunnable()
 		{
+			@Override
 			public void run()
 			{
 				setText(stateToHTML(clientFrame, ts));
@@ -211,7 +222,7 @@ public class StateWriter
 			
 			// determine the maximum number of rows we will have (not including
 			// the power name)
-			List list = (List) powerMap.get(allPowers[i]);
+			List<String> list = powerMap.get(allPowers[i]);
 			if(list.size() > nRows)
 			{
 				nRows = list.size();
@@ -236,7 +247,7 @@ public class StateWriter
 					sb.append("<td>");
 				}
 				
-				List list = (List) powerMap.get(allPowers[j]);
+				List<String> list = powerMap.get(allPowers[j]);
 				if(i < list.size())
 				{
 					sb.append(list.get(i));
@@ -286,10 +297,10 @@ public class StateWriter
 			if(canShow)
 			{
 				// print submission/elimination information
-				List orders = turnState.getOrders(allPowers[i]);
+				List<Orderable> orders = turnState.getOrders(allPowers[i]);
 				if(orders.size() > 0)
 				{
-					Iterator iter = orders.iterator();
+					Iterator<Orderable> iter = orders.iterator();
 					while(iter.hasNext())
 					{
 						Order order = (Order) iter.next();
@@ -534,7 +545,7 @@ public class StateWriter
 	*	for province names are always used.
 	*	
 	*/
-	private java.util.Map getUnitsByPower()
+	private java.util.Map<Power, List<String>> getUnitsByPower()
 	{
 		java.util.Map<Power, List<String>> pmap = new HashMap<Power, List<String>>();
 		for(final Power power: allPowers)

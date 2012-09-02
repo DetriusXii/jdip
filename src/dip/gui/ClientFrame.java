@@ -22,49 +22,59 @@
 //
 package dip.gui;
 
-import dip.gui.map.*;
-import dip.gui.map.RenderCommandFactory.RenderCommand;
-import dip.gui.dialog.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.dnd.DropTarget;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Locale;
+
+import javax.swing.JFrame;
+import javax.swing.JSplitPane;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
+
+import jcmdline.BooleanParam;
+import jcmdline.CmdLineHandler;
+import jcmdline.FileParam;
+import jcmdline.HelpCmdLineHandler;
+import jcmdline.Parameter;
+import jcmdline.StringParam;
+import jcmdline.VersionCmdLineHandler;
+
+import org.apache.batik.util.XMLResourceDescriptor;
+
+import dip.gui.dialog.AboutDialog;
+import dip.gui.dialog.ErrorDialog;
+import dip.gui.dialog.FileDropTargetListener;
 import dip.gui.dialog.newgame.NewGameDialog;
-import dip.gui.dialog.prefs.*;
+import dip.gui.dialog.prefs.DisplayPreferencePanel;
+import dip.gui.dialog.prefs.GeneralPreferencePanel;
+import dip.gui.map.MapMetadata;
+import dip.gui.map.MapPanel;
 import dip.gui.order.GUIOrderFactory;
-import dip.gui.report.*;
-import dip.order.Orderable;
-import dip.order.OrderFormatOptions;
-import dip.world.*;
-import dip.misc.*;
+import dip.gui.report.ResultWriter;
 import dip.gui.swing.XJFileChooser;
+import dip.gui.undo.UndoRedoManager;
 import dip.gui.undo.UndoResolve;
-import dip.gui.undo.UndoRedoManager;        
-import dip.world.variant.VariantManager;
-import dip.world.variant.data.Variant;
-import dip.process.StdAdjudicator;
+import dip.misc.Help;
+import dip.misc.Log;
+import dip.misc.Utils;
+import dip.order.OrderFormatOptions;
+import dip.order.Orderable;
 import dip.order.ValidationOptions;
+import dip.process.StdAdjudicator;
+import dip.tool.Tool;
 import dip.tool.ToolManager;
 import dip.tool.ToolProxyImpl;
-import dip.tool.Tool;
-import dip.misc.Help;
-
-//import dip.order.Order;
-
-import javax.swing.*;
-
-//import javax.swing.event.*;
-//import javax.swing.border.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
-import java.util.*;
-import java.awt.dnd.*;
-import java.awt.datatransfer.*;
-import java.io.*;
-//import java.net.*;
-
-import jcmdline.*;	// command line handlers
-
-//import org.apache.batik.swing.JSVGCanvas;
-import org.apache.batik.util.XMLResourceDescriptor;
+import dip.world.Power;
+import dip.world.TurnState;
+import dip.world.World;
+import dip.world.variant.VariantManager;
 
 /**
 *	The main class for starting the client... everything starts here.
@@ -245,7 +255,7 @@ public class ClientFrame extends JFrame
 			if(lafClassName.indexOf("jgoodies") >= 0)
 			{
 				// for WebStart compatibility
-				UIManager.put("ClassLoader", com.jgoodies.plaf.LookUtils.class.getClassLoader());
+				UIManager.put("ClassLoader", com.jgoodies.looks.LookUtils.class.getClassLoader());
 			}
 			Log.println(lafClassName);
 			UIManager.setLookAndFeel(lafClassName);
@@ -337,6 +347,7 @@ public class ClientFrame extends JFrame
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter()
 		{
+			@Override
 			public void windowClosing(WindowEvent e)
 			{
 				persistMan.exit();
@@ -941,6 +952,7 @@ public class ClientFrame extends JFrame
 	*/
 	private class CFDropTargetListener extends FileDropTargetListener
 	{
+		@Override
 		public void processDroppedFiles(File[] files)
 		{
 			for(int i=0; i<files.length; i++)
@@ -978,6 +990,7 @@ public class ClientFrame extends JFrame
 	*/
 	private class ModeListener implements PropertyChangeListener 
 	{
+		@Override
 		public void propertyChange(PropertyChangeEvent evt)
 		{
 			String evtName = evt.getPropertyName();
@@ -1066,15 +1079,15 @@ public class ClientFrame extends JFrame
 		FileParam argLogFile =
 			new FileParam("log", "writes logging information to file or stdout [if \"stdout\" specified]",
 							FileParam.NO_ATTRIBUTES,
-							StringParam.OPTIONAL,
-							FileParam.SINGLE_VALUED);
+							Parameter.OPTIONAL,
+							Parameter.SINGLE_VALUED);
 		
 		// variantpath specifier
 		FileParam argVariantPath = 
 			new FileParam("variantpath", "load variant plugins from specified directory", 
 							FileParam.IS_DIR & FileParam.IS_READABLE & FileParam.EXISTS,
-							FileParam.OPTIONAL,
-							FileParam.SINGLE_VALUED);
+							Parameter.OPTIONAL,
+							Parameter.SINGLE_VALUED);
 		
 		// validate option
 		BooleanParam validateOpt =
@@ -1208,9 +1221,6 @@ public class ClientFrame extends JFrame
 	*/
 	private class MenuHandler
 	{
-		// inner state
-		private String oldEditMode = null;
-		
 		/** Register the menu items */
 		public void registerMenuItems()
 		{
@@ -1277,341 +1287,10 @@ public class ClientFrame extends JFrame
 			Help.enableHelpOnButton(clientMenu.getMenuItem(ClientMenu.HELP_CONTENTS), Help.HelpID.Contents);
 		}// registerMenuItems()
 		
-		// file
-		//
-		public void onFileNewStd()
-		{
-			World world = persistMan.newGame();
-			if(world != null)
-			{
-				createWorld(world);
-				persistMan.updateTitle();
-			}		
-		}// onFileNewStd()
 		
-		public void onFileNewF2F()
-		{
-			World world = persistMan.newF2FGame();
-			if(world != null)
-			{
-				createWorld(world);
-				persistMan.updateTitle();
-			}		
-		}// onFileNewStd()
-		
-		public void onFileOpen()
-		{
-			World world = persistMan.open();
-			if(world != null)
-			{
-				createWorld(world);
-			}		
-		}
-		
-		public void onFileImport()
-		{
-			World world = persistMan.importJudge(getWorld());
-			if(world != null)
-			{
-				world.setGameSetup(new DefaultGUIGameSetup());
-				createWorld(world);
-			}		
-			persistMan.updateTitle();
-		}
-		
-		public void onFileImportFloc()
-		{
-			World world = persistMan.importFloc();
-			if(world != null)
-			{
-				world.setGameSetup(new DefaultGUIGameSetup());
-				createWorld(world);
-				persistMan.updateTitle();
-			}		
-		}
-		
-		
-		// edit
-		//
-		public void onEditUndo() 
-		{
-			if(orderDisplayPanel != null)
-			{
-				undoManager.undo();
-			}
-		}
-		
-		public void onEditRedo() 
-		{
-			if(orderDisplayPanel != null)
-			{
-				undoManager.redo();
-			}
-		}
-		
-		public void onEditSelectAll()
-		{
-			if(orderDisplayPanel != null)
-			{
-				orderDisplayPanel.selectAll();
-			}
-		}
-		
-		public void onEditSelectNone()
-		{
-			if(orderDisplayPanel != null)
-			{
-				orderDisplayPanel.selectNone();
-			}
-		}
-		
-		public void onEditDelete()
-		{
-			if(orderDisplayPanel != null)
-			{
-				orderDisplayPanel.removeSelected();
-			}
-		}
-		
-		public void onEditClearAll()
-		{
-			if(orderDisplayPanel != null)
-			{
-				orderDisplayPanel.removeAllOrders(true);
-			}
-		}
-		
-		public void onEditEditMode()
-		{
-			if(clientMenu.getSelected(ClientMenu.EDIT_EDIT_MODE))
-			{
-				oldEditMode = getMode();
-				fireChangeMode(MODE_EDIT);
-			}
-			else
-			{
-				// check and see if any powers were eliminated after edit
-				getTurnState().getPosition().setEliminationStatus(world.getMap().getPowers());
-				fireChangeMode(oldEditMode);
-			}
-		}
-		
-		public void onEditMetadata()
-		{
-			if(orderDisplayPanel != null)
-			{
-				MetadataDialog.displayDialog(ClientFrame.this);
-			}
-		}
-		
-		public void onEditPreferences()
-		{
-			PreferenceDialog.displayDialog(ClientFrame.this);
-		}
-		
-		// orders
-		//
-		public void onOrdersValOpts()
-		{
-			if(getOrderDisplayPanel() != null)
-			{
-				ValidationOptions newOpts = ValidationOptionsDialog.displayDialog(ClientFrame.this, valOpts);
-				fireValidationOptionsChanged(valOpts, newOpts);
-				valOpts = newOpts;
-			}
-		}
-		
-		public void onOrdersRevalidate()
-		{
-			if(getOrderDisplayPanel() != null)
-			{
-				getOrderDisplayPanel().revalidateAllOrders();
-			}
-		}
-		
-		public void onOrdersMultiInput()
-		{
-			if(getWorld() != null)
-			{
-				MultiOrderEntry.displayDialog(ClientFrame.this, getWorld());
-			}
-		}
-		
-		public void onOrdersResolve()
-		{
-			resolveOrders();
-		}// onOrdersResolve()
-		
-		// history
-		//
-		public void onHistorySelect()
-		{
-			if(orderDisplayPanel != null)
-			{
-				Phase phase = SelectPhaseDialog.displayDialog(ClientFrame.this);
-				if(phase != null)
-				{
-					fireTurnstateChanged(world.getTurnState(phase));
-				}
-			}
-		}
-		
-		// view
-		//
-		public void onViewNamesNone()
-		{
-			if(mapPanel != null)
-			{
-				RenderCommand rc = mapPanel.getRenderCommandFactory().createRCSetLabel(mapPanel.getMapRenderer(), MapRenderer2.VALUE_LABELS_NONE);
-				execRenderCommand(rc);
-			}
-		}
-		
-		public void onViewNamesShort()
-		{
-			if(mapPanel != null)
-			{
-				RenderCommand rc = mapPanel.getRenderCommandFactory().createRCSetLabel(mapPanel.getMapRenderer(), MapRenderer2.VALUE_LABELS_BRIEF);
-				execRenderCommand(rc);
-			}
-		}
-		
-		public void onViewNamesFull()
-		{
-			if(mapPanel != null)
-			{
-				RenderCommand rc = mapPanel.getRenderCommandFactory().createRCSetLabel(mapPanel.getMapRenderer(), MapRenderer2.VALUE_LABELS_FULL);
-				execRenderCommand(rc);
-			}
-		}
-		
-		public void onViewSC()
-		{
-			if(mapPanel != null)
-			{
-				boolean value = clientMenu.getSelected(ClientMenu.VIEW_SUPPLY_CENTERS);
-				RenderCommand rc = mapPanel.getRenderCommandFactory().createRCSetDisplaySC(mapPanel.getMapRenderer(), value);
-				execRenderCommand(rc);
-			}
-		}
-		
-		public void onViewUnits()
-		{
-			if(mapPanel != null)
-			{
-				boolean value = clientMenu.getSelected(ClientMenu.VIEW_UNITS);
-				RenderCommand rc = mapPanel.getRenderCommandFactory().createRCSetDisplayUnits(mapPanel.getMapRenderer(), value);
-				execRenderCommand(rc);
-			}
-		}
-		
-		public void onViewDislodged()
-		{
-			if(mapPanel != null)
-			{
-				boolean value = clientMenu.getSelected(ClientMenu.VIEW_DISLODGED_UNITS);
-				RenderCommand rc = mapPanel.getRenderCommandFactory().createRCSetDisplayDislodgedUnits(mapPanel.getMapRenderer(), value);
-				execRenderCommand(rc);
-			}
-		}
 		
 		// VIEW_ORDERS is handled internally by ClientMenu
-		
-		public void onViewUnordered()
-		{
-			if(mapPanel != null)
-			{
-				boolean value = clientMenu.getSelected(ClientMenu.VIEW_UNORDERED);
-				RenderCommand rc = mapPanel.getRenderCommandFactory().createRCSetDisplayUnordered(mapPanel.getMapRenderer(), value);
-				execRenderCommand(rc);
-			}
-		}
-		
-		public void onViewInfluence()
-		{
-			if(mapPanel != null)
-			{
-				boolean value = clientMenu.getSelected(ClientMenu.VIEW_INFLUENCE);
-				RenderCommand rc = mapPanel.getRenderCommandFactory().createRCSetInfluenceMode(mapPanel.getMapRenderer(), value);
-				execRenderCommand(rc);
-			}
-		}
-		
-		public void onViewSelectMap()
-		{
-			if(world != null)
-			{
-				MapPicker.displayDialog(ClientFrame.this, world);
-			}
-		}		
-		
-		public void onViewShowMap()
-		{
-			if(mapPanel != null)
-			{
-				boolean value = clientMenu.getSelected(ClientMenu.VIEW_SHOW_MAP);
-				RenderCommand rc = mapPanel.getRenderCommandFactory().createRCShowMap(mapPanel.getMapRenderer(), value);
-				execRenderCommand(rc);
-			}
-		}
-		
-		
-		
-		// reports
-		//
-		public void onReportsResults()
-		{
-			ResultWriter.displayDialog(ClientFrame.this, getTurnState(), getOFO());
-		}
-		
-		public void onReportsPreviousResults()
-		{
-			// getPreviousTurnState() should not return null, if this item is enabled.
-			if(mapPanel != null)
-			{
-				final TurnState ts = getTurnState();
-				ResultWriter.displayDialog(ClientFrame.this, world.getPreviousTurnState(ts), getOFO());
-			}
-		}
-		
-		public void onReportsSCHistory()
-		{
-			SCHistoryWriter.displayDialog(ClientFrame.this, getWorld());
-		}
-		
-		public void onReportsStatus()
-		{
-			StateWriter.displayDialog(ClientFrame.this, getTurnState());
-		}
-		
-		
-		public void onReportsOrderStats()
-		{
-			OrderStatsWriter.displayDialog(ClientFrame.this, getWorld(), getOFO());
-		}
-		
-		public void onReportsMapInfo()
-		{
-			if(getWorld() != null)
-			{
-				VariantInfoWriter.displayDialog(ClientFrame.this, getWorld());
-			}
-		}
-		
-		// help
-		//
-		public void onHelpAbout()
-		{
-			AboutDialog.displayDialog(ClientFrame.this);
-		}
-			
-		
-		/** Helper method for View methods */
-		private void execRenderCommand(RenderCommand rc)
-		{
-			MapRenderer2 mr2 = mapPanel.getMapRenderer();
-			mr2.execRenderCommand(rc);
-		}// execRenderCommand
+
 		
 	}// inner class MenuHandler()
 	

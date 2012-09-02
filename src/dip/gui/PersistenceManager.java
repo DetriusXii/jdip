@@ -22,32 +22,30 @@
 //
 package dip.gui;
 
-import dip.gui.dialog.*;
-import dip.gui.dialog.newgame.*;
-import dip.gui.dialog.prefs.*;
-import dip.judge.gui.FlocImportDialog;
+import java.awt.Dimension;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.util.LinkedList;
 
+import javax.swing.Box;
+import javax.swing.JOptionPane;
+
+import dip.gui.dialog.ErrorDialog;
+import dip.gui.dialog.newgame.NewGameDialog;
+import dip.gui.dialog.prefs.GeneralPreferencePanel;
 import dip.gui.report.ResultWriter;
-
-import dip.world.World;
+import dip.gui.swing.XJFileChooser;
+import dip.judge.gui.FlocImportDialog;
+import dip.judge.parser.JudgeImport;
+import dip.misc.Log;
+import dip.misc.SimpleFileFilter;
+import dip.misc.Utils;
 import dip.world.Phase;
 import dip.world.TurnState;
+import dip.world.World;
 import dip.world.variant.VariantManager;
 import dip.world.variant.data.Variant;
-
-import dip.misc.Help;
-import dip.misc.Utils;
-import dip.gui.swing.XJFileChooser;
-import dip.misc.SimpleFileFilter;
-import dip.misc.Log;
-
-import dip.judge.parser.JudgeImport;
-
-import java.awt.Dimension;
-import java.io.*;
-import javax.swing.*;
-import java.beans.*;
-import java.util.*;
 
 /**
  *	Manages saving / opening of game files, and creation of new games, and exiting of the program.
@@ -102,7 +100,8 @@ public class PersistenceManager {
         // enable modification event listener
         modListener = new PropertyChangeListener() {
 
-            public void propertyChange(PropertyChangeEvent evt) {
+            @Override
+			public void propertyChange(PropertyChangeEvent evt) {
                 if (!isChanged()) {
                     setChanged(true);
                 }
@@ -422,7 +421,6 @@ public class PersistenceManager {
                     // we need to rewind the current game
                     if (rewindDialog(phase)) {
                         // rewind current game
-                        Iterator iter = currentWorld.getPhaseSet().iterator();
                         final LinkedList<Phase> l = new LinkedList<Phase>();
                         for (final Phase p : currentWorld.getPhaseSet()) {
                             if (p.compareTo(phase) > 0) {

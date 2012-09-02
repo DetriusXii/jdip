@@ -22,9 +22,25 @@
 //
 package dip.gui;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.lang.reflect.*;
+import java.awt.Button;
+import java.awt.Canvas;
+import java.awt.Dialog;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Label;
+import java.awt.MediaTracker;
+import java.awt.Panel;
+import java.awt.Toolkit;
+import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.lang.reflect.Method;
 /**
 *
 *	A very fast statup Splash screen, using AWT.
@@ -126,6 +142,7 @@ public final class splash
 			frame = null;
 		}		
 		
+		@Override
 		public void run()
 		{
 			//long time = System.currentTimeMillis();
@@ -171,6 +188,7 @@ public final class splash
 			
 			Canvas canvas = new Canvas()
 			{
+				@Override
 				public void paint(Graphics g)
 				{
 					super.paint(g);
@@ -249,6 +267,7 @@ public final class splash
 				
 				dlg.addWindowListener(new WindowAdapter()
 				{
+					@Override
 					public void windowClosing(WindowEvent e)
 					{
 						dlg.hide();
@@ -261,6 +280,7 @@ public final class splash
 				Button button = new Button("  OK  ");
 				button.addActionListener(new ActionListener()
 				{
+					@Override
 					public void actionPerformed(ActionEvent e)
 					{
 						dlg.hide();

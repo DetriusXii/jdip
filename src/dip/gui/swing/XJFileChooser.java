@@ -22,17 +22,16 @@
 //
 package dip.gui.swing;
 
-import dip.misc.Utils;
-import dip.misc.SimpleFileFilter;
-import dip.misc.Log;
-
 import java.awt.Component;
-
 import java.io.File;
-import javax.swing.JDialog;
+
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
+
+import dip.misc.Log;
+import dip.misc.SimpleFileFilter;
+import dip.misc.Utils;
 
 /**
 *	A simplified and extended JFileChooser for single-file (only!)
@@ -115,6 +114,7 @@ public class XJFileChooser
 			{
 				loader = new SwingWorker()
 				{
+					@Override
 					public Object construct()
 					{
 						long time = System.currentTimeMillis();
@@ -390,6 +390,7 @@ public class XJFileChooser
 		
 		
 		/** Override to check for overwrite confirmation */
+		@Override
 		public void approveSelection() 
 		{
 			if(getDialogType() != JFileChooser.OPEN_DIALOG)

@@ -22,27 +22,12 @@
 //
 package dip.gui.dialog;
 
-import dip.world.Phase;
 
-import dip.net.message.PressConfiguration;
-import dip.net.message.MID;
+import javax.swing.JFrame;
 
-import cz.autel.dmi.HIGConstraints;
-import cz.autel.dmi.HIGLayout;
-
-import dip.gui.*;
 import dip.misc.Utils;
-import dip.misc.Help;
+import dip.net.message.PressConfiguration;
 
-import javax.swing.*;
-import javax.swing.table.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.event.*;
-import javax.swing.border.*;
-
-import java.util.*;
-import java.text.*;
 
 
 public class PressConfigDialog

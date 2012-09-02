@@ -21,14 +21,11 @@
 //
 package dip.order.result;
 
+import java.util.Date;
 
-import dip.order.OrderFormat;
+import dip.misc.Utils;
 import dip.order.OrderFormatOptions;
 import dip.world.Power;
-import dip.misc.Utils;
-
-import java.io.Serializable;
-import java.util.Date;
 
 /**
 *		TimeResult<p> 
@@ -37,6 +34,7 @@ import java.util.Date;
 */
 public class TimeResult extends Result
 {
+	private static final long serialVersionUID = 1L;
 	// instance variables
 	private final long timeStamp;	// milliseconds since midnight, January 1, 1970 UTC.
 	
@@ -73,6 +71,7 @@ public class TimeResult extends Result
 	*	Converts the Resource to a properly-internationlized text message.
 	*	argument {0} is always the time. 
 	*/
+	@Override
 	public String getMessage(OrderFormatOptions ofo)
 	{
 		return Utils.getLocalString(message, new Date(timeStamp));
@@ -80,6 +79,7 @@ public class TimeResult extends Result
 	
 	
 	/** Convert the output to a String */
+	@Override
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer(128);

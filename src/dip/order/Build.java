@@ -21,16 +21,20 @@
 //
 package dip.order;
 
-import dip.world.*;
-
 import dip.misc.Log;
 import dip.misc.Utils;
-
 import dip.process.Adjudicator;
 import dip.process.OrderState;
 import dip.process.Tristate;
-import dip.process.Adjustment;
-import dip.process.Adjustment.AdjustmentInfo;
+import dip.world.Border;
+import dip.world.Coast;
+import dip.world.Location;
+import dip.world.Position;
+import dip.world.Power;
+import dip.world.Province;
+import dip.world.RuleOptions;
+import dip.world.TurnState;
+import dip.world.Unit;
 
 /**
 *
@@ -68,23 +72,27 @@ public class Build extends Order
 		super();
 	}// Build()
 	
+	@Override
 	public String getFullName()
 	{
 		return orderNameFull;
 	}// getName()
 	
+	@Override
 	public String getBriefName()
 	{
 		return orderNameBrief;
 	}// getBriefName()
 	
 	
+	@Override
 	public String getDefaultFormat()
 	{
 		return orderFormatString;
 	}// getFormatBrief()
 	
 	
+	@Override
 	public String toBriefString()
 	{
 		StringBuffer sb = new StringBuffer(64);
@@ -101,6 +109,7 @@ public class Build extends Order
 	}// toBriefString()
 	
 	
+	@Override
 	public String toFullString()
 	{
 		StringBuffer sb = new StringBuffer(128);
@@ -117,6 +126,7 @@ public class Build extends Order
 	}// toFullString()		
 	
 	
+	@Override
 	public boolean equals(Object obj)
 	{
 		if(obj instanceof Build)
@@ -159,6 +169,7 @@ public class Build extends Order
 		build orders are submitted. verify() could, but currently does not.
 		
 	*/
+	@Override
 	public void validate(TurnState state, ValidationOptions valOpts, RuleOptions ruleOpts)
 	throws OrderException
 	{
@@ -217,6 +228,7 @@ public class Build extends Order
 	
 	
 	/** Empty method: Build orders do not require verification. */
+	@Override
 	public void verify(Adjudicator adjudicator)	
 	{
 		OrderState thisOS = adjudicator.findOrderStateBySrc(getSource());
@@ -224,6 +236,7 @@ public class Build extends Order
 	}// verify()
 	
 	/** Empty method: Build orders do not require dependency determination. */
+	@Override
 	public void determineDependencies(Adjudicator adjudicator)	{}
 	
 	
@@ -236,6 +249,7 @@ public class Build extends Order
 		<p>
 		Extra build orders are NOT considered in the evaluate() method here.
 	*/
+	@Override
 	public void evaluate(Adjudicator adjudicator)
 	{
 		Log.println("--- evaluate() dip.order.Build ---");

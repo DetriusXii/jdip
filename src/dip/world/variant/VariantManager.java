@@ -22,27 +22,35 @@
 //
 package dip.world.variant;
 
-import dip.world.variant.data.*;
-import dip.world.variant.parser.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.jnlp.ServiceManager;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.apache.commons.io.FileUtils;
+
 import dip.gui.dialog.ErrorDialog;
 import dip.misc.Log;
-
-import java.util.*;
-import java.net.URLClassLoader;
-import java.net.URL;
-import java.net.URI;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.io.*;
-import org.xml.sax.*;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.ParserConfigurationException;
-
-import javax.jnlp.*;
-import java.util.*;
-import org.apache.commons.io.FileUtils;
+import dip.world.variant.data.MapGraphic;
+import dip.world.variant.data.SymbolPack;
+import dip.world.variant.data.Variant;
+import dip.world.variant.parser.XMLSymbolParser;
+import dip.world.variant.parser.XMLVariantParser;
 
 /**
  *	Finds Variant-packs, which are of the format:
@@ -75,7 +83,12 @@ public class VariantManager {
     // variant constants
     private static final List<String> VARIANT_EXTENSIONS = new ArrayList<String>() {
 
-        {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		{
             add("Variant.zip");
             add("Variants.zip");
             add("Variant.jar");
@@ -86,7 +99,12 @@ public class VariantManager {
     // symbol constants
     private static final List<String> SYMBOL_EXTENSIONS = new ArrayList<String>() {
 
-        {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		{
             add("Symbols.zip");
             add("Symbols.jar");
         }
@@ -198,7 +216,7 @@ public class VariantManager {
 
 
         // if we are in webstart, search for variants within webstart jars
-        Enumeration enum2 = null;
+        Enumeration<URL> enum2 = null;
         ClassLoader cl = null;
 
         if (vm.isInWebstart) {
@@ -212,7 +230,7 @@ public class VariantManager {
 
             if (enum2 != null) {
                 while (enum2.hasMoreElements()) {
-                    URL variantURL = (URL) enum2.nextElement();
+                    URL variantURL = enum2.nextElement();
 
                     // parse variant description file, and create hash entry of variant object -> URL
                     InputStream is = null;
@@ -317,7 +335,7 @@ public class VariantManager {
 
             if (enum2 != null) {
                 while (enum2.hasMoreElements()) {
-                    URL symbolURL = (URL) enum2.nextElement();
+                    URL symbolURL = enum2.nextElement();
 
                     // parse variant description file, and create hash entry of variant object -> URL
                     InputStream is = null;
@@ -432,9 +450,9 @@ public class VariantManager {
      */
     public static synchronized Variant getVariant(String name, float version) {
         checkVM();
-        MapRec mr = (MapRec) vm.variantMap.get(name.toLowerCase());
+        MapRec mr = vm.variantMap.get(name.toLowerCase());
         if (mr != null) {
-            return (Variant) ((VRec) mr.get(version)).getVariant();
+            return ((VRec) mr.get(version)).getVariant();
         }
 
         return null;
@@ -454,9 +472,9 @@ public class VariantManager {
             return null;
         }
 
-        MapRec mr = (MapRec) vm.symbolMap.get(name.toLowerCase());
+        MapRec mr = vm.symbolMap.get(name.toLowerCase());
         if (mr != null) {
-            return (SymbolPack) ((SPRec) mr.get(version)).getSymbolPack();
+            return ((SPRec) mr.get(version)).getSymbolPack();
         }
 
         return null;
@@ -529,7 +547,7 @@ public class VariantManager {
      */
     public synchronized static float[] getVariantVersions(final String name) {
         checkVM();
-        MapRec mr = (MapRec) vm.variantMap.get(name.toLowerCase());
+        MapRec mr = vm.variantMap.get(name.toLowerCase());
         if (mr != null) {
             return (mr.getVersions());
         }
@@ -543,7 +561,7 @@ public class VariantManager {
      */
     public synchronized static float[] getSymbolPackVersions(String name) {
         checkVM();
-        MapRec mr = (MapRec) vm.symbolMap.get(name.toLowerCase());
+        MapRec mr = vm.symbolMap.get(name.toLowerCase());
         if (mr != null) {
             return (mr.getVersions());
         }
@@ -817,7 +835,7 @@ public class VariantManager {
         ClassLoader cl = vm.getClass().getClassLoader();
 
         if (mro != null) {
-            Enumeration enum2 = null;
+            Enumeration<URL> enum2 = null;
 
             try {
                 enum2 = cl.getResources(uri.toString());
@@ -826,7 +844,7 @@ public class VariantManager {
             }
 
             while (enum2.hasMoreElements()) {
-                URL url = (URL) enum2.nextElement();
+                URL url = enum2.nextElement();
 
                 // deconflict. Note that this is not, and cannot be, foolproof;
                 // due to name-mangling by webstart. For example, if two plugins
@@ -869,7 +887,7 @@ public class VariantManager {
         ClassLoader cl = vm.getClass().getClassLoader();
         String deconflictName = getWSPluginName(packURL);
 
-        Enumeration enum2 = null;
+        Enumeration<URL> enum2 = null;
 
         try {
             enum2 = cl.getResources(uri.toString());
@@ -878,7 +896,7 @@ public class VariantManager {
         }
 
         while (enum2.hasMoreElements()) {
-            URL url = (URL) enum2.nextElement();
+            URL url = enum2.nextElement();
 
             // deconflict. Note that this is not, and cannot be, foolproof;
             // due to name-mangling by webstart. For example, if two plugins
@@ -925,7 +943,7 @@ public class VariantManager {
 
         // see if we are mapped to a MapRec already.
         //
-        MapRec mapRec = (MapRec) vm.variantMap.get(vName);
+        MapRec mapRec = vm.variantMap.get(vName);
         if (mapRec == null) {
             // not yet mapped! let's map it.
             mapRec = new MapRec(vr);
@@ -956,7 +974,7 @@ public class VariantManager {
             // not if it's "" though...
             if (!"".equals(aliases[idx])) {
                 final String alias = aliases[idx].toLowerCase();
-                MapRec testMapRec = (MapRec) vm.variantMap.get(alias);
+                MapRec testMapRec = vm.variantMap.get(alias);
                 if (testMapRec == null) {
                     // add alias
                     vm.variantMap.put(alias, mapRec);
@@ -1026,13 +1044,13 @@ public class VariantManager {
 
     /** Gets the VRec associated with a Variant (via name and version) */
     private static VRec getVRec(Variant v) {
-        MapRec mapRec = (MapRec) vm.variantMap.get(v.getName().toLowerCase());
+        MapRec mapRec = vm.variantMap.get(v.getName().toLowerCase());
         return (VRec) mapRec.get(v.getVersion());
     }// getVRec()
 
     /** Gets the SPRec associated with a SymbolPack (via name and version) */
     private static SPRec getSPRec(SymbolPack sp) {
-        MapRec mapRec = (MapRec) vm.symbolMap.get(sp.getName().toLowerCase());
+        MapRec mapRec = vm.symbolMap.get(sp.getName().toLowerCase());
         return (SPRec) mapRec.get(sp.getVersion());
     }// getSPRec()
 
@@ -1048,10 +1066,6 @@ public class VariantManager {
             }
             list.add(obj);
         }// MapRec()
-
-        public int size() {
-            return list.size();
-        }
 
         /**
          *	Adds the MapRecObj to this MapRec, but only if it is of
@@ -1073,7 +1087,7 @@ public class VariantManager {
         public float[] getVersions() {
             final float[] versions = new float[list.size()];
             for (int i = 0; i < list.size(); i++) {
-                MapRecObj mro = (MapRecObj) list.get(i);
+                MapRecObj mro = list.get(i);
                 versions[i] = mro.getVersion();
             }
 
@@ -1092,12 +1106,12 @@ public class VariantManager {
 
             // typical-case
             if (size == 1 && (version == VERSION_OLDEST || version == VERSION_NEWEST)) {
-                return (MapRecObj) list.get(0);
+                return list.get(0);
             }
 
             MapRecObj selected = null;
             for (int i = 0; i < size; i++) {
-                MapRecObj mro = (MapRecObj) list.get(i);
+                MapRecObj mro = list.get(i);
                 selected = (selected == null) ? mro : selected;
 
                 if ((version == VERSION_OLDEST && mro.getVersion() < selected.getVersion())
@@ -1150,7 +1164,8 @@ public class VariantManager {
             variant = value;
         }
 
-        public float getVersion() {
+        @Override
+		public float getVersion() {
             return variant.getVersion();
         }
     }// inner class VRec
@@ -1168,7 +1183,8 @@ public class VariantManager {
             symbolPack = value;
         }
 
-        public float getVersion() {
+        @Override
+		public float getVersion() {
             return symbolPack.getVersion();
         }
     }// inner class SPRec

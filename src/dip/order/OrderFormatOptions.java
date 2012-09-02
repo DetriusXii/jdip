@@ -21,9 +21,13 @@
 //
 package dip.order;
 
-import dip.misc.Log;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
-import java.io.*;
+import dip.misc.Log;
 
 /**
 *	This object controls, in detail, how orders are formatted.
@@ -547,11 +551,12 @@ public class OrderFormatOptions implements Cloneable
 	}// checkCoastFormat()
 	
 	/** Clone */
+	@Override
 	public Object clone()
 	{
 		try
 		{
-			return (OrderFormatOptions) super.clone();
+			return super.clone();
 		}
 		catch(CloneNotSupportedException e)
 		{

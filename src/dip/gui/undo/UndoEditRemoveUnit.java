@@ -22,12 +22,13 @@
 //
 package dip.gui.undo;
 
-import dip.world.Province;
-import dip.world.Position;
-import dip.world.Unit;
-import dip.misc.Utils;
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
 
-import javax.swing.undo.*;
+import dip.misc.Utils;
+import dip.world.Position;
+import dip.world.Province;
+import dip.world.Unit;
 
 
 /**
@@ -55,12 +56,14 @@ public class UndoEditRemoveUnit extends XAbstractUndoableEdit
 		this.isDislodged = isDislodged;
 	}// UndoEditRemoveUnit
 	
+	@Override
 	public String getPresentationName()
 	{
 		return Utils.getLocalString(PRESENTATION_NAME, unit.getType().getFullName(), province.getShortName());
 	}// getPresentationName()
 	
 	
+	@Override
 	public void redo()
 	throws CannotRedoException
 	{
@@ -68,6 +71,7 @@ public class UndoEditRemoveUnit extends XAbstractUndoableEdit
 		UndoEditRemoveUnit.removeUnit(undoRedoManager, position, province, isDislodged);
 	}// redo()
 	
+	@Override
 	public void undo()
 	throws CannotUndoException
 	{

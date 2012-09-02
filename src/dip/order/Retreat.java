@@ -21,21 +21,22 @@
 //
 package dip.order;
 
-import dip.order.result.OrderResult.ResultType;
-
-import dip.world.*;
-
-import dip.process.Adjudicator;
-import dip.process.OrderState;
-import dip.process.Tristate;
-import dip.process.RetreatChecker;
+import java.util.ArrayList;
 
 import dip.misc.Log;
 import dip.misc.Utils;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
+import dip.order.result.OrderResult.ResultType;
+import dip.process.Adjudicator;
+import dip.process.OrderState;
+import dip.process.RetreatChecker;
+import dip.process.Tristate;
+import dip.world.Border;
+import dip.world.Location;
+import dip.world.Position;
+import dip.world.Power;
+import dip.world.RuleOptions;
+import dip.world.TurnState;
+import dip.world.Unit;
 
 /**
 *	Implementation of the Retreat order.
@@ -78,12 +79,14 @@ public class Retreat extends Move
 	}// isByConvoy()
 	
 	
+	@Override
 	public String getFullName()
 	{
 		return orderNameFull;
 	}// getFullName()
 	
 	
+	@Override
 	public boolean equals(Object obj)
 	{
 		if(obj instanceof Retreat)
@@ -102,6 +105,7 @@ public class Retreat extends Move
 	
 	
 
+	@Override
 	public void validate(TurnState state, ValidationOptions valOpts, RuleOptions ruleOpts)
 	throws OrderException
 	{
@@ -153,6 +157,7 @@ public class Retreat extends Move
 	
 	
 	/** No verification is performed.*/
+	@Override
 	public void verify(Adjudicator adjudicator)
 	{
 		OrderState thisOS = adjudicator.findOrderStateBySrc(getSource());
@@ -165,6 +170,7 @@ public class Retreat extends Move
 	*	Retreat orders are only dependent on other 
 	*	retreat orders that are moving to the same destination.	
 	*/
+	@Override
 	public void determineDependencies(Adjudicator adjudicator)
 	{
 		// add moves to destination space, and supports of this space
@@ -201,6 +207,7 @@ public class Retreat extends Move
 	*	If a retreat is valid, it will be successfull unless 
 	*	there exists one or more retreats to the same destination.
 	*/
+	@Override
 	public void evaluate(Adjudicator adjudicator)
 	{
 		OrderState thisOS = adjudicator.findOrderStateBySrc(getSource());

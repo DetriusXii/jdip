@@ -21,16 +21,16 @@
 //
 package dip.order;
 
-import dip.world.*;
-
 import dip.misc.Log;
 import dip.misc.Utils;
-
 import dip.process.Adjudicator;
 import dip.process.OrderState;
 import dip.process.Tristate;
-import dip.process.Adjustment;
-import dip.process.Adjustment.AdjustmentInfo;
+import dip.world.Location;
+import dip.world.Power;
+import dip.world.RuleOptions;
+import dip.world.TurnState;
+import dip.world.Unit;
 
 
 /**
@@ -62,11 +62,13 @@ public class Remove extends Order
 		super();
 	}// Remove()
 	
+	@Override
 	public String getFullName()
 	{
 		return orderNameFull;
 	}// getName()
 	
+	@Override
 	public String getBriefName()
 	{
 		return orderNameBrief;
@@ -76,12 +78,14 @@ public class Remove extends Order
 	
 	
 	// order formatting
+	@Override
 	public String getDefaultFormat()
 	{
 		return orderFormatString;
 	}// getFormatBrief()
 	
 	
+	@Override
 	public String toBriefString()
 	{
 		StringBuffer sb = new StringBuffer(64);
@@ -98,6 +102,7 @@ public class Remove extends Order
 	}// toBriefString()
 	
 	
+	@Override
 	public String toFullString()
 	{
 		StringBuffer sb = new StringBuffer(128);
@@ -115,6 +120,7 @@ public class Remove extends Order
 	
 	
 	
+	@Override
 	public boolean equals(Object obj)
 	{
 		if(obj instanceof Remove)
@@ -128,6 +134,7 @@ public class Remove extends Order
 	}// equals()	
 	
 	
+	@Override
 	public void validate(TurnState state, ValidationOptions valOpts, RuleOptions ruleOpts)
 	throws OrderException
 	{
@@ -140,6 +147,7 @@ public class Remove extends Order
 	
 	
 	/** Empty method: Remove orders do not require verification. */
+	@Override
 	public void verify(Adjudicator adjudicator)
 	{
 		OrderState thisOS = adjudicator.findOrderStateBySrc(getSource());
@@ -147,6 +155,7 @@ public class Remove extends Order
 	}// verify()
 
 	/** Empty method: Remove orders do not require dependency determination. */
+	@Override
 	public void determineDependencies(Adjudicator adjudicator)	{}
 	
 	
@@ -157,6 +166,7 @@ public class Remove extends Order
 	*	must be handled by the adjustment adjudicator.
 	*	
 	*/
+	@Override
 	public void evaluate(Adjudicator adjudicator)
 	{
 		Log.println("--- evaluate() dip.order.Disband ---");

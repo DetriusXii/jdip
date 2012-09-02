@@ -22,14 +22,19 @@
 //
 package dip.world;
 
-import dip.order.*;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import java.util.*;
-import java.io.*;
-
-import org.xml.sax.*;
-import org.xml.sax.helpers.*;
-import javax.xml.parsers.*;
+import dip.order.OrderException;
 
 
 /**
@@ -176,7 +181,7 @@ public class Map implements Serializable
 	*/
 	public Power getPower(String name)
 	{
-		return (Power) powerNameMap.get(name.toLowerCase());
+		return powerNameMap.get(name.toLowerCase());
 	}// getPower()
 	
 	
@@ -217,10 +222,10 @@ public class Map implements Serializable
 		
 		// 2) check for a unique partial match
 		//
-		List list = findPartialPowerMatch(powerName);
+		List<Power> list = findPartialPowerMatch(powerName);
 		if(list.size() == 1)
 		{
-			return (Power) list.get(0);
+			return list.get(0);
 		}
 		
 		// 3) perform a Levenshtein match against power names.
@@ -247,7 +252,7 @@ public class Map implements Serializable
 		}
 		
 		// if absolute error rate is too high, discard.
-		if(bestMatch <= ((int) (powerName.length() / 2)))
+		if(bestMatch <= (powerName.length() / 2))
 		{
 			return matchPower;
 		}
@@ -288,10 +293,10 @@ public class Map implements Serializable
 		// return null.
 		if(powerName.length() >= 4)
 		{
-			List list = findPartialPowerMatch(powerName);
+			List<Power> list = findPartialPowerMatch(powerName);
 			if(list.size() == 1)
 			{
-				return (Power) list.get(0);
+				return list.get(0);
 			}
 		}
 		
@@ -317,7 +322,7 @@ public class Map implements Serializable
 		
 		// if absolute error rate is too high, discard.
 		// we are stricter than in getClosestPower()
-		if(bestMatch <= ((int) (powerName.length() / 3)))
+		if(bestMatch <= (powerName.length() / 3))
 		{
 			return getPower(bestMatchPowerName);	// should never return null
 		}
@@ -346,7 +351,7 @@ public class Map implements Serializable
 	*/
 	public Province getProvince(String name) 
 	{
-		return (Province) nameMap.get(name.toLowerCase());
+		return nameMap.get(name.toLowerCase());
 	}// getProvince()
 	
 	
@@ -426,7 +431,7 @@ public class Map implements Serializable
 		
 		// if absolute error rate is too high, discard.
 		// if we have >1 unique ties, (or none at all) no match
-		if(bestDist <= ((int) (input.length() / 2)) && ties.size() == 1)
+		if(bestDist <= (input.length() / 2) && ties.size() == 1)
 		{
 			// there is but one
 			return ties.iterator().next(); 
@@ -566,17 +571,19 @@ public class Map implements Serializable
 					list.add(name.toLowerCase());
 				}
 			}
-			wsNames = (String[]) list.toArray(new String[list.size()]);
+			wsNames = list.toArray(new String[list.size()]);
 			
 			// sort array from longest entries to shortest. This 
 			// eliminates errors in partial replacements.
 			Arrays.sort(wsNames, new Comparator<String>() {
 				// longer strings are more negative, thus rise to top
+				@Override
 				public int compare(final String o1, final String o2)
 				{
 					return (o2.length() - o1.length());
 				}// compare()
 				
+				@Override
 				public boolean equals(Object obj) { return false; }
 			});
 			
@@ -827,7 +834,7 @@ public class Map implements Serializable
 		Comparator<String> reverseComp = Collections.reverseOrder();
 		Collections.sort( tmpNames, reverseComp );
 		
-		lcPowerNames = (String[]) tmpNames.toArray(new String[tmpNames.size()]);
+		lcPowerNames = tmpNames.toArray(new String[tmpNames.size()]);
 	}// createLCPowerNameList()
 	
 	
@@ -915,7 +922,7 @@ public class Map implements Serializable
 	*	
 	*	THIS METHOD REPLACES getCloseness() FOR POWER MATCHING.
 	*/
-	private List findPartialPowerMatch(String input)
+	private List<Power> findPartialPowerMatch(String input)
 	{
 		final HashSet<Power> ties = new HashSet<Power>(41);
 		

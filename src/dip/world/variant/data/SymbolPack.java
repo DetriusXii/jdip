@@ -24,7 +24,6 @@ package dip.world.variant.data;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -135,7 +134,8 @@ public class SymbolPack implements Comparable<SymbolPack> {
     }// getSymbol()
 
     /** Comparison, based on Name. Only compares to other SymbolPack objects. */
-    public int compareTo(final SymbolPack sp) {
+    @Override
+	public int compareTo(final SymbolPack sp) {
         return this.getName().compareTo(sp.getName());
     }// compareTo()
 

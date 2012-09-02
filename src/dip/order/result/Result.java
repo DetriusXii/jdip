@@ -21,11 +21,10 @@
 //
 package dip.order.result;
 
-import dip.order.OrderFormat;
+import java.io.Serializable;
+
 import dip.order.OrderFormatOptions;
 import dip.world.Power;
-
-import java.io.Serializable;
 
 /**
 *		A Result is a message that is sent from the adjudicator back to a power
@@ -37,6 +36,8 @@ import java.io.Serializable;
 */
 public class Result extends Object implements Serializable, Comparable<Result>
 {
+	private static final long serialVersionUID = 1L;
+
 	// constants
 	private static final OrderFormatOptions DEFAULT_OFO = OrderFormatOptions.createDefault();
 	
@@ -106,6 +107,7 @@ public class Result extends Object implements Serializable, Comparable<Result>
 	}// getMessage()
 	
 	/** For debugging. Use getPower() and getMessage() for general use. */
+	@Override
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer(128);
@@ -131,6 +133,7 @@ public class Result extends Object implements Serializable, Comparable<Result>
 	*	If power is null, it will be first in ascending order.
 	* 	If message may be empty, but never is null.
 	*/
+	@Override
 	public int compareTo(final Result result)
 	{
 		

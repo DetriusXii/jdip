@@ -22,24 +22,13 @@
 //
 package dip.process;
 
-import dip.world.TurnState;
-import dip.world.Province;
-import dip.world.Location;
-import dip.world.Unit;
-import dip.world.Power;
+import java.util.List;
 
-import dip.order.Order;
-import dip.order.Support;
-import dip.order.Move;
-import dip.order.Convoy;
-
-import dip.order.result.Result;
-import dip.order.result.OrderResult;
-import dip.order.result.BouncedResult;
-import dip.order.result.DislodgedResult;
 import dip.order.result.OrderResult.ResultType;
-
-import java.util.*;
+import dip.order.result.Result;
+import dip.world.Location;
+import dip.world.Province;
+import dip.world.TurnState;
 
 
 /**
@@ -122,7 +111,7 @@ public interface Adjudicator
 	*	note that this will <b>not</b> contain 'null' substitutions (e.g., 
 	*	no order was specified, and a Hold order was automatically generated).
 	*/
-	public List getSubstitutedOrderStates();
+	public List<OrderState> getSubstitutedOrderStates();
 	
 	// 	
 	//	Result-adding methods

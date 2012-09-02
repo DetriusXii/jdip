@@ -22,9 +22,9 @@
 //
 package dip.gui.map;
 
-import dip.world.TurnState;
 import dip.world.Power;
 import dip.world.Province;
+import dip.world.TurnState;
 
 public abstract class RenderCommandFactory
 {
@@ -75,6 +75,7 @@ public abstract class RenderCommandFactory
 		*	returns immediately. Subclasses should subclass 
 		*	execute instead of this method..
 		*/
+		@Override
 		public final void run()
 		{
 			if(alive)
@@ -98,6 +99,7 @@ public abstract class RenderCommandFactory
 		}// die()
 		
 		/** For debugging */
+		@Override
 		public String toString()
 		{
 			StringBuffer sb = new StringBuffer();

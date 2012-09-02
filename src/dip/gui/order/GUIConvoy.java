@@ -22,36 +22,27 @@
 //
 package dip.gui.order;
 
-import dip.order.Orderable;
-import dip.order.Convoy;
-import dip.order.ValidationOptions;
-
-import dip.misc.Utils;
-
-import dip.world.Position;
-import dip.world.Location;
-import dip.world.Province;
-import dip.world.Coast;
-import dip.world.Path;
-import dip.world.Unit;
-import dip.world.Power;
-import dip.world.RuleOptions;
-
-import dip.gui.order.GUIOrder.MapInfo;
-
-import dip.process.Adjustment.AdjustmentInfoMap;
-import dip.process.RetreatChecker;
-
-import dip.gui.map.MapMetadata;
-
 import java.awt.geom.Point2D;
 
-import org.apache.batik.util.SVGConstants;
-import org.apache.batik.util.CSSConstants;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
-import org.w3c.dom.svg.*;
-import org.w3c.dom.*;
+import org.apache.batik.util.SVGConstants;
+import org.w3c.dom.svg.SVGElement;
+import org.w3c.dom.svg.SVGGElement;
+import org.w3c.dom.svg.SVGLineElement;
+import org.w3c.dom.svg.SVGPolygonElement;
 
+import dip.gui.map.MapMetadata;
+import dip.misc.Utils;
+import dip.order.Convoy;
+import dip.order.Orderable;
+import dip.order.ValidationOptions;
+import dip.world.Coast;
+import dip.world.Location;
+import dip.world.Path;
+import dip.world.Position;
+import dip.world.Power;
+import dip.world.Province;
+import dip.world.Unit;
 /**
 *
 *	GUIOrder subclass of Convoy order.
@@ -59,6 +50,10 @@ import org.w3c.dom.*;
 */
 public class GUIConvoy extends Convoy implements GUIOrder
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// i18n keys
 	private final static String ONLY_SEA_OR_CC_FLEETS_CAN_CONVOY = "GUIConvoy.only_fleets_can_convoy";
 	private final static String CLICK_TO_CONVOY = "GUIConvoy.click_to_convoy";
@@ -93,6 +88,7 @@ public class GUIConvoy extends Convoy implements GUIOrder
 	}// GUIConvoy()
 	
 	/** This only accepts Convoy orders. All others will throw an IllegalArgumentException. */
+	@Override
 	public void deriveFrom(Orderable order)
 	{
 		if( !(order instanceof Convoy) )
@@ -116,6 +112,7 @@ public class GUIConvoy extends Convoy implements GUIOrder
 	
 	
 	
+	@Override
 	public boolean testLocation(StateInfo stateInfo, Location location, StringBuffer sb)
 	{
 		sb.setLength(0);
@@ -282,6 +279,7 @@ public class GUIConvoy extends Convoy implements GUIOrder
 	}// testLocation()
 	
 	
+	@Override
 	public boolean clearLocations()
 	{
 		if(isComplete())
@@ -302,6 +300,7 @@ public class GUIConvoy extends Convoy implements GUIOrder
 	}// clearLocations()
 	
 	
+	@Override
 	public boolean setLocation(StateInfo stateInfo, Location location, StringBuffer sb)
 	{
 		if(isComplete())
@@ -345,26 +344,32 @@ public class GUIConvoy extends Convoy implements GUIOrder
 		return false;
 	}// setLocation()
 	
+	@Override
 	public boolean isComplete()
 	{
 		assert (currentLocNum <= getNumRequiredLocations());
 		return (currentLocNum == getNumRequiredLocations());
 	}// isComplete()
 	
+	@Override
 	public int getNumRequiredLocations()		{ return REQ_LOC; }
 	
+	@Override
 	public int getCurrentLocationNum()			{ return currentLocNum; }
 	
 	
 	
 	/** Always throws an IllegalArgumentException */
+	@Override
 	public void setParam(Parameter param, Object value)	{ throw new IllegalArgumentException(); }
 	
 	/** Always throws an IllegalArgumentException */
+	@Override
 	public Object getParam(Parameter param)	{ throw new IllegalArgumentException(); }
 	
 	
 	
+	@Override
 	public void removeFromDOM(MapInfo mapInfo)
 	{
 		if(group != null)
@@ -380,6 +385,7 @@ public class GUIConvoy extends Convoy implements GUIOrder
 	*	Draws a dashed line to a triangle surrounding convoyed unit, and then a 
 	*	dashed line from convoyed unit to destination.
 	*/
+	@Override
 	public void updateDOM(MapInfo mapInfo)
 	{
 		// if we are not displayable, we exit, after remove the order (if
@@ -570,6 +576,7 @@ public class GUIConvoy extends Convoy implements GUIOrder
 	}// drawOrder()
 	
 	
+	@Override
 	public boolean isDependent()	{ return false; }
 	
 	

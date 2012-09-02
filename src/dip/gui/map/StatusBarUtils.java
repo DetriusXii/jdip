@@ -23,22 +23,13 @@
 package dip.gui.map;
 
 import dip.gui.StatusBar;
-
-import dip.world.Province;
+import dip.misc.Utils;
 import dip.world.Location;
 import dip.world.Position;
-import dip.world.Unit;
 import dip.world.Power;
-import dip.misc.Utils;
+import dip.world.Province;
+import dip.world.Unit;
 
-import java.awt.GridLayout;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-
-import javax.swing.JTextField;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.border.EmptyBorder;
 
 /**
 *	Convenience methods for displaying information on the StatusBar.

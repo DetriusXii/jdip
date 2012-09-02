@@ -22,9 +22,13 @@
 //
 package dip.world;
 
-import dip.order.Order;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 
-import java.util.*;
+import dip.order.Order;
 
 /**
  *
@@ -135,7 +139,7 @@ public class Province implements java.io.Serializable, Comparable<Province> {
             }
 
             provSet.clear();
-            setLocations(Coast.WING, (Location[]) locList.toArray(new Location[locList.size()]));
+            setLocations(Coast.WING, locList.toArray(new Location[locList.size()]));
         }// createWingCoasts()
 
         /** 
@@ -472,7 +476,8 @@ public class Province implements java.io.Serializable, Comparable<Province> {
     }// isCoastValid()
 
     /** Implementation of Object.hashCode() */
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         if (hashCode == 0) {
             hashCode = fullName.hashCode();
         }
@@ -546,12 +551,14 @@ public class Province implements java.io.Serializable, Comparable<Province> {
     NOTE: we just use default referential equality, since these objects are immutable!
      */
     /** Returns the full name of the province */
-    public String toString() {
+    @Override
+	public String toString() {
         return fullName;
     }// toString();
 
     /** Compares this province to another, by the full name, ignoring case */
-    public int compareTo(final Province obj) {
+    @Override
+	public int compareTo(final Province obj) {
         return fullName.compareToIgnoreCase(obj.fullName);
     }// compareTo()
 }// class Province

@@ -21,7 +21,6 @@
 //
 package dip.order;
 
-import dip.misc.Log;
 
 /**
 *	An OrderException indicates that an Order could not be created,
@@ -31,6 +30,7 @@ import dip.misc.Log;
 */
 public class OrderException extends Exception implements Cloneable
 {
+	private static final long serialVersionUID = 1L;
 	private Order order = null;
 	
 	

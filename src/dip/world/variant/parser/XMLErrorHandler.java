@@ -22,11 +22,11 @@
 //
 package dip.world.variant.parser;
 
-import dip.gui.dialog.ErrorDialog;
-
+import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-import org.xml.sax.ErrorHandler;
+
+import dip.gui.dialog.ErrorDialog;
 
 /**
 *	A simple error handler for the XML parsers.
@@ -42,18 +42,21 @@ public final class XMLErrorHandler implements ErrorHandler
 	
 	
 	/** Handle a (recoverable) error */
+	@Override
 	public void error(SAXParseException exception)
 	{
 		showError(exception, "Error");
 	}// error()
 	
 	/** Handle a non-recoverable error */
+	@Override
 	public void fatalError(SAXParseException exception)
 	{
 		showError(exception, "Fatal Error");
 	}// fatalError()
 	
 	/** Handle a warning */
+	@Override
 	public void warning(SAXParseException exception)	
 	{
 		showError(exception, "Warning");

@@ -22,17 +22,15 @@
 //
 package dip.gui;
 
-import dip.world.GameSetup;
-import dip.world.TurnState;
-import dip.world.World;
-import dip.world.Power;
+import java.awt.BorderLayout;
 
-import dip.gui.map.*;
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+
+import dip.gui.map.MapPanel;
 import dip.gui.undo.UndoRedoManager;
-
-import java.awt.*;
-
-import javax.swing.*;
+import dip.world.Power;
+import dip.world.World;
 
 /**
 *	The Default GameSetup. This is used when we are not in face-
@@ -47,6 +45,7 @@ public class F2FGUIGameSetup implements GUIGameSetup
 	private Power selectedPower = null;		// may be null
 	
 	/** Setup the game. */
+	@Override
 	public void setup(ClientFrame cf, World world)
 	{
 		// create right-panel components
@@ -106,6 +105,7 @@ public class F2FGUIGameSetup implements GUIGameSetup
 	
 	
 	/** Save the Current Power */
+	@Override
 	public void save(ClientFrame cf)
 	{
 		F2FOrderDisplayPanel fodp = (F2FOrderDisplayPanel) cf.getOrderDisplayPanel();

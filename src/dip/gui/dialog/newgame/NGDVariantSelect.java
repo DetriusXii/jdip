@@ -22,37 +22,31 @@
 //
 package dip.gui.dialog.newgame;
 
-import dip.misc.Utils;
-import dip.world.variant.VariantManager;
-import dip.world.*;
-import dip.world.variant.data.MapGraphic;
-import dip.world.variant.data.Variant;
-import dip.world.variant.data.SymbolPack;
-import dip.gui.ClientFrame;
-import dip.gui.dialog.ErrorDialog;
-import dip.gui.swing.*;
-
-import cz.autel.dmi.HIGConstraints;
-import cz.autel.dmi.HIGLayout;
-
 import javax.swing.DefaultListModel;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JEditorPane;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import java.awt.Component;
-import java.net.URI;
-import java.net.URL;
-import javax.swing.*;
-import java.awt.*;
+
+import cz.autel.dmi.HIGConstraints;
+import cz.autel.dmi.HIGLayout;
+import dip.gui.ClientFrame;
+import dip.gui.dialog.ErrorDialog;
+import dip.gui.swing.GradientJLabel;
+import dip.gui.swing.XJScrollPane;
+import dip.misc.Utils;
+import dip.world.InvalidWorldException;
+import dip.world.RuleOptions;
+import dip.world.World;
+import dip.world.WorldFactory;
+import dip.world.variant.VariantManager;
+import dip.world.variant.data.MapGraphic;
+import dip.world.variant.data.SymbolPack;
+import dip.world.variant.data.Variant;
 
 /**
 *	Panel for New Game Dialog that allows selection of a map / variant / map graphic.
@@ -61,6 +55,10 @@ import java.awt.*;
 */
 public class NGDVariantSelect extends JPanel implements NewGameDialog.NGDTabPane
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// i18n constants
 	private static final String TAB_NAME	 = 	"NGDvariant.tab.name";
 	private static final String LOADING_TEXT = 	"NGDvariant.text.loading";
@@ -109,6 +107,7 @@ public class NGDVariantSelect extends JPanel implements NewGameDialog.NGDTabPane
 		variantList.setPrototypeCellValue("MMMMMMMMMMMMMM");
 		variantList.addListSelectionListener(new ListSelectionListener() 
 		{
+			@Override
 			public void valueChanged(ListSelectionEvent e)
 			{
 				doVariantListSelection();
@@ -254,18 +253,21 @@ public class NGDVariantSelect extends JPanel implements NewGameDialog.NGDTabPane
 	
 	
 	/** Get the tab name. */
+	@Override
 	public String getTabName()
 	{
 		return Utils.getLocalString(TAB_NAME);
 	}// getTabName()
 
 	/** The Variant has Changed. */
+	@Override
 	public void variantChanged(Variant variant)
 	{
 		// DO NOTHING
 	}// variantChanged()
 	
 	/** The Enabled status has Changed. We do nothing for this tab.*/
+	@Override
 	public void enablingChanged(boolean enabled)
 	{
 		// DO NOTHING
@@ -277,10 +279,10 @@ public class NGDVariantSelect extends JPanel implements NewGameDialog.NGDTabPane
 	private void makeLayout()
 	{
 		JScrollPane descSP = new XJScrollPane(textPanel);
-		descSP.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		descSP.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		
 		JScrollPane varSP = new XJScrollPane(variantList);
-		varSP.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		varSP.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		
 		int w1[] = { BORDER, 0, 15, 0, BORDER };	// cols
 		int h1[] = { 2*BORDER, 0,5, 0, BORDER };	// rows

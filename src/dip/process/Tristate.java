@@ -59,6 +59,7 @@ final public class Tristate
 	}// Tristate()
 	
 	
+	@Override
 	public String toString()
 	{
 		return text;

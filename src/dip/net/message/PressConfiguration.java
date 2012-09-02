@@ -22,12 +22,11 @@
 //
 package dip.net.message;
 
+import dip.misc.Utils;
 import dip.world.Phase;
 import dip.world.Phase.PhaseType;
-import dip.world.Phase.YearType;
 import dip.world.Phase.SeasonType;
-
-import dip.misc.Utils;
+import dip.world.Phase.YearType;
 
 /**
 *	Press Configuration
@@ -475,6 +474,7 @@ public class PressConfiguration implements Cloneable
 	
 	
 	/** Clones the object. */
+	@Override
 	public Object clone()
 	throws CloneNotSupportedException
 	{

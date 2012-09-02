@@ -21,23 +21,27 @@
 //
 package dip.order;
 
-import dip.order.result.OrderResult.ResultType;
-import dip.order.result.DependentMoveFailedResult;
-import dip.order.result.ConvoyPathResult;
-
-import dip.world.*;
-
-import dip.process.Adjudicator;
-import dip.process.OrderState;
-import dip.process.Tristate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import dip.misc.Log;
 import dip.misc.Utils;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Collections;
+import dip.order.result.ConvoyPathResult;
+import dip.order.result.DependentMoveFailedResult;
+import dip.order.result.OrderResult.ResultType;
+import dip.process.Adjudicator;
+import dip.process.OrderState;
+import dip.process.Tristate;
+import dip.world.Border;
+import dip.world.Location;
+import dip.world.Path;
+import dip.world.Position;
+import dip.world.Power;
+import dip.world.Province;
+import dip.world.RuleOptions;
+import dip.world.TurnState;
+import dip.world.Unit;
 
 
 /**
@@ -252,11 +256,13 @@ public class Move extends Order
 	}// getConvoyRoute()
 	
 	
+	@Override
 	public String getFullName()
 	{
 		return orderNameFull;
 	}// getFullName()
 	
+	@Override
 	public String getBriefName()
 	{
 		return orderNameBrief;
@@ -264,12 +270,14 @@ public class Move extends Order
 	
 	
 	// order formatting
+	@Override
 	public String getDefaultFormat()
 	{
 		return (convoyRoutes == null) ? orderFormatString : orderFormatExCon;
 	}// getDefaultFormat()
 	
 	
+	@Override
 	public String toBriefString()
 	{
 		StringBuffer sb = new StringBuffer(64);
@@ -313,6 +321,7 @@ public class Move extends Order
 	}// toBriefString()
 	
 	
+	@Override
 	public String toFullString()
 	{
 		StringBuffer sb = new StringBuffer(128);
@@ -358,6 +367,7 @@ public class Move extends Order
 	
 	
 	
+	@Override
 	public boolean equals(Object obj)
 	{
 		if(obj instanceof Move)
@@ -374,6 +384,7 @@ public class Move extends Order
 	}// equals()	
 	
 	
+	@Override
 	public void validate(TurnState state, ValidationOptions valOpts, RuleOptions ruleOpts)
 	throws OrderException
 	{
@@ -615,6 +626,7 @@ public class Move extends Order
 	*	and	destination), that also have Convoy orders that match this Move.
 	*
 	*/
+	@Override
 	public void verify(Adjudicator adjudicator)
 	{
 		OrderState thisOS = adjudicator.findOrderStateBySrc(getSource());
@@ -719,35 +731,6 @@ public class Move extends Order
 	
 	/**
 	*	Evaluate a Province path (length must be >= 3)
-	*	for the presence of a Fleet of the given Power.
-	*	<p>
-	*	This does NOT check to see if the Fleet was ordered
-	*	to convoy, or if that convoy order matches a particular 
-	*	Move order.
-	*	<p>
-	*	Returns the Province with the Fleet of own Power if found;
-	*	otherwise returns null..
-	*/
-	private Province evalPath(Position pos, final Province[] path, Power fleetPower)
-	{
-		if(path.length >= 3)
-		{
-			for(int i=1; i<(path.length-1); i++)
-			{
-				Unit unit = pos.getUnit(path[i]);
-				if(unit.getPower().equals(fleetPower))
-				{
-					return path[i];
-				}
-			}
-		}
-		
-		return null;
-	}// evalPath()
-	
-	
-	/**
-	*	Evaluate a Province path (length must be >= 3)
 	*	for the presence of a Fleet of the given Power with
 	*	appropriate convoy orders. This assumes the given Path
 	*	contains provinces with Fleets.
@@ -831,6 +814,7 @@ public class Move extends Order
 	*	verification is complete, as it depends upon whether this and/or an
 	*	opposing move is convoyed.
 	*/
+	@Override
 	public void determineDependencies(Adjudicator adjudicator)
 	{
 		// add moves to destination space, and supports of this space
@@ -1009,6 +993,7 @@ public class Move extends Order
 					dislodged results for 'maybe' dislodged orders. 
 		</pre>				
 	*/
+	@Override
 	public void evaluate(Adjudicator adjudicator)
 	{
 		Log.println("--- evaluate() dip.order.Move ---");

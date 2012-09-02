@@ -22,17 +22,12 @@
 //
 package dip.world;
 
-import dip.misc.Utils;
-
 import java.io.Serializable;
-import java.io.Externalizable;
-import java.io.IOException;
-import java.util.StringTokenizer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.StringTokenizer;
+
+import dip.misc.Utils;
 /**
 *
 *	A Phase object represents when a turn takes place, and contains the
@@ -131,6 +126,7 @@ public class Phase implements java.io.Serializable, Comparable<Phase>
 	}// getBriefName()
 		
 	/** Displays the phase as a String */
+	@Override
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer(64);
@@ -144,6 +140,7 @@ public class Phase implements java.io.Serializable, Comparable<Phase>
 	}// toString()
 	
 	/** Returns true if the two phases are equivalent. */
+	@Override
 	public boolean equals(Object obj)
 	{
 		Phase phase = (Phase) obj;
@@ -161,6 +158,7 @@ public class Phase implements java.io.Serializable, Comparable<Phase>
 	*	positive integer depending if the given Phase is less than, equal, or 
 	*	greater than (temporally) to this Phase.
 	*/
+	@Override
 	public int compareTo(final Phase obj)
 	{
 		Phase phase =  obj;
@@ -433,6 +431,7 @@ public class Phase implements java.io.Serializable, Comparable<Phase>
 		
 		
 		/** Return the name of this season */
+		@Override
 		public String toString()
 		{
 			return displayName;
@@ -455,12 +454,14 @@ public class Phase implements java.io.Serializable, Comparable<Phase>
 		}// getBriefName()
 		
 		/** Returns the hashCode */
+		@Override
 		public int hashCode()
 		{
 			return position;
 		}// hashCode()
 		
 		/** Returns <code>true</code> if SeasonType objects are equivalent */
+		@Override
 		public boolean equals(Object obj)
 		{
 			if(obj == this)
@@ -481,6 +482,7 @@ public class Phase implements java.io.Serializable, Comparable<Phase>
 		*	<p>
 		*	Fall always follows Spring.
 		*/
+		@Override
 		public int compareTo(Object obj)
 		{
 			SeasonType st = (SeasonType) obj;
@@ -659,6 +661,7 @@ public class Phase implements java.io.Serializable, Comparable<Phase>
 		}// PhaseType()
 		
 		/** Get the name of a phase */
+		@Override
 		public String toString()
 		{
 			return displayName;
@@ -686,12 +689,14 @@ public class Phase implements java.io.Serializable, Comparable<Phase>
 		
 		
 		/** Returns the hashCode */
+		@Override
 		public int hashCode()
 		{
 			return constName.hashCode();
 		}// hashCode()
 		
 		/** Returns <code>true</code> if PhaseType objects are equivalent */
+		@Override
 		public boolean equals(Object obj)
 		{
 			if(obj == this)
@@ -707,6 +712,7 @@ public class Phase implements java.io.Serializable, Comparable<Phase>
 		
 		
 		/** Temporally compares PhaseType objects */
+		@Override
 		public int compareTo(Object obj)
 		{
 			PhaseType pt = (PhaseType) obj;
@@ -873,6 +879,7 @@ public class Phase implements java.io.Serializable, Comparable<Phase>
 		
 		
 		/** Get the name of a year. */
+		@Override
 		public String toString()
 		{
 			if(year >= 1000)
@@ -904,12 +911,14 @@ public class Phase implements java.io.Serializable, Comparable<Phase>
 		}// getYear()
 		
 		/** Returns the hashcode */
+		@Override
 		public int hashCode()
 		{
 			return year;
 		}// hashCode()
 		
 		/** Returns <code>true</code> if YearTYpe objects are equivalent */
+		@Override
 		public boolean equals(Object obj)
 		{
 			if(obj == this)
@@ -925,6 +934,7 @@ public class Phase implements java.io.Serializable, Comparable<Phase>
 		}// equals()
 		
 		/** Temporally compares YearType objects */
+		@Override
 		public int compareTo(Object obj)
 		{
 			return (year - ((YearType) obj).year);

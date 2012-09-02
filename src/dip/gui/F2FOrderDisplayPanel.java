@@ -22,40 +22,36 @@
 //
 package dip.gui;
 
-import dip.order.*;
-import dip.world.*;
-import dip.gui.undo.*;
-import dip.gui.order.GUIOrder;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import cz.autel.dmi.HIGConstraints;
+import cz.autel.dmi.HIGLayout;
+import dip.gui.map.MapMetadata;
 import dip.gui.map.SVGColorParser;
 import dip.gui.swing.ColorRectIcon;
 import dip.misc.Utils;
 import dip.process.Adjustment;
-import dip.misc.Log;
-import dip.gui.map.MapMetadata;
-
-import dip.order.result.Result;
-import dip.order.result.OrderResult;
-
-import cz.autel.dmi.*;		// HIGLayout
-
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.border.*;
-import javax.swing.table.*;
-import javax.swing.undo.*;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Component;
-import java.awt.Toolkit;
-import java.awt.GridLayout;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.Insets;
-import java.awt.Graphics;
-import java.awt.event.*;
-import java.util.*;
-import java.beans.*;
-import java.text.MessageFormat;
+import dip.world.Phase;
+import dip.world.Position;
+import dip.world.Power;
+import dip.world.TurnState;
 
 /**
  *	The F2FOrderDisplayPanel: displayer of orders for Face-to-Face (F2F) games.
@@ -97,14 +93,16 @@ public class F2FOrderDisplayPanel extends OrderDisplayPanel {
     }// F2FOrderDisplayPanel()
 
     /**	Cleanup */
-    public void close() {
+    @Override
+	public void close() {
         super.close();
     }// close()
 
     /** Handle the Submit button events */
     private class SubmissionListener implements ActionListener {
 
-        public void actionPerformed(ActionEvent e) {
+        @Override
+		public void actionPerformed(ActionEvent e) {
             // confirm submission
             final int result = JOptionPane.showConfirmDialog(
                     clientFrame,
@@ -157,7 +155,8 @@ public class F2FOrderDisplayPanel extends OrderDisplayPanel {
     /** Handle the "Enter Orders" button event */
     private class EnterOrdersListener implements ActionListener {
 
-        public void actionPerformed(ActionEvent e) {
+        @Override
+		public void actionPerformed(ActionEvent e) {
             isReviewingResolvedTS = false;
             resolvedTS = null;
             final TurnState tmpTS = nextTS;
@@ -184,7 +183,8 @@ public class F2FOrderDisplayPanel extends OrderDisplayPanel {
             }
         }// forceUpdate()
 
-        public synchronized void stateChanged(ChangeEvent e) {
+        @Override
+		public synchronized void stateChanged(ChangeEvent e) {
             if (isEnabled) {
                 update();
             }
@@ -210,7 +210,8 @@ public class F2FOrderDisplayPanel extends OrderDisplayPanel {
     /** Extended F2FPropertyListener */
     protected class F2FPropertyListener extends ODPPropertyListener {
 
-        public void actionTurnstateChanged(TurnState ts) {
+        @Override
+		public void actionTurnstateChanged(TurnState ts) {
             if (resolvedTS != null && !isReviewingResolvedTS) {
                 isReviewingResolvedTS = true;
                 changeButton(enterOrders);
@@ -220,7 +221,8 @@ public class F2FOrderDisplayPanel extends OrderDisplayPanel {
                 // fire this event outside, so that everyone can receive it.
                 SwingUtilities.invokeLater(new Runnable() {
 
-                    public void run() {
+                    @Override
+					public void run() {
                         clientFrame.fireTurnstateChanged(resolvedTS);
                     }
                 });
@@ -249,23 +251,27 @@ public class F2FOrderDisplayPanel extends OrderDisplayPanel {
             }
         }// actionTurnstateChanged()
 
-        public void actionTurnstateResolved(TurnState ts) {
+        @Override
+		public void actionTurnstateResolved(TurnState ts) {
             super.actionTurnstateResolved(ts);
             resolvedTS = ts;
         }// actionTurnstateResolved()
 
-        public void actionTurnstateAdded(TurnState ts) {
+        @Override
+		public void actionTurnstateAdded(TurnState ts) {
             super.actionTurnstateAdded(ts);
             nextTS = ts;
         }// actionTurnstateAdded()
 
-        public void actionMMDReady(MapMetadata mmd) {
+        @Override
+		public void actionMMDReady(MapMetadata mmd) {
             super.actionMMDReady(mmd);
             F2FOrderDisplayPanel.this.mmd = mmd;
             setTabIcons();
         }// actionMMDReady()
 
-        public void actionModeChanged(String mode) {
+        @Override
+		public void actionModeChanged(String mode) {
             super.actionModeChanged(mode);
             if (mode == ClientFrame.MODE_ORDER) {
                 // disable some menu options
@@ -444,13 +450,13 @@ public class F2FOrderDisplayPanel extends OrderDisplayPanel {
      * @return the index of the selected tab
      */
     private int selectNextRandomTab(JTabbedPane tabPane) {
-        List tabSelectionOrderList = createTabSelectionOrderList();
+        List<Integer> tabSelectionOrderList = createTabSelectionOrderList();
 
         int nextAvailable = -1;
         int currentTab;
 
         for (int i = 0; i < tabSelectionOrderList.size(); i++) {
-            currentTab = ((Integer) tabSelectionOrderList.get(i)).intValue();
+            currentTab = tabSelectionOrderList.get(i).intValue();
             if (tabPane.isEnabledAt(currentTab)) {
                 nextAvailable = currentTab;
                 break;
@@ -460,7 +466,8 @@ public class F2FOrderDisplayPanel extends OrderDisplayPanel {
     }
 
     /** Create an extended property listener. */
-    protected AbstractCFPListener createPropertyListener() {
+    @Override
+	protected AbstractCFPListener createPropertyListener() {
         return new F2FPropertyListener();
     }// createPropertyListener()
 
@@ -500,7 +507,7 @@ public class F2FOrderDisplayPanel extends OrderDisplayPanel {
         tabPane = new JTabbedPane();
         tabListener = new TabListener();
         tabPane.addChangeListener(tabListener);
-        tabPane.setTabPlacement(JTabbedPane.TOP);
+        tabPane.setTabPlacement(SwingConstants.TOP);
 
         // we always have the 'all' tab (though it may be disabled at times)
         // it should always be position 0
@@ -512,7 +519,8 @@ public class F2FOrderDisplayPanel extends OrderDisplayPanel {
     }// makeF2FLayout()
 
     /** Do nothing. We have our own layout method. */
-    protected void makeLayout() {
+    @Override
+	protected void makeLayout() {
         // do nothing.
     }// makeLayout()
 

@@ -22,35 +22,42 @@
 //
 package dip.world.variant.parser;
 
-import dip.world.variant.VariantManager;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
-import dip.world.variant.data.Variant;
-import dip.world.variant.data.SupplyCenter;
-import dip.world.variant.data.InitialState;
-import dip.world.variant.data.MapGraphic;
-import dip.world.variant.data.ProvinceData;
-import dip.world.variant.data.BorderData;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import dip.misc.LRUCache;
+import dip.misc.Log;
+import dip.misc.Utils;
+import dip.world.Coast;
 import dip.world.Phase;
 import dip.world.Power;
 import dip.world.Unit;
-import dip.world.Coast;
-
-import dip.misc.LRUCache;
-import dip.misc.Utils;
-import dip.misc.Log;
-
+import dip.world.variant.VariantManager;
+import dip.world.variant.data.BorderData;
+import dip.world.variant.data.InitialState;
+import dip.world.variant.data.MapGraphic;
+import dip.world.variant.data.ProvinceData;
+import dip.world.variant.data.SupplyCenter;
+import dip.world.variant.data.Variant;
 import dip.world.variant.data.Variant.NameValuePair;
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.ParserConfigurationException;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.w3c.dom.*;
 
 /**
  *	Parses an XML Variant description.
@@ -174,7 +181,8 @@ public class XMLVariantParser implements VariantParser {
     Will never return null. Note that parse() must be called before
     this will return any information.
      */
-    public List<Variant> getVariants() {
+    @Override
+	public List<Variant> getVariants() {
         return variantList;
     }// getVariants()
 
@@ -339,7 +347,7 @@ public class XMLVariantParser implements VariantParser {
                 final String preferredUnitStyle = mgElement.getAttribute(ATT_PREFERRED_UNIT_STYLE);
 
                 // lookup; if we didn't find it, throw an exception
-                MapDef md = (MapDef) mapDefTable.get(refID);
+                MapDef md = mapDefTable.get(refID);
                 if (md == null) {
                     throw new IOException("MAP_GRAPHIC refers to unknown ID: \"" + refID + "\"");
                 }
@@ -485,7 +493,7 @@ public class XMLVariantParser implements VariantParser {
             // see if we already have the URI data cached.
             if (adjCache.get(adjacencyURI) != null) {
                 //Log.println("  AdjCache: using cached adjacency data: ", adjacencyURI);
-                return (AdjCache) adjCache.get(adjacencyURI);
+                return adjCache.get(adjacencyURI);
             }
 
             // it's not cached. resolve URI.

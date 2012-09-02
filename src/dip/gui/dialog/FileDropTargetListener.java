@@ -22,13 +22,18 @@
 //
 package dip.gui.dialog;
 
-import dip.misc.Utils;
-
-import java.awt.dnd.*;
-import java.awt.datatransfer.*;
-import java.util.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTargetAdapter;
+import java.awt.dnd.DropTargetDropEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import dip.misc.Utils;
 
 /**
  *	DND (drag-and-drop) DropTarget listener that can accept drops 
@@ -42,7 +47,8 @@ import java.io.IOException;
  */
 public abstract class FileDropTargetListener extends DropTargetAdapter {
 
-    public void drop(DropTargetDropEvent dtde) {
+    @Override
+	public void drop(DropTargetDropEvent dtde) {
         if (dtde.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
             try {
                 dtde.acceptDrop(DnDConstants.ACTION_COPY);
@@ -50,7 +56,7 @@ public abstract class FileDropTargetListener extends DropTargetAdapter {
                 Object obj = xfer.getTransferData(DataFlavor.javaFileListFlavor);
 
                 if (obj instanceof java.util.List) {
-                    final java.util.List list = (java.util.List) obj;
+                    final java.util.List<?> list = (java.util.List<?>) obj;
                     if (!list.isEmpty()) {
                         final List<File> unconvertedFileList = new ArrayList<File>();
                         for (final Object object: list) {

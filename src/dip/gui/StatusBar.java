@@ -22,16 +22,15 @@
 //
 package dip.gui;
 
-import java.awt.GridLayout;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
-import javax.swing.JTextField;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
-import javax.swing.border.CompoundBorder;
 
 /**
 *
@@ -52,6 +51,7 @@ public class StatusBar extends JPanel
 		super(new BorderLayout());
 		text = new JTextField(INITIAL_MESSAGE)
 		{
+			@Override
 			public boolean isFocusable()
 			{
 				return false;
@@ -67,12 +67,13 @@ public class StatusBar extends JPanel
 		
 		mode = new JTextField("", 8)
 		{
+			@Override
 			public boolean isFocusable()
 			{
 				return false;
 			}
 		};
-		mode.setHorizontalAlignment(JTextField.RIGHT);
+		mode.setHorizontalAlignment(SwingConstants.RIGHT);
 		mode.setEditable(false);
 		mode.setHighlighter(null);
 		mode.setBorder(new EmptyBorder(3,3,3,3));

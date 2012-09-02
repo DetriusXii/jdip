@@ -22,24 +22,20 @@
 //
 package dip.process;
 
-import dip.world.Location;
-import dip.world.TurnState;
-import dip.world.Position;
-import dip.world.World;
-
-import dip.order.Orderable;
-import dip.order.Move;
-import dip.order.result.Result;
-import dip.order.result.OrderResult;
-import dip.order.result.OrderResult.ResultType;
-import dip.misc.Log;
-
-import dip.world.Province;
-import java.util.List;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+
+import dip.order.Move;
+import dip.order.Orderable;
+import dip.order.result.OrderResult;
+import dip.order.result.Result;
+import dip.world.Location;
+import dip.world.Position;
+import dip.world.Province;
+import dip.world.TurnState;
+import dip.world.World;
 
 /**
  *	RetreatChecker analyzes the current TurnState and the results of the previous
@@ -191,9 +187,9 @@ public class RetreatChecker {
      *			dislodged <code>dislodgedLoc</code>
      */
     private boolean isDislodgersSpace(Location dislodgedLoc, Location loc) {
-        Iterator iter = filteredMoveResults.iterator();
+        Iterator<RCMoveResult> iter = filteredMoveResults.iterator();
         while (iter.hasNext()) {
-            RCMoveResult rcmr = (RCMoveResult) iter.next();
+            RCMoveResult rcmr = iter.next();
 
             // note: dislodgedLoc is the potential move destination
             if (rcmr.isDislodger(loc, dislodgedLoc)) {
@@ -220,9 +216,9 @@ public class RetreatChecker {
 
         int moveCount = 0;
 
-        Iterator iter = filteredMoveResults.iterator();
+        Iterator<RCMoveResult> iter = filteredMoveResults.iterator();
         while (iter.hasNext()) {
-            RCMoveResult rcmr = (RCMoveResult) iter.next();
+            RCMoveResult rcmr = iter.next();
 
             if (rcmr.isPossibleStandoff(loc)) {
                 moveCount++;

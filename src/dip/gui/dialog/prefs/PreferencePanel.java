@@ -59,6 +59,7 @@ public abstract class PreferencePanel extends javax.swing.JPanel
 	*	<p>
 	*	This is displayed in the tab.
 	*/
+	@Override
 	public abstract String getName();
 	
 	
